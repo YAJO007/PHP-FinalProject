@@ -34,20 +34,26 @@
         </button>
         </a>
 
+        <a href="login">
         <button class="px-6 py-2 bg-white border-2 border-black 
                        rounded-lg font-bold hover:bg-purple-100">
             กิจกรรมของฉัน
         </button>
-
+        </a>
+        
+        <a href="login">
         <button class="px-6 py-2 bg-purple-500 text-white 
                        border-2 border-black rounded-lg font-bold">
             สร้างกิจกรรม
         </button>
+        </a>
 
+        <a href="login">
         <button class="px-6 py-2 bg-white border-2 border-black 
                        rounded-lg font-bold hover:bg-purple-100">
             โปรไฟล์
         </button>
+        </a>
 
     </div>
 

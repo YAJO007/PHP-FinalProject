@@ -33,7 +33,7 @@
             <!-- Email -->
             <div>
                 <label for="email" class="block text-sm font-bold mb-2">
-                    อีเมล
+                    Emailชื่อผู้ใช้ 
                 </label>
                 <input type="email" name="email" id="email" required
                        placeholder="Email..."

@@ -2,16 +2,16 @@
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = isset($_POST['password']) ? $_POST['password'] : null;
 
-    $is_login_success = checklogin($email, $password);
+    $is_login_success = checklogin($email);
 
     if ($is_login_success) {
         $_SESSION['email'] = $email;
         header('Location: event');
         exit();
     } else {
-        echo "<script>alert('อีเมลหรือรหัสผ่านไม่ถูกต้อง');</script>";
+        echo "<script>alert('อีเมลไม่ถูกต้อง');</script>";
         renderView('login'); 
     }
 } else {

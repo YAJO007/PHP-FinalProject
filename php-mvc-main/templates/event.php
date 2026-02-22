@@ -28,17 +28,21 @@
                            hover:shadow-none transition-all duration-150">
                 ค้นหา
             </button>
-
+            
+            <a href="my_event">
             <button class="px-6 py-2 bg-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
                 กิจกรรมของฉัน
             </button>
+            </a>
 
+            <a href="create_event">
             <button class="px-6 py-2 bg-purple-500 text-white
                            border-2 border-black rounded-lg font-bold
                            hover:scale-110 transition-all">
                 สร้างกิจกรรม
             </button>
+            </a>
 
             <a href="profile">
                 <button class="px-6 py-2 bg-white border-2 border-black

@@ -1,7 +1,7 @@
 <?php
 
 $hostname = 'localhost';
-$dbName = 'event';
+$dbName = 'enrollment';
 $username = 'root';
 $password = '';
 $conn = new mysqli($hostname, $username, $password, $dbName);
@@ -17,5 +17,4 @@ function getConnection(): mysqli
 
 // database functions ต่างๆ
 require_once DATABASES_DIR . '/user.php';
-
-die(__FILE__);
+require_once DATABASES_DIR . '/event.php';

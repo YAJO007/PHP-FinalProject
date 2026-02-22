@@ -23,23 +23,30 @@
             <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="event">
-                    <button class="px-6 py-2 bg-purple-500 text-white
-                           border-2 border-black rounded-lg font-bold
-                           hover:scale-110 transition-all">
+                    <button class="px-6 py-2 bg-purple-600 text-white 
+                       border-2 border-black rounded-lg font-bold 
+                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                       hover:translate-x-1 hover:translate-y-1 
+                       hover:shadow-none transition-all duration-150">
                         ค้นหา
                     </button>
                 </a>
 
+                <a href="my_event">
                 <button class="px-6 py-2 bg-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
                     กิจกรรมของฉัน
                 </button>
-
+                </a>
+                
+                <a href="create_event">
                 <button class="px-6 py-2 bg-purple-500 text-white
                            border-2 border-black rounded-lg font-bold
                            hover:scale-110 transition-all">
                     สร้างกิจกรรม
                 </button>
+                </a>
+
                 <button class="px-6 py-2 bg-white
                            border-2 border-black rounded-lg font-bold
                            shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -137,7 +144,7 @@
                     </div>
 
                     <div class="mt-10 flex justify-center border-t-2 border-black pt-6">
-                        <a href="/logout">
+                        <a href="/home">
                             <button class="px-8 py-3 bg-red-400 text-black border-2 border-black rounded-xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-red-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
                                 ออกจากระบบ
                             </button>
