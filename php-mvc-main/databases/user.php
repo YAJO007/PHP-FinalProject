@@ -9,7 +9,7 @@ function getuser(): mysqli_result
     return $result;
 }
 
-function addStudent($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
+function adduser($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
 {
     global $conn;
     $sql = "INSERT INTO user 

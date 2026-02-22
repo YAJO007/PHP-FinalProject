@@ -20,7 +20,7 @@
         <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-black tracking-tight mb-2 text-purple-700">
-                เข้าสู่ระบบ
+                Login
             </h1>
             <p class="text-gray-700 text-sm font-medium">
                 เพื่อเข้าลงทะเบียนกิจกรรม
@@ -104,7 +104,7 @@
         <!-- Footer -->
         <p class="mt-8 text-center text-xs font-semibold text-gray-700">
             ยังไม่มีบัญชี?
-            <a href="/php-mvc-main/templates/register.php"
+            <a href="register"
                class="underline text-purple-700 hover:text-purple-900 transition">
                สมัครสมาชิก
             </a>

@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $congenital = $_POST['congenital'];
     
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $result = addStudent($username, $first_name, $last_name, $email, $hashed_password, $birthdate, $gender, $phone, $congenital);
+    $result = adduser($username, $first_name, $last_name, $email, $hashed_password, $birthdate, $gender, $phone, $congenital);
     
     if ($result === true) {
         header('Location: login');

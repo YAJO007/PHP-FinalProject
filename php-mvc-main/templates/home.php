@@ -24,7 +24,7 @@
     <div class="flex items-center gap-4 flex-wrap">
 
         <!-- ปุ่มเข้าสู่ระบบ (ย้ายมาไว้ซ้ายสุด) -->
-         <a href="login.php">
+         <a href="login">
         <button class="px-6 py-2 bg-purple-600 text-white 
                        border-2 border-black rounded-lg font-bold 
                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
