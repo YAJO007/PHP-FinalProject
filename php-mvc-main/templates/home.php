@@ -3,76 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebSite Name</title>
+    <title>ค้นหากิจกรรม</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-[#e3f0fb] min-h-screen p-4 sm:p-8 font-sans text-black flex flex-col">
+<body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
+             min-h-screen p-4 sm:p-8 font-sans text-black flex">
 
-    <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex-1 flex flex-col overflow-hidden max-w-7xl mx-auto w-full">
+<div class="bg-white border-2 border-black rounded-[24px] 
+            shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
+            flex flex-col overflow-hidden 
+            max-w-7xl mx-auto w-full">
 
-        <header class="border-b-2 border-black p-6 bg-[#528af5]">
-            <h1 class="text-3xl font-black tracking-widest uppercase text-center text-black">
-                WebSite Name
-            </h1>
-        </header>
+    <!-- ===== TOP NAV ===== -->
+<div class="flex justify-between items-center 
+            border-b-2 border-black 
+            bg-purple-300 px-6 py-4">
 
-        <nav class="border-b-2 border-black flex flex-wrap justify-center gap-4 sm:gap-12 py-4 px-4 text-sm font-bold uppercase tracking-widest bg-white">
-            <a href="/" class="px-4 py-2 border-2 border-transparent hover:border-black rounded-lg hover:bg-[#e3f0fb] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">Home</a>
-            <a href="/login" class="px-4 py-2 border-2 border-transparent hover:border-black rounded-lg hover:bg-[#e3f0fb] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">Login</a>
-            <a href="/register" class="px-4 py-2 border-2 border-transparent hover:border-black rounded-lg hover:bg-[#e3f0fb] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] transition-all">Register</a>
-        </nav>
+    <!-- LEFT SIDE -->
+    <div class="flex items-center gap-4 flex-wrap">
 
-        <div class="flex flex-col md:flex-row flex-1">
+        <!-- ปุ่มเข้าสู่ระบบ (ย้ายมาไว้ซ้ายสุด) -->
+         <a href="login.php">
+        <button class="px-6 py-2 bg-purple-600 text-white 
+                       border-2 border-black rounded-lg font-bold 
+                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                       hover:translate-x-1 hover:translate-y-1 
+                       hover:shadow-none transition-all duration-150">
+            เข้าสู่ระบบ
+        </button>
+        </a>
 
-            <div class="w-full md:w-64 border-b-2 md:border-b-0 md:border-r-2 border-black p-6 sm:p-8 bg-[#f9fafb]">
-                <div role="tablist" class="flex flex-col gap-4 text-xs uppercase tracking-widest">
+        <button class="px-6 py-2 bg-white border-2 border-black 
+                       rounded-lg font-bold hover:bg-purple-100">
+            กิจกรรมของฉัน
+        </button>
 
-                    <button role="tab" aria-selected="true"
-                            class="w-full text-left px-4 py-3 border-2 border-black rounded-lg font-bold bg-[#528af5] shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        General
-                    </button>
+        <button class="px-6 py-2 bg-purple-500 text-white 
+                       border-2 border-black rounded-lg font-bold">
+            สร้างกิจกรรม
+        </button>
 
-                    <button role="tab"
-                            class="w-full text-left px-4 py-3 border-2 border-transparent hover:border-black rounded-lg font-bold hover:bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        Privacy
-                    </button>
+        <button class="px-6 py-2 bg-white border-2 border-black 
+                       rounded-lg font-bold hover:bg-purple-100">
+            โปรไฟล์
+        </button>
 
-                    <button role="tab"
-                            class="w-full text-left px-4 py-3 border-2 border-transparent hover:border-black rounded-lg font-bold hover:bg-white hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
-                        Security
-                    </button>
+    </div>
 
-                </div>
+    <!-- RIGHT SIDE (เมนูไอคอน) -->
+    <button class="w-10 h-10 flex items-center justify-center 
+                   bg-purple-600 text-white 
+                   border-2 border-black rounded-md
+                   hover:rotate-12 transition-all">
+        ☰
+    </button>
+</div>
+
+
+    <!-- ===== SEARCH SECTION ===== -->
+    <div class="p-8 bg-purple-100 border-b-2 border-black">
+
+        <div class="bg-purple-200 border-2 border-black 
+                    rounded-xl p-6 
+                    shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+
+            <h2 class="text-4xl font-black mb-6 text-purple-900">
+                ค้นหากิจกรรม
+            </h2>
+
+            <!-- search bar -->
+            <div class="flex gap-3 mb-6">
+                <input type="text" placeholder="ค้นหากิจกรรม..."
+                       class="flex-1 px-4 py-3 border-2 border-black 
+                              rounded-lg bg-white font-medium
+                              focus:ring-4 focus:ring-purple-400
+                              transition-all">
+
+                <button class="px-5 bg-purple-600 text-white
+                               border-2 border-black rounded-lg font-bold
+                               hover:scale-110 transition-all">
+                    🔍
+                </button>
             </div>
 
-            <div role="tabpanel" class="flex-1 p-8 sm:p-12 md:p-16 bg-white">
-                
-                <h2 class="text-4xl sm:text-5xl md:text-6xl font-black leading-tight uppercase mb-8 drop-shadow-sm">
-                    A Deep Taste<br>
-                    Enchanted In<br>
-                    The Recipe.
-                </h2>
+            <!-- date filter -->
+            <div class="flex flex-wrap gap-6 items-center">
 
-                <p class="text-base text-gray-800 max-w-xl font-medium leading-relaxed border-l-4 border-[#528af5] pl-4">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
-                    This layout follows an editorial campaign aesthetic with 
-                    strong typography and generous spacing.
+                <div class="flex items-center gap-3">
+                    <label class="font-bold text-purple-900">วันที่เริ่ม:</label>
+                    <input type="date"
+                           class="px-4 py-2 border-2 border-black 
+                                  rounded-lg bg-purple-500 text-white
+                                  focus:ring-4 focus:ring-purple-300
+                                  transition-all">
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <label class="font-bold text-purple-900">วันที่สิ้นสุด:</label>
+                    <input type="date"
+                           class="px-4 py-2 border-2 border-black 
+                                  rounded-lg bg-white
+                                  focus:ring-4 focus:ring-purple-300
+                                  transition-all">
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ===== CARD SECTION ===== -->
+    <div class="flex-1 bg-purple-100 p-10">
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+            <!-- Card -->
+            <div class="bg-white border-2 border-black rounded-xl 
+                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                        hover:scale-105 hover:-translate-y-2
+                        transition-all duration-200">
+
+                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
+
+                <h3 class="font-bold text-lg mb-2 text-purple-800">
+                    ชื่อกิจกรรม
+                </h3>
+
+                <p class="text-sm text-gray-700">
+                    รายละเอียดกิจกรรม...
                 </p>
+            </div>
 
+            <!-- Card -->
+            <div class="bg-white border-2 border-black rounded-xl 
+                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                        hover:scale-105 hover:-translate-y-2
+                        transition-all duration-200">
+
+                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
+
+                <h3 class="font-bold text-lg mb-2 text-purple-800">
+                    ชื่อกิจกรรม
+                </h3>
+
+                <p class="text-sm text-gray-700">
+                    รายละเอียดกิจกรรม...
+                </p>
+            </div>
+
+            <!-- Card -->
+            <div class="bg-white border-2 border-black rounded-xl 
+                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                        hover:scale-105 hover:-translate-y-2
+                        transition-all duration-200">
+
+                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
+
+                <h3 class="font-bold text-lg mb-2 text-purple-800">
+                    ชื่อกิจกรรม
+                </h3>
+
+                <p class="text-sm text-gray-700">
+                    รายละเอียดกิจกรรม...
+                </p>
             </div>
 
         </div>
 
-        <main class="border-t-2 border-black bg-[#e3f0fb] p-6 text-center font-bold uppercase text-sm tracking-widest">
-            Home
-        </main>
-
-        <footer class="border-t-2 border-black bg-white p-5 text-center text-sm font-bold">
-            &copy; <?= date('Y') ?>. All rights reserved by Aj.M.
-        </footer>
-
     </div>
+
+</div>
 
 </body>
 </html>
