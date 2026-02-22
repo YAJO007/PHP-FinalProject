@@ -1,5 +1,7 @@
 <?php
 
+session_start();
 session_destroy();
-header('Location: /home');
+$base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
+header('Location: ' . $base . '/home');
 exit;
