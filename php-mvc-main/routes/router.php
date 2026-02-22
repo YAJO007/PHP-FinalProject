@@ -1,4 +1,0 @@
-$routes = [
-    '/' => 'home',
-    '/auth' => 'auth',
-];
