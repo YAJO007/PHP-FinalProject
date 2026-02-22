@@ -2,8 +2,8 @@
 
 $hostname = 'localhost';
 $dbName = 'event';
-$username = 'demo';
-$password = 'abc123';
+$username = 'root';
+$password = '';
 $conn = new mysqli($hostname, $username, $password, $dbName);
 
 function getConnection(): mysqli
@@ -17,3 +17,5 @@ function getConnection(): mysqli
 
 // database functions ต่างๆ
 require_once DATABASES_DIR . '/user.php';
+
+die(__FILE__);

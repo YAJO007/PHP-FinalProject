@@ -3,10 +3,8 @@
 function getuser(): mysqli_result
 {
     global $conn;
-    $sql = 'select * from user';
-    $result = $conn->query($sql);
-    $conn->close();
-    return $result;
+    $sql = "SELECT * FROM user";
+    return $conn->query($sql);
 }
 
 function adduser($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
