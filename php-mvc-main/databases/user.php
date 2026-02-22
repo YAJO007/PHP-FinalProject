@@ -51,3 +51,12 @@ function checklogin($email, $password): bool
         return false;
     }
 }
+function getUserByEmail(string $email): mysqli_result
+{
+    global $conn;
+    $sql  = "SELECT * FROM user WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    return $stmt->get_result();
+}
