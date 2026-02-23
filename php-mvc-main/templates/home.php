@@ -27,30 +27,31 @@
          <a href="login">
         <button class="px-6 py-2 bg-purple-600 text-white 
                        border-2 border-black rounded-lg font-bold 
-                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                       hover:translate-x-1 hover:translate-y-1 
-                       hover:shadow-none transition-all duration-150">
+                       hover:scale-110 transition-all">
             เข้าสู่ระบบ
         </button>
         </a>
 
         <a href="login">
         <button class="px-6 py-2 bg-white border-2 border-black 
-                       rounded-lg font-bold hover:bg-purple-100">
+                       rounded-lg font-bold hover:bg-purple-100
+                       hover:scale-110 transition-all">
             กิจกรรมของฉัน
         </button>
         </a>
         
         <a href="login">
         <button class="px-6 py-2 bg-purple-500 text-white 
-                       border-2 border-black rounded-lg font-bold">
+                       border-2 border-black rounded-lg font-bold
+                       hover:scale-110 transition-all">
             สร้างกิจกรรม
         </button>
         </a>
 
         <a href="login">
         <button class="px-6 py-2 bg-white border-2 border-black 
-                       rounded-lg font-bold hover:bg-purple-100">
+                       rounded-lg font-bold hover:bg-purple-100
+                       hover:scale-110 transition-all">
             โปรไฟล์
         </button>
         </a>
@@ -124,7 +125,27 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
+            <a href="login">
+                 <div class="bg-white border-2 border-black rounded-xl 
+                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                        hover:scale-105 hover:-translate-y-2
+                        transition-all duration-200">
+
+                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
+
+                <h3 class="font-bold text-lg mb-2 text-purple-800">
+                    ชื่อกิจกรรม
+                </h3>
+
+                <p class="text-sm text-gray-700">
+                    รายละเอียดกิจกรรม...
+                </p>
+            </div>
+            </a>
+           
+
             <!-- Card -->
+            <a href="login">
             <div class="bg-white border-2 border-black rounded-xl 
                         p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                         hover:scale-105 hover:-translate-y-2
@@ -140,8 +161,9 @@
                     รายละเอียดกิจกรรม...
                 </p>
             </div>
-
+            </a>
             <!-- Card -->
+            <a href="login">
             <div class="bg-white border-2 border-black rounded-xl 
                         p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                         hover:scale-105 hover:-translate-y-2
@@ -157,24 +179,7 @@
                     รายละเอียดกิจกรรม...
                 </p>
             </div>
-
-            <!-- Card -->
-            <div class="bg-white border-2 border-black rounded-xl 
-                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-                        hover:scale-105 hover:-translate-y-2
-                        transition-all duration-200">
-
-                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
-
-                <h3 class="font-bold text-lg mb-2 text-purple-800">
-                    ชื่อกิจกรรม
-                </h3>
-
-                <p class="text-sm text-gray-700">
-                    รายละเอียดกิจกรรม...
-                </p>
-            </div>
-
+            </a>
         </div>
 
     </div>

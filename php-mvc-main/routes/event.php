@@ -1,3 +1,4 @@
 <?php
 
-renderView('event');
+$result = getEvents();
+renderView('event', ['result' => $result]);

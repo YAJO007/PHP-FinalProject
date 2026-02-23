@@ -23,11 +23,9 @@
             <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="event">
-                    <button class="px-6 py-2 bg-purple-600 text-white 
-                       border-2 border-black rounded-lg font-bold 
-                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                       hover:translate-x-1 hover:translate-y-1 
-                       hover:shadow-none transition-all duration-150">
+                    <button class="px-6 py-2 bg-purple-500 text-white
+                           border-2 border-black rounded-lg font-bold
+                           hover:scale-110 transition-all">
                         ค้นหา
                     </button>
                 </a>
