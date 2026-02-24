@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
             $new_name = uniqid('event_', true) . '.' . $ext;
 
-            $upload_dir = __DIR__ . '/../uploads/';
+            $upload_dir = __DIR__ . '/../public/img/';
             if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0755, true);
             }
