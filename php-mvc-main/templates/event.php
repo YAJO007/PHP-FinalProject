@@ -123,7 +123,7 @@
                     <div class="bg-white border-2 border-black rounded-xl
                                 p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                                 hover:scale-105 hover:-translate-y-2 transition-all">
-                        <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden"><img src="' . htmlspecialchars($event['image_path']) . '"></img></div>
+                        <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden"><img src="img/' . htmlspecialchars($event['image_path']) . '"></img></div>
                         <h3 class="font-bold text-lg mb-2 text-purple-800">' . htmlspecialchars($event['title']) . '</h3>
                         <p class="text-sm text-gray-700">' . htmlspecialchars($event['Details']) . '</p>
                        <p class="text-xs text-gray-500">สถานะ: ' . htmlspecialchars($event['status']) . '</p>
@@ -140,70 +140,4 @@
 
 </body>
 
-            <h2 class="text-4xl font-black mb-6 text-purple-900">
-                ค้นหากิจกรรม
-            </h2>
-
-            <!-- Search -->
-            <div class="flex gap-3 mb-6">
-                <input type="text" placeholder="ค้นหากิจกรรม..."
-                       class="flex-1 px-4 py-3 border-2 border-black
-                              rounded-lg bg-white font-medium
-                              focus:ring-4 focus:ring-purple-400">
-
-                <button class="px-5 bg-purple-600 text-white
-                               border-2 border-black rounded-lg font-bold
-                               hover:scale-110 transition-all">
-                    🔍
-                </button>
-            </div>
-
-            <!-- Date Filter -->
-            <div class="flex flex-wrap gap-6 items-center">
-                <div class="flex items-center gap-3">
-                    <label class="font-bold text-purple-900">วันที่เริ่ม:</label>
-                    <input type="date"
-                           class="px-4 py-2 border-2 border-black
-                                  rounded-lg bg-purple-500 text-white
-                                  focus:ring-4 focus:ring-purple-300">
-                </div>
-
-                <div class="flex items-center gap-3">
-                    <label class="font-bold text-purple-900">วันที่สิ้นสุด:</label>
-                    <input type="date"
-                           class="px-4 py-2 border-2 border-black
-                                  rounded-lg bg-white
-                                  focus:ring-4 focus:ring-purple-300">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== CARD SECTION ===== -->
-    <div class="flex-1 bg-purple-100 p-10">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <?php
-            if (isset($data['result']) && $data['result']->num_rows > 0) {
-                while ($event = $data['result']->fetch_assoc()) {
-                    echo '
-                    <a href="">
-                    <div class="bg-white border-2 border-black rounded-xl
-                                p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-                                hover:scale-105 hover:-translate-y-2 transition-all">
-                        <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
-                        <h3 class="font-bold text-lg mb-2 text-purple-800">' . htmlspecialchars($event['title']) . '</h3>
-                        <p class="text-sm text-gray-700">' . htmlspecialchars($event['Details']) . '</p>
-                       <p class="text-xs text-gray-500">สถานะ: ' . htmlspecialchars($event['status']) . '</p>
-                    </div>
-                    </a>';
-                }
-            } else {
-                echo '<p class="text-center text-gray-700">ไม่พบกิจกรรม</p>';
-            }
-            ?>
-        </div>
-    </div>
-</div>
-
-</body>
 </html>
