@@ -2,110 +2,291 @@
 // databases/event.php
 
 function addEvent(
-    int $user_id,
+    int $uid,
     string $title,
     int $max_participants,
     string $start_date,
     string $end_date,
     string $status,
-    string $details,
-    string $creator_at
-) {
+    string $details
+): int|string {
+
     global $conn;
-    $creator_at = date('Y-m-d H:i:s');
+
     $sql = "INSERT INTO event
-            (uid, title, max_participants, start_date, end_date, status, details, creator_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        (uid, title, max_participants, start_date, end_date, status, details, create_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
     $stmt = $conn->prepare($sql);
-    if (!$stmt) {
-        return 'DB prepare failed: ' . $conn->error;
-    }
+    if (!$stmt) return $conn->error;
 
     $stmt->bind_param(
-        "isisssss",
-        $user_id,
+        "isissss",
+        $uid,
         $title,
         $max_participants,
         $start_date,
         $end_date,
         $status,
-        $details,
-        $creator_at
+        $details
     );
 
-    if (!$stmt->execute()) {
-        $err = $stmt->error;
-        $stmt->close();
-        return 'DB execute failed: ' . $err;
+    if ($stmt->execute()) {
+        return $conn->insert_id;
     }
 
-    $stmt->close();
-    return true;
+    return $stmt->error;
 }
 
-function getEvents($start_date = null, $end_date = null, $search = null): mysqli_result
-{
+function getEvents(
+    ?string $start_date = null,
+    ?string $end_date = null,
+    ?string $search = null
+): mysqli_result {
+
     global $conn;
-    
-    // 1. ตั้งต้น SQL และตัวแปรเก็บ Parameter
-    $sql = "SELECT  e.*,
-                    MIN(image_path) as image_path
-            FROM event e
-            LEFT JOIN event_img img ON e.eid = img.eid 
-            WHERE 1=1";
+
+    $sql = "
+        SELECT e.*,
+               MIN(img.image_path) AS image_path,
+               CASE
+                   WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
+                   WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
+                   ELSE 'กำลังดำเนินอยู่'
+               END AS event_status
+        FROM event e
+        LEFT JOIN event_img img ON e.eid = img.eid
+        WHERE 1=1
+    ";
+
     $params = [];
     $types = "";
 
-    // 2. ตรวจสอบและต่อเงื่อนไข (ใช้ && $start_date !== '' เพื่อกันกรณีค่าว่างจาก Form)
-    if (!empty($start_date)) {
-        $sql .= " AND start_date >= ?";
+    if ($start_date) {
+        $sql .= " AND e.start_date >= ?";
         $params[] = $start_date;
         $types .= "s";
     }
 
-    if (!empty($end_date)) {
-        $sql .= " AND start_date <= ?"; // หรือ end_date แล้วแต่โครงสร้างตาราง
+    if ($end_date) {
+        $sql .= " AND e.start_date <= ?";
         $params[] = $end_date;
         $types .= "s";
     }
 
-    if (!empty($search)) {
-        $sql .= " AND title LIKE ?";
+    if ($search) {
+        $sql .= " AND e.title LIKE ?";
         $params[] = "%$search%";
         $types .= "s";
     }
 
     $sql .= " GROUP BY e.eid ORDER BY e.start_date DESC";
 
-    // 3. เตรียม Statement
     $stmt = $conn->prepare($sql);
-    
-    // 4. ถ้ามีเงื่อนไข ให้ Bind Parameter
-    if (!empty($params)) {
+    if ($params) {
         $stmt->bind_param($types, ...$params);
-        $stmt->execute();
-        return $stmt->get_result();
     }
 
-    // 5. ถ้าไม่มีเงื่อนไขเลย ให้ Query ตรงๆ
-    return $conn->query($sql);
+    $stmt->execute();
+    return $stmt->get_result();
 }
 
-function getMyEvents(int $user_id): array {
+function getEventByUserId(int $uid): mysqli_result
+{
+    global $conn;
+
+    $sql = "SELECT 
+    e.*,
+    CASE
+        WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
+        WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
+        ELSE 'กำลังดำเนินอยู่'
+        END AS status
+        FROM event e
+        WHERE e.uid = ?
+        ORDER BY e.start_date DESC";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        die("Prepare failed: " . $conn->error);
+    }
+
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+function getEventById(int $eid): ?array
+{
     global $conn;
 
     $sql = "
-        SELECT e.*, ue.status
+        SELECT e.*,
+               (
+                   SELECT img.image_path
+                   FROM event_img img
+                   WHERE img.eid = e.eid
+                   LIMIT 1
+               ) AS image_path
         FROM event e
-        JOIN user_event ue ON e.eid = ue.eid
-        WHERE ue.uid = ?
-        ORDER BY e.start_date DESC
+        WHERE e.eid = ?
+        LIMIT 1
     ";
 
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $user_id);
+    $stmt->bind_param("i", $eid);
     $stmt->execute();
 
-    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: null;
+}
+
+function updateEvent(
+    int $eid,
+    string $title,
+    int $max_participants,
+    string $start_date,
+    string $end_date,
+    string $details
+): bool|string {
+    global $conn;
+
+    $sql = "UPDATE event 
+            SET title = ?, 
+                max_participants = ?, 
+                start_date = ?, 
+                end_date = ?, 
+                Details = ?
+            WHERE eid = ?";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+
+    $stmt->bind_param(
+        "sisssi",
+        $title,
+        $max_participants,
+        $start_date,
+        $end_date,
+        $details,
+        $eid
+    );
+
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+function deleteEvent(int $eid): bool|string
+{
+    global $conn;
+
+    // First delete related images
+    $sql1 = "DELETE FROM event_img WHERE eid = ?";
+    $stmt1 = $conn->prepare($sql1);
+    if ($stmt1) {
+        $stmt1->bind_param("i", $eid);
+        $stmt1->execute();
+    }
+
+    // Delete user_event entries
+    $sql2 = "DELETE FROM user_event WHERE eid = ?";
+    $stmt2 = $conn->prepare($sql2);
+    if ($stmt2) {
+        $stmt2->bind_param("i", $eid);
+        $stmt2->execute();
+    }
+
+    // Finally delete event
+    $sql = "DELETE FROM event WHERE eid = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+
+    $stmt->bind_param("i", $eid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+/**
+ * Get event participants with their request status
+ */
+function getEventParticipants(int $eid): mysqli_result
+{
+    global $conn;
+    
+    $sql = "SELECT u.uid, u.first_name, u.last_name, u.email, u.phone_number, 
+                   ue.status
+            FROM user_event ue
+            JOIN user u ON ue.uid = u.uid
+            WHERE ue.eid = ?
+            ORDER BY ue.status, u.first_name ASC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $eid);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+/**
+ * Approve a participant request
+ */
+function approveParticipant(int $eid, int $uid): bool|string
+{
+    global $conn;
+    
+    $status = 'อนุมัติ';
+    $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
+    
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+    
+    $stmt->bind_param("sii", $status, $eid, $uid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+/**
+ * Reject a participant request
+ */
+function rejectParticipant(int $eid, int $uid): bool|string
+{
+    global $conn;
+    
+    $sql = "DELETE FROM user_event WHERE eid = ? AND uid = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+    
+    $stmt->bind_param("ii", $eid, $uid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+function updateEventStatus(): void
+{
+    global $conn;
+
+    $sql = "
+        UPDATE event
+        SET status = CASE
+            WHEN start_date > CURDATE() THEN 'กำลังจะมาถึง'
+            WHEN end_date < CURDATE() THEN 'จบแล้ว'
+            ELSE 'กำลังดำเนินอยู่'
+        END
+    ";
+
+    $conn->query($sql);
 }

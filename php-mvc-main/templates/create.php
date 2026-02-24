@@ -110,12 +110,29 @@
                     </div>
 
                     <div>
-                        <label class="font-bold">สถานที่</label>
-                        <input name="location"
+                        <label class="font-bold">จังหวัด</label>
+                        <input type="text" name="province" required
                             class="w-full px-4 py-2 border-2 border-black rounded-lg
-                   shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                     shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     </div>
-
+                    <div>
+                        <label class="font-bold">เขต/อำเภอ</label>
+                        <input type="text" name="district" required
+                            class="w-full px-4 py-2 border-2 border-black rounded-lg
+                     shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    </div>
+                    <div>
+                        <label class="font-bold">รายละเอียดที่อยู่</label>
+                        <input type="text" name="address" placeholder="ตึก IT ชั้น 4 ห้อง ***" required
+                            class="w-full px-4 py-2 border-2 border-black rounded-lg
+                     shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    </div>
+                    <div>
+                        <label class="font-bold">ข้อกำหนดเพิ่มเติม</label>
+                        <input type="text" name="requirement" placeholder="เช่น ต้องมีความรู้พื้นฐานด้านคอมพิวเตอร์, การแต่งกาย" required
+                            class="w-full px-4 py-2 border-2 border-black rounded-lg
+                     shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    </div>
                     <div>
                         <label class="font-bold">จำนวนผู้เข้าร่วม</label>
                         <input type="number" name="max_participants" min="1" required

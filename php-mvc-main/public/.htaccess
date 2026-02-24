@@ -1,4 +1,5 @@
 RewriteEngine on
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^detail$ detail.php [L,QSA]
 RewriteRule . index.php [L]

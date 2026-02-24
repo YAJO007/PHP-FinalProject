@@ -5,36 +5,35 @@ if (!isset($_SESSION['email'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user_id = getUseridbyEmail($_SESSION['email']);
 
-    $title   = trim($_POST['title'] ?? '');
-    $details = trim($_POST['detail'] ?? '');
-    $date    = $_POST['date'] ?? '';
-    $time    = $_POST['time'] ?? '';
-    $category = $_POST['category'] ?? '';
+    if ($user_id === null) {
+        die("ไม่พบ user จาก email นี้");
+    }
+    $title   = $_POST['title'] ?? '';
+    $details = $_POST['detail'] ?? '';
     $creator_email = $_SESSION['email'];
-
-    // กำหนดค่า default
+    $start_date = $_POST['start_date'] ?? '';
+    $end_date = $_POST['end_date'] ?? '';
     $max_participants = 100;
-    $status = 'open';
-    $start_date = $date . ' ' . $time;
-    $end_date   = $start_date;
-
+    $status = 'active';
+    $create_at = date('Y-m-d');
     $res = addEvent(
+        $user_id,
         $title,
         $max_participants,
         $start_date,
         $end_date,
         $status,
-        $category,
         $details,
-        $creator_email
+        $create_at
     );
 
-    if ($res === true) {
+    if (is_int($res)) {
 
-        $event_id = $conn->insert_id;
-
-        // upload รูป
+        $event_id = $res;
+        addAddress($event_id, $_POST['province'], $_POST['district'], $_POST['address']);
+        addRequirement($event_id, $_POST['requirement']);
         if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
 
             $tmp_name = $_FILES['image']['tmp_name'];
@@ -47,7 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             move_uploaded_file($tmp_name, $upload_dir . $new_name);
-            addImage($event_id, $new_name);
+
+            addImage($event_id, $new_name); // ✅ ไม่ null แล้ว
         }
 
         echo "<script>alert('สร้างกิจกรรมสำเร็จ'); location.href='event';</script>";
