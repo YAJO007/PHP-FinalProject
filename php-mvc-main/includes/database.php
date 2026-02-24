@@ -2,8 +2,8 @@
 
 $hostname = 'localhost';
 $dbName = 'event';
-$username = 'demo';
-$password = 'abc123';
+$username = 'root';
+$password = '';
 $conn = new mysqli($hostname, $username, $password, $dbName);
 
 function getConnection(): mysqli
