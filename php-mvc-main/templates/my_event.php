@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กิจกรรมของฉัน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
+             min-h-screen p-4 sm:p-8 font-sans text-black flex">
+
+<div class="bg-white border-2 border-black rounded-[24px] 
+            shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
+            flex flex-col overflow-hidden 
+            max-w-7xl mx-auto w-full">
+
+<!-- ===== TOP NAV ===== -->
+<div class="flex justify-between items-center border-b-2 border-black bg-purple-300 px-6 py-4">
+
+    <div class="flex items-center gap-4 flex-wrap">
+        <a href="event">
+            <button class="px-6 py-2 bg-purple-500 text-white
+                           border-2 border-black rounded-lg font-bold
+                           hover:scale-110 transition-all">
+                ค้นหา
+            </button>
+        </a>
+
+        <a href="my_event">
+            <button class="px-6 py-2 bg-white
+                           border-2 border-black rounded-lg font-bold
+                           shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                           hover:translate-x-1 hover:translate-y-1
+                           hover:shadow-none transition-all duration-150">
+                กิจกรรมของฉัน
+            </button>
+        </a>
+
+        <a href="create_event">
+            <button class="px-6 py-2 bg-purple-500 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                สร้างกิจกรรม
+            </button>
+        </a>
+
+        <a href="profile">
+            <button class="px-6 py-2 bg-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                โปรไฟล์
+            </button>
+        </a>
+    </div>
+
+    <button class="w-10 h-10 bg-purple-600 text-white border-2 border-black rounded-md">☰</button>
+</div>
+
+<!-- ================= MIDDLE CONTENT ================= -->
+
+<!-- DASHBOARD -->
+<div class="p-8 bg-purple-100 border-b-2 border-black">
+    <div class="bg-purple-200 border-2 border-black rounded-xl p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+
+        <h2 class="text-4xl font-black mb-6 text-purple-900">🎮 กิจกรรมของฉัน</h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-white border-2 border-black p-4 rounded-lg">
+                <p class="font-bold">ทั้งหมด</p>
+                <p class="text-3xl font-black text-purple-600">12</p>
+            </div>
+
+            <div class="bg-green-200 border-2 border-black p-4 rounded-lg">
+                <p class="font-bold">กำลังจะมาถึง</p>
+                <p class="text-3xl font-black">5</p>
+            </div>
+
+            <div class="bg-yellow-200 border-2 border-black p-4 rounded-lg">
+                <p class="font-bold">กำลังดำเนินอยู่</p>
+                <p class="text-3xl font-black">3</p>
+            </div>
+
+            <div class="bg-red-200 border-2 border-black p-4 rounded-lg">
+                <p class="font-bold">จบแล้ว</p>
+                <p class="text-3xl font-black">4</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- GAME CARDS -->
+<div class="flex-1 bg-purple-100 p-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+        <!-- Card -->
+        <div class="bg-white border-2 border-black rounded-xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:scale-105 transition-all">
+            <div class="bg-gradient-to-br from-purple-400 to-purple-600 h-40 rounded-lg mb-6 flex items-center justify-center text-white font-black">
+                🎮 EVENT MODE
+            </div>
+            <h3 class="font-bold text-lg text-purple-800">แข่ง ROV</h3>
+            <p class="text-sm">แข่งทีม 5v5 ชิงเงินรางวัล</p>
+            <div class="flex justify-between mt-4">
+                <span class="bg-green-200 border border-black px-2 rounded text-xs font-bold">UPCOMING</span>
+                <a href="/activity/1">
+                    <button class="bg-purple-600 text-white px-4 py-2 border-2 border-black rounded-lg">ดู</button>
+                </a>
+            </div>
+        </div>
+
+        <!-- Card -->
+        <div class="bg-white border-2 border-black rounded-xl p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:scale-105 transition-all">
+            <div class="bg-gradient-to-br from-blue-400 to-blue-600 h-40 rounded-lg mb-6 flex items-center justify-center text-white font-black">
+                🧠 QUIZ MODE
+            </div>
+            <h3 class="font-bold text-lg text-purple-800">Cyber Quiz</h3>
+            <p class="text-sm">แข่งตอบคำถาม CTF</p>
+            <div class="flex justify-between mt-4">
+                <span class="bg-yellow-200 border border-black px-2 rounded text-xs font-bold">RUNNING</span>
+                <button class="bg-purple-600 text-white px-4 py-2 border-2 border-black rounded-lg">เข้าร่วม</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+</div>
+</body>
+</html>

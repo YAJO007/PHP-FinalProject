@@ -14,11 +14,20 @@ const INDEX_ROUNTE = 'home';
 // ฟังชันสำหรับทำให้ URI ที่ร้องขอเข้ามาอยู่ในรูปแบบมาตรฐาน
 function normalizeUri(string $uri): string
 {
-    // ลบเครื่องหมาย '/' ที่อยู่ข้างหน้าและข้างหลังออก และแปลงเป็นตัวพิมพ์เล็ก
-    $uri = strtolower(trim($uri, '/'));
+    // เอาเฉพาะ path (ตัด query string ออก)
+    $path = parse_url($uri, PHP_URL_PATH) ?: '';
 
-    // เช็คว่า URI ว่างหรือไม่ ถ้าว่างให้เปลี่ยนเป็น route เริ่มต้น
-    return $uri == INDEX_URI ? INDEX_ROUNTE : $uri;
+    // ตัด prefix ของสคริปต์ (เช่น เมื่อโปรเจ็กต์รันอยู่ใน subfolder)
+    $base = dirname($_SERVER['SCRIPT_NAME']);
+    if ($base !== '/' && strpos($path, $base) === 0) {
+        $path = substr($path, strlen($base));
+    }
+
+    // ลบ '/' ข้างหน้า/ข้างหลัง และแปลงเป็นพิมพ์เล็ก
+    $path = strtolower(trim($path, '/'));
+
+    // ถ้าว่างให้เปลี่ยนเป็น route เริ่มต้น
+    return $path === INDEX_URI ? INDEX_ROUNTE : $path;
 }
 
 // ฟังชันสำหรับแสดงหน้า 404 Not Found

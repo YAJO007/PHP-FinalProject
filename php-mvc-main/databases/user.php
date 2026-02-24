@@ -3,13 +3,11 @@
 function getuser(): mysqli_result
 {
     global $conn;
-    $sql = 'select * from user';
-    $result = $conn->query($sql);
-    $conn->close();
-    return $result;
+    $sql = "SELECT * FROM user";
+    return $conn->query($sql);
 }
 
-function addStudent($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
+function adduser($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
 {
     global $conn;
     $sql = "INSERT INTO user 
@@ -26,7 +24,7 @@ function addStudent($username, $first_name, $last_name, $email, $password, $birt
         return true; // สำเร็จ คืนค่า true
         
     } catch (mysqli_sql_exception $e) {
-        $stmt->close();
+        $stmt->close(); 
         if ($e->getCode() == 1062) {
             return "ข้อมูลซ้ำ: มีอีเมล ชื่อผู้ใช้ หรือเบอร์โทรศัพท์นี้ในระบบแล้ว";
         } else {
@@ -35,19 +33,24 @@ function addStudent($username, $first_name, $last_name, $email, $password, $birt
     }
 }
 
-function checklogin($email, $password): bool
+function checklogin($email): bool
 {
     global $conn;
-    $sql = "SELECT * FROM user WHERE email = ?";
+    $sql = "SELECT 1 FROM user WHERE email = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        return password_verify($password, $user['password']);
-    } else {
-        return false;
-    }
+    $exists = ($result->num_rows > 0);
+    $stmt->close();
+    return $exists;
+}
+function getUserByEmail(string $email): mysqli_result
+{
+    global $conn;
+    $sql  = "SELECT * FROM user WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    return $stmt->get_result();
 }
