@@ -52,7 +52,7 @@ while ($row = $participants_result->fetch_assoc()) {
 }
 
 // Render the manage event template
-renderView('manage_event', [
+renderView('stat_event', [
     'event' => $event,
     'participants_data' => $participants_data
 ]);
