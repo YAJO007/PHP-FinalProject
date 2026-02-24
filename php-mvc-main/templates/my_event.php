@@ -1,3 +1,8 @@
+<?php
+$events = $events ?? [];
+$stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' => 0];
+?>
+
 <!DOCTYPE html>
 <html lang="th">
 
