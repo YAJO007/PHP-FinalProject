@@ -1,5 +1,5 @@
 <?php
-// databases/event.php
+
 
 function addEvent(
     int $uid,
@@ -50,9 +50,9 @@ function getEvents(
         SELECT e.*,
                MIN(img.image_path) AS image_path,
                CASE
-                   WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
-                   WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
-                   ELSE 'กำลังดำเนินอยู่'
+                   WHEN e.start_date > CURDATE() THEN 'Upcoming'
+                   WHEN e.end_date < CURDATE() THEN 'Completed'
+                   ELSE 'Live'
                END AS event_status
         FROM event e
         LEFT JOIN event_img img ON e.eid = img.eid
@@ -99,10 +99,10 @@ function getEventByUserId(int $uid): mysqli_result
     e.*,
     MIN(img.image_path) AS image_path,
     CASE
-        WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
-        WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
-        ELSE 'กำลังดำเนินอยู่'
-        END AS status
+        WHEN e.start_date > CURDATE() THEN 'Upcoming'
+        WHEN e.end_date < CURDATE() THEN 'Completed'
+        ELSE 'Live'
+    END AS status
         FROM event e
         LEFT JOIN event_img img ON e.eid = img.eid
         WHERE e.uid = ?
@@ -244,7 +244,7 @@ function approveParticipant(int $eid, int $uid): bool|string
 {
     global $conn;
     
-    $status = 'อนุมัติ';
+    $status = 'Approved';
     $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
     
     $stmt = $conn->prepare($sql);
@@ -286,9 +286,9 @@ function updateEventStatus(): void
     $sql = "
         UPDATE event
         SET status = CASE
-            WHEN start_date > CURDATE() THEN 'กำลังจะมาถึง'
-            WHEN end_date < CURDATE() THEN 'จบแล้ว'
-            ELSE 'กำลังดำเนินอยู่'
+            WHEN start_date > CURDATE() THEN 'Upcoming'
+            WHEN end_date < CURDATE() THEN 'Completed'
+            ELSE 'Live'
         END
     ";
 

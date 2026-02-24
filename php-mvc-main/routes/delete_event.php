@@ -29,7 +29,7 @@ $result = deleteEvent($eid);
 
 if ($result === true) {
     // Success - redirect to events list
-    header('Location: event?deleted=success');
+    header('Location: my_event?deleted=success');
     exit;
 } else {
     // Error - redirect back with error message

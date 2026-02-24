@@ -12,6 +12,8 @@ if (!function_exists('getEventById')) {
     require_once DATABASES_DIR . '/event.php';
 }
 
+updateEventStatus();
+
 $event = getEventById($eid);
 $address = getAddressByEventId($eid);
 if ($address && $address->num_rows > 0) {

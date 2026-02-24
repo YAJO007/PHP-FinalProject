@@ -56,15 +56,15 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                     </button>
                 </a>
 
-            
+
             </div>
 
             <a href="home">
-                    <button class="px-6 py-2 bg-red-500 text-white
+                <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                        ออกจากระบบ
-                    </button>
-                </a> 
+                    ออกจากระบบ
+                </button>
+            </a>
         </div>
 
         <!-- ================= MIDDLE CONTENT ================= -->
@@ -87,21 +87,21 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                     </div>
 
                     <div class="bg-green-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">กำลังจะมาถึง</p>
+                        <p class="font-bold">Upcoming</p>
                         <p class="text-3xl font-black">
                             <?= $data['upcoming'] ?>
                         </p>
                     </div>
 
                     <div class="bg-yellow-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">กำลังดำเนินอยู่</p>
+                        <p class="font-bold">Live</p>
                         <p class="text-3xl font-black">
                             <?= $data['ongoing'] ?>
                         </p>
                     </div>
 
                     <div class="bg-red-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">จบแล้ว</p>
+                        <p class="font-bold">Completed</p>
                         <p class="text-3xl font-black">
                             <?= $data['finished'] ?>
                         </p>
@@ -142,10 +142,46 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
 
-                            <!-- Status -->
-                            <p class="text-xs text-gray-500 mb-4">
-                                สถานะ: <?= htmlspecialchars($event['status']) ?>
-                            </p>
+                            <?php
+                            $status = $event['status'] ?? '';
+                            $statusBg = '';
+                            $statusBorder = '';
+                            $statusIcon = '';
+                            $statusText = '';
+
+                            switch ($status) {
+                                case 'Upcoming':
+                                    $statusBg = 'bg-green-100';
+                                    $statusBorder = 'border-green-500';
+                                    $statusIcon = '&#x23F1;';
+                                    $statusText = 'กำลังจะมาถึง';
+                                    break;
+                                case 'Live':
+                                    $statusBg = 'bg-yellow-100';
+                                    $statusBorder = 'border-yellow-500';
+                                    $statusIcon = '&#x1F534;';
+                                    $statusText = 'กำลังดำเนินอยู่';
+                                    break;
+                                case 'Completed':
+                                    $statusBg = 'bg-red-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '&#x2713;';
+                                    $statusText = 'จบแล้ว';
+                                    break;
+                                default:
+                                    $statusBg = 'bg-gray-50';
+                                    $statusBorder = 'border-gray-400';
+                                    $statusIcon = '📋';
+                                    $statusText = $status;
+                            }
+                            ?>
+                            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border <?= $statusBg ?> <?= $statusBorder ?> shadow-sm">
+                                <span class="text-lg"><?= $statusIcon ?></span>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">สถานะ</p>
+                                    <p class="font-bold text-xs"><?= $statusText ?></p>
+                                </div>
+                            </div>
 
                             <div class="flex gap-2 mt-4">
                                 <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="col-span-1">
