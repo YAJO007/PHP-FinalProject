@@ -140,6 +140,79 @@ function getEventById(int $eid): ?array
     return $result->fetch_assoc() ?: null;
 }
 
+function updateEvent(
+    int $eid,
+    string $title,
+    int $max_participants,
+    string $start_date,
+    string $end_date,
+    string $details
+): bool|string {
+    global $conn;
+
+    $sql = "UPDATE event 
+            SET title = ?, 
+                max_participants = ?, 
+                start_date = ?, 
+                end_date = ?, 
+                Details = ?
+            WHERE eid = ?";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+
+    $stmt->bind_param(
+        "sisssi",
+        $title,
+        $max_participants,
+        $start_date,
+        $end_date,
+        $details,
+        $eid
+    );
+
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+function deleteEvent(int $eid): bool|string
+{
+    global $conn;
+
+    // First delete related images
+    $sql1 = "DELETE FROM event_img WHERE eid = ?";
+    $stmt1 = $conn->prepare($sql1);
+    if ($stmt1) {
+        $stmt1->bind_param("i", $eid);
+        $stmt1->execute();
+    }
+
+    // Delete user_event entries
+    $sql2 = "DELETE FROM user_event WHERE eid = ?";
+    $stmt2 = $conn->prepare($sql2);
+    if ($stmt2) {
+        $stmt2->bind_param("i", $eid);
+        $stmt2->execute();
+    }
+
+    // Finally delete event
+    $sql = "DELETE FROM event WHERE eid = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+
+    $stmt->bind_param("i", $eid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
 function updateEventStatus(): void
 {
     global $conn;
