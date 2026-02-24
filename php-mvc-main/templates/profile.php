@@ -45,13 +45,22 @@
                 </button>
                 </a>
 
-                <button class="px-6 py-2 bg-white
-                           border-2 border-black rounded-lg font-bold
-                           shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                           hover:translate-x-1 hover:translate-y-1
-                           hover:shadow-none transition-all duration-150">
-                    โปรไฟล์
-                </button>
+                <a href="profile">
+                    <button class="px-6 py-2 bg-white
+                               border-2 border-black rounded-lg font-bold
+                               shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                               hover:translate-x-1 hover:translate-y-1
+                               hover:shadow-none transition-all duration-150">
+                        โปรไฟล์
+                    </button>
+                </a>
+
+                <a href="logout">
+                    <button class="px-6 py-2 bg-red-500 text-white
+                           border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                        ออกจากระบบ
+                    </button>
+                </a> 
             </div>
 
             <!-- RIGHT -->
@@ -141,8 +150,13 @@
 
                     </div>
 
-                    <div class="mt-10 flex justify-center border-t-2 border-black pt-6">
-                        <a href="/home">
+                    <div class="mt-10 flex justify-center gap-4 border-t-2 border-black pt-6 flex-wrap">
+                        <a href="edit_profile">
+                            <button class="px-8 py-3 bg-blue-400 text-black border-2 border-black rounded-xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
+                                ✏️ แก้ไขโปรไฟล์
+                            </button>
+                        </a>
+                        <a href="logout">
                             <button class="px-8 py-3 bg-red-400 text-black border-2 border-black rounded-xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-red-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
                                 ออกจากระบบ
                             </button>

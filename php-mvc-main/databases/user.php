@@ -71,3 +71,32 @@ function getUseridbyEmail(string $email): ?int
 
     return null;
 }
+
+function updateUserProfile(string $email, string $first_name, string $last_name, 
+                          string $phone_number, string $date_of_birth, 
+                          string $gender, string $congenital_disease)
+{
+    global $conn;
+    
+    $sql = "UPDATE user SET 
+            first_name = ?, 
+            last_name = ?, 
+            phone_number = ?, 
+            date_of_birth = ?, 
+            gender = ?, 
+            congenital_disease = ? 
+            WHERE email = ?";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sssssss", $first_name, $last_name, $phone_number, 
+                      $date_of_birth, $gender, $congenital_disease, $email);
+    
+    try {
+        $stmt->execute();
+        $stmt->close();
+        return true; // สำเร็จ
+    } catch (mysqli_sql_exception $e) {
+        $stmt->close();
+        return "เกิดข้อผิดพลาด: " . $e->getMessage();
+    }
+}
