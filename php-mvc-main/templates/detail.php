@@ -5,8 +5,6 @@ if (!isset($event) || !is_array($event)) {
     return;
 }
 
-// ตัวอย่างการเลือกภาพหลัก
-$mainImage = !empty($event['images']) ? $event['images'][0] : 'img/event1.jpg';
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +34,7 @@ $mainImage = !empty($event['images']) ? $event['images'][0] : 'img/event1.jpg';
     <div class="p-8 bg-purple-100 grid md:grid-cols-2 gap-8">
 
         <div class="bg-purple-300 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-            <img src="<?php echo htmlspecialchars($mainImage); ?>" class="w-full h-full object-cover" alt="<?php echo htmlspecialchars($event['title'] ?? ''); ?>">
+            <img src="img/<?= htmlspecialchars($event['image_path']) ?>" class="w-full h-full object-cover" alt="<?php echo htmlspecialchars($event['title'] ?? ''); ?>">
         </div>
 
         <div class="space-y-4">
@@ -66,6 +64,7 @@ $mainImage = !empty($event['images']) ? $event['images'][0] : 'img/event1.jpg';
 
     </div>
 </div>
+
 
 </body>
 </html>

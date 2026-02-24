@@ -127,7 +127,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                             <!-- Image -->
                             <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden">
                                 <img
-                                    src="uploads/<?= htmlspecialchars($event['image_path']) ?>"
+                                    src="img/<?= htmlspecialchars($event['image_path']) ?>"
                                     alt="<?= htmlspecialchars($event['title']) ?>"
                                     class="w-full h-full object-cover">
                             </div>

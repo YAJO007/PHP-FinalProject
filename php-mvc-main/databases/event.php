@@ -97,13 +97,16 @@ function getEventByUserId(int $uid): mysqli_result
 
     $sql = "SELECT 
     e.*,
+    MIN(img.image_path) AS image_path,
     CASE
         WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
         WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
         ELSE 'กำลังดำเนินอยู่'
         END AS status
         FROM event e
+        LEFT JOIN event_img img ON e.eid = img.eid
         WHERE e.uid = ?
+        GROUP BY e.eid
         ORDER BY e.start_date DESC";
 
     $stmt = $conn->prepare($sql);
@@ -115,6 +118,7 @@ function getEventByUserId(int $uid): mysqli_result
     $stmt->execute();
     return $stmt->get_result();
 }
+
 function getEventById(int $eid): ?array
 {
     global $conn;
