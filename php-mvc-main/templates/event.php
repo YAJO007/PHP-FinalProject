@@ -123,7 +123,7 @@
                     <div class="bg-white border-2 border-black rounded-xl
                                 p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                                 hover:scale-105 hover:-translate-y-2 transition-all">
-                        <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden"><img src="img/' . htmlspecialchars($event['image_path']) . '"></img></div>
+                        <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden"><img src="uploads/' . htmlspecialchars($event['image_path']) . '"></img></div>
                         <h3 class="font-bold text-lg mb-2 text-purple-800">' . htmlspecialchars($event['title']) . '</h3>
                         <p class="text-sm text-gray-700">' . htmlspecialchars($event['Details']) . '</p>
                        <p class="text-xs text-gray-500">สถานะ: ' . htmlspecialchars($event['status']) . '</p>
