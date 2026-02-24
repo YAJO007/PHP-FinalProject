@@ -21,3 +21,9 @@ function addRequirement(int $eid, string $requirement)
     $stmt->close();
     return true;
 }
+
+function getRequirementsByEventId(int $event_id): mysqli_result
+{
+    global $conn;
+    return $conn->query("SELECT * FROM requirement WHERE eid = $event_id");
+}

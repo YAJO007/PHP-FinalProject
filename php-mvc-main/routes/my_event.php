@@ -1,3 +1,38 @@
 <?php
+$user_id = getUseridbyEmail($_SESSION['email']);
+$result = getEventByUserId($user_id);
 
-renderView('my_event');
+// นับสถานะ
+$total = 0;
+$upcoming = 0;
+$ongoing = 0;
+$finished = 0;
+
+if ($result && $result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $total++;
+
+        switch ($row['status']) {
+            case 'กำลังจะมาถึง':
+                $upcoming++;
+                break;
+            case 'กำลังดำเนินอยู่':
+                $ongoing++;
+                break;
+            case 'จบแล้ว':
+                $finished++;
+                break;
+        }
+    }
+
+    // reset pointer เพื่อเอาไปใช้ loop แสดง card ต่อ
+    $result->data_seek(0);
+}
+
+renderView('my_event', [
+    'result'   => $result,
+    'total'    => $total,
+    'upcoming' => $upcoming,
+    'ongoing'  => $ongoing,
+    'finished' => $finished
+]);

@@ -13,6 +13,18 @@ if (!function_exists('getEventById')) {
 }
 
 $event = getEventById($eid);
+$address = getAddressByEventId($eid);
+if ($address && $address->num_rows > 0) {
+    $event['address'] = $address->fetch_assoc();
+} else {
+    $event['address'] = null;
+}
+$requiredment = getRequirementsByEventId($eid);
+if ($requiredment && $requiredment->num_rows > 0) {
+    $event['requiredment'] = $requiredment->fetch_assoc();
+} else {
+    $event['requiredment'] = null;
+}
 if (!$event) {
     renderView('404');
     exit;
