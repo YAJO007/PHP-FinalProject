@@ -91,3 +91,21 @@ function getEvents($start_date = null, $end_date = null, $search = null): mysqli
     // 5. ถ้าไม่มีเงื่อนไขเลย ให้ Query ตรงๆ
     return $conn->query($sql);
 }
+
+function getMyEvents(int $user_id): array {
+    global $conn;
+
+    $sql = "
+        SELECT e.*, ue.status
+        FROM event e
+        JOIN user_event ue ON e.eid = ue.eid
+        WHERE ue.uid = ?
+        ORDER BY e.start_date DESC
+    ";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+
+    return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+}
