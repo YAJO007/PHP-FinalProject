@@ -89,3 +89,28 @@ function getEvents($start_date = null, $end_date = null, $search = null): mysqli
     // 5. ถ้าไม่มีเงื่อนไขเลย ให้ Query ตรงๆ
     return $conn->query($sql);
 }
+
+function getEventById(int $eid): ?array
+{
+    global $conn;
+
+    $sql = "SELECT e.*, 
+                   GROUP_CONCAT(img.image_path) AS images
+            FROM event e
+            LEFT JOIN event_img img ON e.eid = img.eid
+            WHERE e.eid = ?
+            GROUP BY e.eid";
+
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return null;
+    }
+
+    $stmt->bind_param("i", $eid);
+    if (!$stmt->execute()) {
+        return null;
+    }
+
+    $result = $stmt->get_result();
+    return $result->fetch_assoc() ?: null;
+}
