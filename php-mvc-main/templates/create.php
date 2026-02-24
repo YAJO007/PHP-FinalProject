@@ -52,18 +52,14 @@
                     </button>
                 </a>
 
-                <a href="home">
+            </div>
+
+            <a href="home">
                     <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
                         ออกจากระบบ
                     </button>
                 </a> 
-            </div>
-
-            <button class="w-10 h-10 flex items-center justify-center 
-                       bg-purple-600 text-white border-2 border-black rounded-md hover:scale-110 transition-all">
-                ☰
-            </button>
         </div>
 
         <!-- ===== CONTENT ZONE (เปลี่ยนเฉพาะตรงนี้) ===== -->

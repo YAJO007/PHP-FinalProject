@@ -56,15 +56,15 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                     </button>
                 </a>
 
-                <a href="home">
+            
+            </div>
+
+            <a href="home">
                     <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
                         ออกจากระบบ
                     </button>
                 </a> 
-            </div>
-
-            <button class="w-10 h-10 bg-purple-600 text-white border-2 border-black rounded-md">☰</button>
         </div>
 
         <!-- ================= MIDDLE CONTENT ================= -->
