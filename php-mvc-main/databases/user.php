@@ -54,3 +54,20 @@ function getUserByEmail(string $email): mysqli_result
     $stmt->execute();
     return $stmt->get_result();
 }
+
+function getUseridbyEmail(string $email): ?int
+{
+    global $conn;
+
+    $sql = "SELECT uid FROM user WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        return (int)$row['uid'];
+    }
+
+    return null;
+}

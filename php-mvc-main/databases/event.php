@@ -2,46 +2,44 @@
 // databases/event.php
 
 function addEvent(
-    int $user_id,
+    int $uid,
     string $title,
     int $max_participants,
     string $start_date,
     string $end_date,
     string $status,
     string $details,
-    string $creator_at
-) {
+    string $create_at
+): int|string {
+
     global $conn;
-    $creator_at = date('Y-m-d H:i:s');
+
     $sql = "INSERT INTO event
-            (uid, title, max_participants, start_date, end_date, status, details, creator_at)
+            (uid, title, max_participants, start_date, end_date, status, Details, create_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        return 'DB prepare failed: ' . $conn->error;
+        return $conn->error;
     }
 
     $stmt->bind_param(
         "isisssss",
-        $user_id,
+        $uid,
         $title,
         $max_participants,
         $start_date,
         $end_date,
         $status,
         $details,
-        $creator_at
+        $create_at
     );
 
-    if (!$stmt->execute()) {
-        $err = $stmt->error;
-        $stmt->close();
-        return 'DB execute failed: ' . $err;
+    if ($stmt->execute()) {
+        return $conn->insert_id; // ✅ คืน event_id
     }
 
-    $stmt->close();
-    return true;
+    return $stmt->error;
 }
 
 function getEvents($start_date = null, $end_date = null, $search = null): mysqli_result

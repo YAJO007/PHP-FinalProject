@@ -3,13 +3,13 @@
 function getAddressByEventId($event_id): mysqli_result
 {
     global $conn;
-    return $conn->query("SELECT * FROM address WHERE event_id = $event_id");
+    return $conn->query("SELECT * FROM address WHERE eid = $event_id");
 } 
 
 function addAddress($event_id, $province, $district, $address_line)
 {
     global $conn;
-    $sql = "INSERT INTO address (event_id, province, district, address_line) 
+    $sql = "INSERT INTO address (eid, province, district, Address_line) 
             VALUES (?, ?, ?, ?)";
     
     $stmt = $conn->prepare($sql);
