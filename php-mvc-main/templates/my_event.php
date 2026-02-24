@@ -136,9 +136,11 @@
                             </p>
 
                             <div class="flex gap-2 mt-4">
-                                <a href="detail?eid=<?= $event['eid'] ?>" class="flex-1">
-                                    <button class="w-full bg-purple-600 text-white border-2 border-black rounded-lg font-bold py-2">
-                                        ดูรายละเอียด
+                                <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="col-span-1">
+                                    <button type="button" class="w-full px-6 py-3 bg-indigo-600 text-white border-2 border-black rounded-lg font-bold
+                                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                   hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-sm">
+                                        📊 จัดการ
                                     </button>
                                 </a>
 

@@ -54,12 +54,13 @@ $mainImage = !empty($event['images']) ? $event['images'][0] : 'img/event1.jpg';
             </div>
 
             <!-- Buttons -->
-            <div class="grid grid-cols-3 gap-2 pt-2">
+            <div class="grid grid-cols-4 gap-2 pt-2">
                 <button class="px-6 py-3 bg-purple-600 text-white border-2 border-black rounded-lg font-bold
                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                                hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-sm">
                     ✋ ร่วม
                 </button>
+                
             </div>
         </div>
 

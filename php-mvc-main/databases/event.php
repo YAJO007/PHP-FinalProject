@@ -213,6 +213,68 @@ function deleteEvent(int $eid): bool|string
     return $stmt->error;
 }
 
+/**
+ * Get event participants with their request status
+ */
+function getEventParticipants(int $eid): mysqli_result
+{
+    global $conn;
+    
+    $sql = "SELECT u.uid, u.first_name, u.last_name, u.email, u.phone_number, 
+                   ue.status
+            FROM user_event ue
+            JOIN user u ON ue.uid = u.uid
+            WHERE ue.eid = ?
+            ORDER BY ue.status, u.first_name ASC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $eid);
+    $stmt->execute();
+    return $stmt->get_result();
+}
+
+/**
+ * Approve a participant request
+ */
+function approveParticipant(int $eid, int $uid): bool|string
+{
+    global $conn;
+    
+    $status = 'อนุมัติ';
+    $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
+    
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+    
+    $stmt->bind_param("sii", $status, $eid, $uid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
+/**
+ * Reject a participant request
+ */
+function rejectParticipant(int $eid, int $uid): bool|string
+{
+    global $conn;
+    
+    $sql = "DELETE FROM user_event WHERE eid = ? AND uid = ?";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+    
+    $stmt->bind_param("ii", $eid, $uid);
+    if ($stmt->execute()) {
+        return true;
+    }
+    return $stmt->error;
+}
+
 function updateEventStatus(): void
 {
     global $conn;
