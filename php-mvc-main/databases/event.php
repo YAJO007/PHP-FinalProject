@@ -1,5 +1,5 @@
 <?php
-// databases/event.php
+
 
 function addEvent(
     int $uid,
@@ -50,9 +50,9 @@ function getEvents(
         SELECT e.*,
                MIN(img.image_path) AS image_path,
                CASE
-                   WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
-                   WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
-                   ELSE 'กำลังดำเนินอยู่'
+                   WHEN e.start_date > CURDATE() THEN 'Upcoming'
+                   WHEN e.end_date < CURDATE() THEN 'Completed'
+                   ELSE 'Live'
                END AS event_status
         FROM event e
         LEFT JOIN event_img img ON e.eid = img.eid
@@ -99,10 +99,10 @@ function getEventByUserId(int $uid): mysqli_result
     e.*,
     MIN(img.image_path) AS image_path,
     CASE
-        WHEN e.start_date > CURDATE() THEN 'กำลังจะมาถึง'
-        WHEN e.end_date < CURDATE() THEN 'จบแล้ว'
-        ELSE 'กำลังดำเนินอยู่'
-        END AS status
+        WHEN e.start_date > CURDATE() THEN 'Upcoming'
+        WHEN e.end_date < CURDATE() THEN 'Completed'
+        ELSE 'Live'
+    END AS status
         FROM event e
         LEFT JOIN event_img img ON e.eid = img.eid
         WHERE e.uid = ?
@@ -244,7 +244,7 @@ function approveParticipant(int $eid, int $uid): bool|string
 {
     global $conn;
     
-    $status = 'อนุมัติ';
+    $status = 'Approved';
     $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
     
     $stmt = $conn->prepare($sql);
@@ -265,18 +265,57 @@ function approveParticipant(int $eid, int $uid): bool|string
 function rejectParticipant(int $eid, int $uid): bool|string
 {
     global $conn;
-    
-    $sql = "DELETE FROM user_event WHERE eid = ? AND uid = ?";
+
+    $status = 'Rejected';
+    $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        return $conn->error;
+        return 'DB prepare failed: ' . $conn->error;
+    }
+
+    $stmt->bind_param("sii", $status, $eid, $uid);
+
+    if (!$stmt->execute()) {
+        $err = $stmt->error;
+        $stmt->close();
+        return 'DB execute failed: ' . $err;
+    }
+
+    $stmt->close();
+    return true;
+}
+
+/**
+ * Get user's rejection history
+ */
+function getUserRejectionHistory(int $uid): array
+{
+    global $conn;
+    
+    // Since rejection_history table doesn't exist, we'll get rejected registrations directly
+    $sql = "SELECT e.title, e.eid, ue.status
+            FROM user_event ue
+            JOIN event e ON ue.eid = e.eid
+            WHERE ue.uid = ? AND ue.status = 'Rejected'
+            ORDER BY ue.eid DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    
+    $rejections = [];
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $rejections[] = [
+            'title' => $row['title'],
+            'eid' => $row['eid'],
+            'rejection_date' => 'N/A',
+            'rejection_reason' => 'Rejected by event organizer'
+        ];
     }
     
-    $stmt->bind_param("ii", $eid, $uid);
-    if ($stmt->execute()) {
-        return true;
-    }
-    return $stmt->error;
+    return $rejections;
 }
 
 function updateEventStatus(): void
@@ -286,9 +325,9 @@ function updateEventStatus(): void
     $sql = "
         UPDATE event
         SET status = CASE
-            WHEN start_date > CURDATE() THEN 'กำลังจะมาถึง'
-            WHEN end_date < CURDATE() THEN 'จบแล้ว'
-            ELSE 'กำลังดำเนินอยู่'
+            WHEN start_date > CURDATE() THEN 'Upcoming'
+            WHEN end_date < CURDATE() THEN 'Completed'
+            ELSE 'Live'
         END
     ";
 

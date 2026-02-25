@@ -16,6 +16,7 @@ $participants = isset($participants_data) ? $participants_data : [];
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>สถิติกิจกรรม - <?php echo htmlspecialchars($event['title']); ?></title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black">
 
@@ -58,7 +59,7 @@ $participants = isset($participants_data) ? $participants_data : [];
                         <?php 
                         $approved = 0;
                         foreach ($participants as $p) {
-                            if ($p['status'] === 'อนุมัติ') $approved++;
+                            if ($p['status'] === 'Approved') $approved++;
                         }
                         echo $approved;
                         ?>
@@ -71,7 +72,7 @@ $participants = isset($participants_data) ? $participants_data : [];
                         <?php 
                         $pending = 0;
                         foreach ($participants as $p) {
-                            if ($p['status'] === 'รอการอนุมัติ') $pending++;
+                            if ($p['status'] === 'Pending') $pending++;
                         }
                         echo $pending;
                         ?>
@@ -107,8 +108,8 @@ $participants = isset($participants_data) ? $participants_data : [];
                                 <?php 
                                 $index = 1;
                                 foreach ($participants as $p): 
-                                    $status_class = $p['status'] === 'อนุมัติ' ? 'bg-green-200' : 'bg-yellow-200';
-                                    $status_text = $p['status'] === 'อนุมัติ' ? '✅ อนุมัติ' : '⏳ รอการอนุมัติ';
+                                    $status_class = $p['status'] === 'Approved' ? 'bg-green-200' : ($p['status'] === 'Pending' ? 'bg-yellow-200' : 'bg-red-200');
+                                    $status_text = $p['status'] === 'Approved' ? '✅ อนุมัติ' : ($p['status'] === 'Pending' ? '⏳ รอการอนุมัติ' : '❌ ปฏิเสธ');
                                 ?>
                                     <tr class="border-b border-gray-300 hover:bg-purple-50 transition-all">
                                         <td class="px-4 py-3 font-bold"><?php echo $index++; ?></td>
@@ -123,7 +124,7 @@ $participants = isset($participants_data) ? $participants_data : [];
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-center">
-                                            <?php if ($p['status'] === 'รอการอนุมัติ'): ?>
+                                            <?php if ($p['status'] === 'Pending'): ?>
                                                 <div class="flex gap-2 justify-center">
                                                     <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>&action=approve&uid=<?php echo htmlspecialchars($p['uid']); ?>">
                                                         <button class="px-3 py-1 bg-green-500 text-white border border-black rounded font-bold text-sm hover:scale-105 transition-all">

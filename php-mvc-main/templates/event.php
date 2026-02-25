@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ค้นหากิจกรรม</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black flex">
@@ -44,23 +45,27 @@
                         สร้างกิจกรรม
                     </button>
                 </a>
-
                 <a href="profile">
                     <button class="px-6 py-2 bg-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
                         โปรไฟล์
                     </button>
                 </a>
-
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
             </div>
 
             <!-- RIGHT -->
             <a href="home">
-                    <button class="px-6 py-2 bg-red-500 text-white
+                <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                        ออกจากระบบ
-                    </button>
-                </a> 
+                    ออกจากระบบ
+                </button>
+            </a>
         </div>
 
         <!-- ===== SEARCH SECTION ===== -->
@@ -80,7 +85,7 @@
                             class="flex-1 px-4 py-3 border-2 border-black
                               rounded-lg bg-white font-medium
                               focus:ring-4 focus:ring-purple-400">
-                    
+
                         <button type="submit" class="px-5 bg-purple-600 text-white
                                border-2 border-black rounded-lg font-bold
                                hover:scale-110 transition-all">
@@ -114,51 +119,88 @@
         </div>
 
         <!-- ===== CARD SECTION ===== -->
-<div class="flex-1 bg-purple-100 p-10">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div class="flex-1 bg-purple-100 p-10">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-        <?php if (isset($data['result']) && $data['result']->num_rows > 0): ?>
-            <?php while ($event = $data['result']->fetch_assoc()): ?>
+                <?php if (isset($data['result']) && $data['result']->num_rows > 0): ?>
+                    <?php while ($event = $data['result']->fetch_assoc()): ?>
 
-                <div class="bg-white border-2 border-black rounded-xl
+                        <div class="bg-white border-2 border-black rounded-xl
                     p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                     hover:scale-105 hover:-translate-y-2 transition-all">
 
-                    <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden">
-                        <img src="img/<?= htmlspecialchars($event['image_path']) ?>"
-                             class="w-full h-full object-cover"
-                             alt="<?= htmlspecialchars($event['title']) ?>">
-                    </div>
+                            <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden">
+                                <img src="img/<?= htmlspecialchars($event['image_path']) ?>"
+                                    class="w-full h-full object-cover"
+                                    alt="<?= htmlspecialchars($event['title']) ?>">
+                            </div>
 
-                    <h3 class="font-bold text-lg mb-2 text-purple-800">
-                        <?= htmlspecialchars($event['title']) ?>
-                    </h3>
+                            <h3 class="font-bold text-lg mb-2 text-purple-800">
+                                <?= htmlspecialchars($event['title']) ?>
+                            </h3>
 
-                    <p class="text-sm text-gray-700">
-                        <?= htmlspecialchars($event['Details']) ?>
-                    </p>
+                            <p class="text-sm text-gray-700">
+                                <?= htmlspecialchars($event['Details']) ?>
+                            </p>
 
-                    <p class="text-xs text-gray-500">
-                        สถานะ: <?= htmlspecialchars($event['status']) ?>
-                    </p>
+                            <?php
+                            $status = $event['status'] ?? '';
+                            $statusBg = '';
+                            $statusBorder = '';
+                            $statusIcon = '';
+                            $statusText = '';
 
-                    <a href="detail?eid=<?= (int)$event['eid'] ?>">
-                        <button class="px-5 bg-purple-600 text-white py-2 mt-4
+                            switch ($status) {
+                                case 'Upcoming':
+                                    $statusBg = 'bg-green-100';
+                                    $statusBorder = 'border-green-500';
+                                    $statusIcon = '<i class="fa-regular fa-clock"></i>';
+                                    $statusText = 'กำลังจะมาถึง';
+                                    break;
+                                case 'Live':
+                                    $statusBg = 'bg-yellow-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '<i class="fa-solid fa-hourglass-start"></i>';
+                                    $statusText = 'กำลังดำเนินอยู่';
+                                    break;
+                                case 'Completed':
+                                    $statusBg = 'bg-red-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '&#x2713;';
+                                    $statusText = 'จบแล้ว';
+                                    break;
+                                default:
+                                    $statusBg = 'bg-gray-50';
+                                    $statusBorder = 'border-gray-400';
+                                    $statusIcon = '<i class="fa-solid fa-clipboard"></i>';
+                                    $statusText = $status;
+                            }
+                            ?>
+                            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border <?= $statusBg ?> <?= $statusBorder ?> shadow-sm">
+                                <span class="text-lg"><?= $statusIcon ?></span>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">สถานะ</p>
+                                    <p class="font-bold text-xs"><?= $statusText ?></p>
+                                </div>
+                            </div>
+
+                            <a href="detail?eid=<?= (int)$event['eid'] ?>">
+                                <button class="px-5 bg-purple-600 text-white py-2 mt-4
                                border-2 border-black rounded-lg font-bold
                                hover:scale-110 transition-all">
-                            ดูรายละเอียด
-                        </button>
-                    </a>
+                                    ดูรายละเอียด
+                                </button>
+                            </a>
 
-                </div>
+                        </div>
 
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p class="text-center text-gray-700">ไม่พบกิจกรรม</p>
-        <?php endif; ?>
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <p class="text-center text-gray-700">ไม่พบกิจกรรม</p>
+                <?php endif; ?>
 
-    </div>
-</div>
+            </div>
+        </div>
 
 </body>
 

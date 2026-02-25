@@ -11,6 +11,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>กิจกรรมของฉัน</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
@@ -55,16 +56,21 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                         โปรไฟล์
                     </button>
                 </a>
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
 
-            
             </div>
 
             <a href="home">
-                    <button class="px-6 py-2 bg-red-500 text-white
+                <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                        ออกจากระบบ
-                    </button>
-                </a> 
+                    ออกจากระบบ
+                </button>
+            </a>
         </div>
 
         <!-- ================= MIDDLE CONTENT ================= -->
@@ -87,21 +93,21 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                     </div>
 
                     <div class="bg-green-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">กำลังจะมาถึง</p>
+                        <p class="font-bold">Upcoming</p>
                         <p class="text-3xl font-black">
                             <?= $data['upcoming'] ?>
                         </p>
                     </div>
 
                     <div class="bg-yellow-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">กำลังดำเนินอยู่</p>
+                        <p class="font-bold">Live</p>
                         <p class="text-3xl font-black">
                             <?= $data['ongoing'] ?>
                         </p>
                     </div>
 
                     <div class="bg-red-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">จบแล้ว</p>
+                        <p class="font-bold">Completed</p>
                         <p class="text-3xl font-black">
                             <?= $data['finished'] ?>
                         </p>
@@ -142,10 +148,46 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
 
-                            <!-- Status -->
-                            <p class="text-xs text-gray-500 mb-4">
-                                สถานะ: <?= htmlspecialchars($event['status']) ?>
-                            </p>
+                            <?php
+                            $status = $event['status'] ?? '';
+                            $statusBg = '';
+                            $statusBorder = '';
+                            $statusIcon = '';
+                            $statusText = '';
+
+                            switch ($status) {
+                                case 'Upcoming':
+                                    $statusBg = 'bg-green-100';
+                                    $statusBorder = 'border-green-500';
+                                    $statusIcon = '<i class="fa-regular fa-clock"></i>';
+                                    $statusText = 'กำลังจะมาถึง';
+                                    break;
+                                case 'Live':
+                                    $statusBg = 'bg-yellow-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '<i class="fa-solid fa-hourglass-start"></i>';
+                                    $statusText = 'กำลังดำเนินอยู่';
+                                    break;
+                                case 'Completed':
+                                    $statusBg = 'bg-red-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '&#x2713;';
+                                    $statusText = 'จบแล้ว';
+                                    break;
+                                default:
+                                    $statusBg = 'bg-gray-50';
+                                    $statusBorder = 'border-gray-400';
+                                    $statusIcon = '<i class="fa-solid fa-clipboard"></i>';
+                                    $statusText = $status;
+                            }
+                            ?>
+                            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border <?= $statusBg ?> <?= $statusBorder ?> shadow-sm">
+                                <span class="text-lg"><?= $statusIcon ?></span>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">สถานะ</p>
+                                    <p class="font-bold text-xs"><?= $statusText ?></p>
+                                </div>
+                            </div>
 
                             <div class="flex gap-2 mt-4">
                                 <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="col-span-1">

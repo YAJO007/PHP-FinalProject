@@ -12,6 +12,8 @@ if (!function_exists('getEventById')) {
     require_once DATABASES_DIR . '/event.php';
 }
 
+updateEventStatus();
+
 $event = getEventById($eid);
 $address = getAddressByEventId($eid);
 if ($address && $address->num_rows > 0) {
@@ -21,9 +23,13 @@ if ($address && $address->num_rows > 0) {
 }
 $requiredment = getRequirementsByEventId($eid);
 if ($requiredment && $requiredment->num_rows > 0) {
-    $event['requiredment'] = $requiredment->fetch_assoc();
+    $requirements_list = [];
+    while ($row = $requiredment->fetch_assoc()) {
+        $requirements_list[] = $row['requirement'];
+    }
+    $event['requirements'] = $requirements_list;
 } else {
-    $event['requiredment'] = null;
+    $event['requirements'] = [];
 }
 if (!$event) {
     renderView('404');

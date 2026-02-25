@@ -1,4 +1,7 @@
 <?php
+
+updateEventStatus();
+
 $user_id = getUseridbyEmail($_SESSION['email']);
 $result = getEventByUserId($user_id);
 
@@ -13,13 +16,13 @@ if ($result && $result->num_rows > 0) {
         $total++;
 
         switch ($row['status']) {
-            case 'กำลังจะมาถึง':
+            case 'Upcoming':
                 $upcoming++;
                 break;
-            case 'กำลังดำเนินอยู่':
+            case 'Live':
                 $ongoing++;
                 break;
-            case 'จบแล้ว':
+            case 'Completed':
                 $finished++;
                 break;
         }
