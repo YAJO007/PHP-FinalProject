@@ -28,12 +28,12 @@ $participants = isset($participants_data) ? $participants_data : [];
         <!-- HEADER -->
         <div class="border-b-2 border-black bg-purple-300 px-6 py-4 flex justify-between items-center rounded-t-[22px]">
             <div>
-                <h1 class="text-3xl font-black text-purple-900">📊 สถิติกิจกรรม</h1>
+                <h1 class="text-3xl font-black text-purple-900"><i class="fa-solid fa-chart-bar"></i> สถิติกิจกรรม</h1>
                 <p class="text-sm text-purple-800 mt-1"><?php echo htmlspecialchars($event['title']); ?></p>
             </div>
-            <a href="detail?eid=<?php echo htmlspecialchars($event['eid']); ?>">
+            <a href="my_event">
                 <button class="px-4 py-1 bg-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                    ✖ ปิด
+                    <i class="fa-solid fa-times"></i> ปิด
                 </button>
             </a>
         </div>
@@ -44,16 +44,19 @@ $participants = isset($participants_data) ? $participants_data : [];
             <!-- STATS OVERVIEW -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-user-plus text-2xl text-purple-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">รับสมัครสูงสุด</p>
                     <p class="text-3xl font-black text-purple-600"><?php echo htmlspecialchars($event['max_participants']); ?></p>
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-users text-2xl text-blue-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">ทั้งหมด</p>
                     <p class="text-3xl font-black text-blue-600"><?php echo count($participants); ?></p>
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-check-circle text-2xl text-green-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">อนุมัติ</p>
                     <p class="text-3xl font-black text-green-600">
                         <?php 
@@ -67,6 +70,7 @@ $participants = isset($participants_data) ? $participants_data : [];
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">รอการอนุมัติ</p>
                     <p class="text-3xl font-black text-yellow-600">
                         <?php 
@@ -84,7 +88,7 @@ $participants = isset($participants_data) ? $participants_data : [];
             <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 
                 <div class="bg-purple-400 border-b-2 border-black px-6 py-4">
-                    <h2 class="text-2xl font-black text-purple-900">👥 รายชื่อผู้ร่วมกิจกรรม</h2>
+                    <h2 class="text-2xl font-black text-purple-900"><i class="fa-solid fa-users"></i> รายชื่อผู้ร่วมกิจกรรม</h2>
                 </div>
 
                 <?php if (empty($participants)): ?>
@@ -109,7 +113,7 @@ $participants = isset($participants_data) ? $participants_data : [];
                                 $index = 1;
                                 foreach ($participants as $p): 
                                     $status_class = $p['status'] === 'Approved' ? 'bg-green-200' : ($p['status'] === 'Pending' ? 'bg-yellow-200' : 'bg-red-200');
-                                    $status_text = $p['status'] === 'Approved' ? '✅ อนุมัติ' : ($p['status'] === 'Pending' ? '⏳ รอการอนุมัติ' : '❌ ปฏิเสธ');
+                                    $status_text = $p['status'] === 'Approved' ? '<i class="fa-solid fa-check-circle"></i> อนุมัติ' : ($p['status'] === 'Pending' ? '<i class="fa-solid fa-clock"></i> รอการอนุมัติ' : '<i class="fa-solid fa-times-circle"></i> ปฏิเสธ');
                                 ?>
                                     <tr class="border-b border-gray-300 hover:bg-purple-50 transition-all">
                                         <td class="px-4 py-3 font-bold"><?php echo $index++; ?></td>
@@ -128,12 +132,12 @@ $participants = isset($participants_data) ? $participants_data : [];
                                                 <div class="flex gap-2 justify-center">
                                                     <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>&action=approve&uid=<?php echo htmlspecialchars($p['uid']); ?>">
                                                         <button class="px-3 py-1 bg-green-500 text-white border border-black rounded font-bold text-sm hover:scale-105 transition-all">
-                                                            ✓ อนุมัติ
+                                                            <i class="fa-solid fa-check"></i> อนุมัติ
                                                         </button>
                                                     </a>
                                                     <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>&action=reject&uid=<?php echo htmlspecialchars($p['uid']); ?>" onclick="return confirm('ยืนยันการปฏิเสธ?')">
                                                         <button class="px-3 py-1 bg-red-500 text-white border border-black rounded font-bold text-sm hover:scale-105 transition-all">
-                                                            ✗ ปฏิเสธ
+                                                            <i class="fa-solid fa-times"></i> ปฏิเสธ
                                                         </button>
                                                     </a>
                                                 </div>
@@ -152,7 +156,7 @@ $participants = isset($participants_data) ? $participants_data : [];
             <!-- EVENT DETAILS -->
             <div class="mt-8 grid md:grid-cols-2 gap-6">
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <h3 class="text-xl font-black text-purple-800 mb-4">📝 รายละเอียดกิจกรรม</h3>
+                    <h3 class="text-xl font-black text-purple-800 mb-4"><i class="fa-solid fa-file-lines"></i> รายละเอียดกิจกรรม</h3>
                     <div class="space-y-2 text-sm">
                         <p><strong>วันเริ่ม:</strong> <?php echo htmlspecialchars($event['start_date']); ?></p>
                         <p><strong>วันสิ้นสุด:</strong> <?php echo htmlspecialchars($event['end_date']); ?></p>
@@ -163,16 +167,16 @@ $participants = isset($participants_data) ? $participants_data : [];
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <h3 class="text-xl font-black text-purple-800 mb-4">⚙️ การจัดการ</h3>
+                    <h3 class="text-xl font-black text-purple-800 mb-4"><i class="fa-solid fa-gear"></i> การจัดการ</h3>
                     <div class="space-y-3">
                         <a href="edit_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="block">
                             <button class="w-full px-4 py-2 bg-blue-500 text-white border-2 border-black rounded-lg font-bold hover:translate-x-1 hover:translate-y-1 transition-all">
-                                ✏️ แก้ไขกิจกรรม
+                                <i class="fa-solid fa-edit"></i> แก้ไขกิจกรรม
                             </button>
                         </a>
                         <a href="detail?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="block">
                             <button class="w-full px-4 py-2 bg-purple-600 text-white border-2 border-black rounded-lg font-bold hover:translate-x-1 hover:translate-y-1 transition-all">
-                                👁️ ดูรายละเอียด
+                                <i class="fa-solid fa-eye"></i> ดูรายละเอียด
                             </button>
                         </a>
                     </div>

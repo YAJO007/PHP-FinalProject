@@ -88,11 +88,13 @@ $registrations = $registrations ?? [];
                 <!-- STATS -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                        <i class="fa-solid fa-list text-2xl text-blue-600 mb-2"></i>
                         <p class="text-gray-700 font-bold text-sm">ทั้งหมด</p>
                         <p class="text-3xl font-black text-blue-600"><?php echo count($registrations); ?></p>
                     </div>
 
-                    <div class="bg-green-200 border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <div class="bg-green-200 border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px rgba(0,0,0,1)] text-center">
+                        <i class="fa-solid fa-check-circle text-2xl text-green-600 mb-2"></i>
                         <p class="text-gray-700 font-bold text-sm">อนุมัติ</p>
                         <p class="text-3xl font-black text-green-600">
                             <?php 
@@ -106,6 +108,7 @@ $registrations = $registrations ?? [];
                     </div>
 
                     <div class="bg-yellow-200 border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                        <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
                         <p class="text-gray-700 font-bold text-sm">รอการอนุมัติ</p>
                         <p class="text-3xl font-black text-yellow-600">
                             <?php 
@@ -119,6 +122,7 @@ $registrations = $registrations ?? [];
                     </div>
 
                     <div class="bg-red-200 border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px rgba(0,0,0,1)] text-center">
+                        <i class="fa-solid fa-times-circle text-2xl text-red-600 mb-2"></i>
                         <p class="text-gray-700 font-bold text-sm">ปฏิเสธ</p>
                         <p class="text-3xl font-black text-red-600">
                             <?php 

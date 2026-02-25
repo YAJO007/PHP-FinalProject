@@ -141,16 +141,16 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                            shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                            hover:translate-x-1 hover:translate-y-1
                            hover:shadow-none transition-all">
-                            💾 บันทึกการเปลี่ยนแปลง
+                            <i class="fa-solid fa-save"></i> บันทึกการเปลี่ยนแปลง
                         </button>
-                        <a href="detail?eid=<?php echo $event['eid']; ?>" class="flex-1">
+                        <a href="my_event" class="flex-1">
                             <button type="button"
                                 class="w-full px-6 py-3 bg-gray-400 text-white
                                border-2 border-black rounded-lg font-bold
                                shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                                hover:translate-x-1 hover:translate-y-1
                                hover:shadow-none transition-all">
-                                ✖ ยกเลิก
+                                <i class="fa-solid fa-times"></i> ยกเลิก
                             </button>
                         </a>
                     </div>

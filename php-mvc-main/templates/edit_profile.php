@@ -89,7 +89,7 @@ if (!isset($user) || !is_array($user)) {
                 <!-- HEADER -->
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-12 h-12 bg-purple-300 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-2xl">
-                        👤
+                        <i class="fa-solid fa-user"></i>
                     </div>
                     <h1 class="text-3xl font-black text-purple-800">แก้ไขโปรไฟล์</h1>
                 </div>
@@ -99,10 +99,10 @@ if (!isset($user) || !is_array($user)) {
                 <?php 
                 // Show success/error messages
                 if (isset($_GET['success']) && $_GET['success'] === 'updated') {
-                    echo '<div class="bg-green-100 border-2 border-green-500 text-green-800 px-4 py-3 rounded-lg mb-6 font-bold">✓ บันทึกข้อมูลสำเร็จ</div>';
+                    echo '<div class="bg-green-100 border-2 border-green-500 text-green-800 px-4 py-3 rounded-lg mb-6 font-bold"><i class="fa-solid fa-check"></i> บันทึกข้อมูลสำเร็จ</div>';
                 }
                 if (isset($_GET['error'])) {
-                    echo '<div class="bg-red-100 border-2 border-red-500 text-red-800 px-4 py-3 rounded-lg mb-6 font-bold">✗ ' . htmlspecialchars($_GET['error']) . '</div>';
+                    echo '<div class="bg-red-100 border-2 border-red-500 text-red-800 px-4 py-3 rounded-lg mb-6 font-bold"><i class="fa-solid fa-times"></i> ' . htmlspecialchars($_GET['error']) . '</div>';
                 }
                 ?>
 
@@ -158,13 +158,13 @@ if (!isset($user) || !is_array($user)) {
                                 <input type="radio" name="gender" value="male" 
                                        <?php echo ($user['gender'] === 'male') ? 'checked' : ''; ?> required
                                        class="w-5 h-5 border-2 border-black">
-                                <span class="font-bold">ชาย ♂</span>
+                                <span class="font-bold">ชาย <i class="fa-solid fa-mars"></i></span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="gender" value="female" 
                                        <?php echo ($user['gender'] === 'female') ? 'checked' : ''; ?> required
                                        class="w-5 h-5 border-2 border-black">
-                                <span class="font-bold">หญิง ♀</span>
+                                <span class="font-bold">หญิง <i class="fa-solid fa-venus"></i></span>
                             </label>
                             <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="radio" name="gender" value="other" 

@@ -80,34 +80,38 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
             <div class="bg-purple-200 border-2 border-black rounded-xl p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
 
                 <h2 class="text-4xl font-black mb-6 text-purple-900">
-                    🎮 กิจกรรมของฉัน
+                    <i class="fa-solid fa-gamepad"></i> กิจกรรมของฉัน
                 </h2>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-                    <div class="bg-white border-2 border-black p-4 rounded-lg">
+                    <div class="bg-white border-2 border-black p-4 rounded-lg text-center">
+                        <i class="fa-solid fa-calendar text-2xl text-purple-600 mb-2"></i>
                         <p class="font-bold">ทั้งหมด</p>
                         <p class="text-3xl font-black text-purple-600">
                             <?= $data['total'] ?>
                         </p>
                     </div>
 
-                    <div class="bg-green-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">Upcoming</p>
+                    <div class="bg-green-200 border-2 border-black p-4 rounded-lg text-center">
+                        <i class="fa-regular fa-clock text-2xl text-green-600 mb-2"></i>
+                        <p class="font-bold">กำลังจะมาถึง</p>
                         <p class="text-3xl font-black">
                             <?= $data['upcoming'] ?>
                         </p>
                     </div>
 
-                    <div class="bg-yellow-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">Live</p>
+                    <div class="bg-yellow-200 border-2 border-black p-4 rounded-lg text-center">
+                        <i class="fa-solid fa-hourglass-start text-2xl text-yellow-600 mb-2"></i>
+                        <p class="font-bold">กำลังดำเนินอยู่</p>
                         <p class="text-3xl font-black">
                             <?= $data['ongoing'] ?>
                         </p>
                     </div>
 
-                    <div class="bg-red-200 border-2 border-black p-4 rounded-lg">
-                        <p class="font-bold">Completed</p>
+                    <div class="bg-red-200 border-2 border-black p-4 rounded-lg text-center">
+                        <i class="fa-solid fa-check-circle text-2xl text-red-600 mb-2"></i>
+                        <p class="font-bold">จบแล้ว</p>
                         <p class="text-3xl font-black">
                             <?= $data['finished'] ?>
                         </p>
@@ -171,7 +175,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 case 'Completed':
                                     $statusBg = 'bg-red-100';
                                     $statusBorder = 'border-red-500';
-                                    $statusIcon = '&#x2713;';
+                                    $statusIcon = '<i class="fa-solid fa-check-circle"></i>';
                                     $statusText = 'จบแล้ว';
                                     break;
                                 default:
@@ -193,19 +197,22 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="col-span-1">
                                     <button type="button" class="w-full px-6 py-3 bg-indigo-600 text-white border-2 border-black rounded-lg font-bold
                                    shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                   hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-sm">
-                                        📊 จัดการ
+                                   hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-sm flex items-center justify-center gap-2">
+                                        <i class="fa-solid fa-chart-bar"></i>
+                                        จัดการ
                                     </button>
                                 </a>
 
                                 <a href="edit_event?eid=<?= $event['eid'] ?>">
-                                    <button class="px-3 bg-yellow-300 border-2 border-black rounded-lg font-bold">
+                                    <button class="px-3 bg-yellow-300 border-2 border-black rounded-lg font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-edit"></i>
                                         แก้ไข
                                     </button>
                                 </a>
 
                                 <a href="delete_event?eid=<?= $event['eid'] ?>" onclick="return confirm('ลบกิจกรรมนี้?')">
-                                    <button class="px-3 bg-red-400 border-2 border-black rounded-lg font-bold">
+                                    <button class="px-3 bg-red-400 border-2 border-black rounded-lg font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-trash"></i>
                                         ลบ
                                     </button>
                                 </a>

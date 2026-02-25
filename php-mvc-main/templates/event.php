@@ -89,7 +89,7 @@
                         <button type="submit" class="px-5 bg-purple-600 text-white
                                border-2 border-black rounded-lg font-bold
                                hover:scale-110 transition-all">
-                            🔍
+                            <i class="fa-solid fa-search"></i>
                         </button>
 
                     </div>
@@ -166,7 +166,7 @@
                                 case 'Completed':
                                     $statusBg = 'bg-red-100';
                                     $statusBorder = 'border-red-500';
-                                    $statusIcon = '&#x2713;';
+                                    $statusIcon = '<i class="fa-solid fa-check-circle"></i>';
                                     $statusText = 'จบแล้ว';
                                     break;
                                 default:

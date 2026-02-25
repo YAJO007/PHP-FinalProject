@@ -32,7 +32,7 @@ if (!isset($event) || !is_array($event)) {
         <div class="bg-purple-300 border-b-2 border-black px-6 py-4 flex justify-between items-center">
             <h1 class="text-2xl font-black text-purple-900">รายละเอียดกิจกรรม</h1>
             <a href="event" class="px-4 py-1 bg-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                ✖ ปิด
+                <i class="fa-solid fa-times"></i> ปิด
             </a>
         </div>
 
@@ -50,11 +50,11 @@ if (!isset($event) || !is_array($event)) {
                 </p>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                    <p>📅 วันที่เริ่ม: <?php echo htmlspecialchars($event['start_date'] ?? ''); ?></p>
-                    <p>📅 วันที่สิ้นสุด: <?php echo htmlspecialchars($event['end_date'] ?? ''); ?></p>
-                    <p>👤 รับสมัคร: <?php echo htmlspecialchars($event['max_participants'] ?? ''); ?> คน</p>
+                    <p><i class="fa-solid fa-calendar"></i> วันที่เริ่ม: <?php echo htmlspecialchars($event['start_date'] ?? ''); ?></p>
+                    <p><i class="fa-solid fa-calendar-check"></i> วันที่สิ้นสุด: <?php echo htmlspecialchars($event['end_date'] ?? ''); ?></p>
+                    <p><i class="fa-solid fa-users"></i> รับสมัคร: <?php echo htmlspecialchars($event['max_participants'] ?? ''); ?> คน</p>
                     <?php if (!empty($event['address'])): ?>
-                        <p>📍 สถานที่: 
+                        <p><i class="fa-solid fa-map-location-dot"></i> สถานที่: 
                             <?php 
                             $address_parts = [];
                             if (!empty($event['address']['Address_line'])) $address_parts[] = htmlspecialchars($event['address']['Address_line']);
@@ -87,7 +87,7 @@ if (!isset($event) || !is_array($event)) {
                         case 'Completed':
                             $statusBg = 'bg-red-100';
                             $statusBorder = 'border-red-500';
-                            $statusIcon = '&#x2713;';
+                            $statusIcon = '<i class="fa-solid fa-check-circle"></i>';
                             $statusText = 'จบแล้ว';
                             break;
                         default:
@@ -128,6 +128,10 @@ if (!isset($event) || !is_array($event)) {
                 $user_id = $is_logged_in ? getUseridbyEmail($_SESSION['email']) : null;
                 $is_registered = $user_id ? isUserRegistered($user_id, (int)$event['eid']) : false;
                 $registration_status = $user_id ? getUserRegistrationStatus($user_id, (int)$event['eid']) : null;
+                
+                // Check if event is completed
+                $event_status = $event['status'] ?? '';
+                $is_completed = ($event_status === 'Completed');
                 ?>
                 
                 <!-- Registration Status -->
@@ -160,6 +164,16 @@ if (!isset($event) || !is_array($event)) {
                                 เข้าสู่ระบบเพื่อลงทะเบียน
                             </button>
                         </a>
+                    <?php elseif ($is_completed): ?>
+                        <div class="col-span-4">
+                            <button class="w-full px-6 py-3 bg-gray-500 text-white border-2 border-black rounded-lg font-bold
+                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed"
+                                       disabled>
+                                <i class="fa-solid fa-calendar-times"></i>
+                                กิจกรรมจบแล้ว ไม่สามารถลงทะเบียนได้
+                            </button>
+                        </div>
                     <?php elseif (!$is_registered): ?>
                         <form action="register_event" method="POST" class="col-span-4">
                             <input type="hidden" name="eid" value="<?= (int)$event['eid'] ?>">

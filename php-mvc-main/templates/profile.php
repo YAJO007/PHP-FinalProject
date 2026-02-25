@@ -92,7 +92,7 @@
                         border-4 border-black
                         shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                         flex items-center justify-center text-6xl font-bold overflow-hidden">
-                        👤
+                        <i class="fa-solid fa-user"></i>
                     </div>
                     <?php if ($user): ?>
                         <p class="text-2xl font-black uppercase text-gray-800 bg-purple-200 px-4 py-1 border-2 border-black rounded-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
@@ -128,8 +128,8 @@
                             <label class="block text-xs font-bold text-purple-800 uppercase mb-1">เพศ</label>
                             <div class="font-bold text-gray-900 uppercase">
                                 <?php 
-                                    if($user['gender'] == 'male') echo 'ชาย ♂';
-                                    elseif($user['gender'] == 'female') echo 'หญิง ♀';
+                                    if($user['gender'] == 'male') echo 'ชาย <i class="fa-solid fa-mars"></i>';
+                                    elseif($user['gender'] == 'female') echo 'หญิง <i class="fa-solid fa-venus"></i>';
                                     elseif($user['gender'] == 'other') echo 'อื่นๆ';
                                     else echo htmlspecialchars($user['gender']);
                                 ?>
@@ -151,7 +151,7 @@
                     <div class="mt-10 flex justify-center gap-4 border-t-2 border-black pt-6 flex-wrap">
                         <a href="edit_profile">
                             <button class="px-8 py-3 bg-blue-400 text-black border-2 border-black rounded-xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-blue-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">
-                                ✏️ แก้ไขโปรไฟล์
+                                <i class="fa-solid fa-edit"></i> แก้ไขโปรไฟล์
                             </button>
                         </a>
                         <a href="logout">

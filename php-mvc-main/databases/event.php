@@ -318,6 +318,29 @@ function getUserRejectionHistory(int $uid): array
     return $rejections;
 }
 
+function cancelRegistration(int $uid, int $eid): bool|string
+{
+    global $conn;
+    
+    $sql = "DELETE FROM user_event WHERE uid = ? AND eid = ? AND status = 'Pending'";
+    
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) {
+        return $conn->error;
+    }
+    
+    $stmt->bind_param("ii", $uid, $eid);
+    
+    if ($stmt->execute()) {
+        $stmt->close();
+        return true;
+    }
+    
+    $error = $stmt->error;
+    $stmt->close();
+    return $error;
+}
+
 function updateEventStatus(): void
 {
     global $conn;
