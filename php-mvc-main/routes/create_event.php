@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $creator_email = $_SESSION['email'];
     $start_date = $_POST['start_date'] ?? '';
     $end_date = $_POST['end_date'] ?? '';
-    $max_participants = 100;
+    $max_participants = $_POST['max_participants'] ?? '';
     $status = 'active';
     $create_at = date('Y-m-d');
     $res = addEvent(

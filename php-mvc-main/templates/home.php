@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ค้นหากิจกรรม</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
@@ -125,61 +126,97 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-            <a href="login">
-                 <div class="bg-white border-2 border-black rounded-xl 
-                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-                        hover:scale-105 hover:-translate-y-2
-                        transition-all duration-200">
+            <?php if (isset($data['result']) && $data['result']->num_rows > 0): ?>
+                <?php while ($event = $data['result']->fetch_assoc()): ?>
 
-                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
+                    <a href="login">
+                        <div class="bg-white border-2 border-black rounded-xl 
+                            p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
+                            hover:scale-105 hover:-translate-y-2
+                            transition-all duration-200">
 
-                <h3 class="font-bold text-lg mb-2 text-purple-800">
-                    ชื่อกิจกรรม
-                </h3>
+                            <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden">
+                                <img src="img/<?= htmlspecialchars($event['image_path']) ?>"
+                                    class="w-full h-full object-cover"
+                                    alt="<?= htmlspecialchars($event['title']) ?>">
+                            </div>
 
-                <p class="text-sm text-gray-700">
-                    รายละเอียดกิจกรรม...
+                            <h3 class="font-bold text-lg mb-2 text-purple-800">
+                                <?= htmlspecialchars($event['title']) ?>
+                            </h3>
+
+                            <p class="text-sm text-gray-700 mb-3">
+                                <?= htmlspecialchars($event['Details']) ?>
+                            </p>
+
+                            <!-- Participant Count -->
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="fa-solid fa-users text-purple-600"></i>
+                                <span class="text-sm font-bold text-purple-800">
+                                    เข้าร่วมแล้ว: <?= (int)($event['approved_count'] ?? 0) ?> / <?= (int)($event['max_participants'] ?? 0) ?> คน
+                                </span>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                <?php 
+                                $approved = (int)($event['approved_count'] ?? 0);
+                                $max = (int)($event['max_participants'] ?? 1);
+                                $percentage = min(($approved / $max) * 100, 100);
+                                ?>
+                                <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: <?= $percentage ?>%"></div>
+                            </div>
+
+                            <?php
+                            $status = $event['event_status'] ?? '';
+                            $statusBg = '';
+                            $statusBorder = '';
+                            $statusIcon = '';
+                            $statusText = '';
+
+                            switch ($status) {
+                                case 'Upcoming':
+                                    $statusBg = 'bg-green-100';
+                                    $statusBorder = 'border-green-500';
+                                    $statusIcon = '<i class="fa-regular fa-clock"></i>';
+                                    $statusText = 'กำลังจะมาถึง';
+                                    break;
+                                case 'Live':
+                                    $statusBg = 'bg-yellow-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '<i class="fa-solid fa-hourglass-start"></i>';
+                                    $statusText = 'กำลังดำเนินอยู่';
+                                    break;
+                                case 'Completed':
+                                    $statusBg = 'bg-red-100';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '<i class="fa-solid fa-check-circle"></i>';
+                                    $statusText = 'จบแล้ว';
+                                    break;
+                                default:
+                                    $statusBg = 'bg-gray-50';
+                                    $statusBorder = 'border-gray-400';
+                                    $statusIcon = '<i class="fa-solid fa-clipboard"></i>';
+                                    $statusText = $status;
+                            }
+                            ?>
+                            <div class="inline-flex items-center gap-2 px-3 py-2 rounded-lg border <?= $statusBg ?> <?= $statusBorder ?> shadow-sm">
+                                <span class="text-lg"><?= $statusIcon ?></span>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">สถานะ</p>
+                                    <p class="font-bold text-xs"><?= $statusText ?></p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </a>
+
+                <?php endwhile; ?>
+            <?php else: ?>
+                <p class="col-span-full text-center text-gray-700 text-lg font-bold">
+                    ไม่พบกิจกรรม
                 </p>
-            </div>
-            </a>
-           
-
-            <!-- Card -->
-            <a href="login">
-            <div class="bg-white border-2 border-black rounded-xl 
-                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-                        hover:scale-105 hover:-translate-y-2
-                        transition-all duration-200">
-
-                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
-
-                <h3 class="font-bold text-lg mb-2 text-purple-800">
-                    ชื่อกิจกรรม
-                </h3>
-
-                <p class="text-sm text-gray-700">
-                    รายละเอียดกิจกรรม...
-                </p>
-            </div>
-            </a>
-            <!-- Card -->
-            <a href="login">
-            <div class="bg-white border-2 border-black rounded-xl 
-                        p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
-                        hover:scale-105 hover:-translate-y-2
-                        transition-all duration-200">
-
-                <div class="bg-purple-300 h-40 rounded-lg mb-6"></div>
-
-                <h3 class="font-bold text-lg mb-2 text-purple-800">
-                    ชื่อกิจกรรม
-                </h3>
-
-                <p class="text-sm text-gray-700">
-                    รายละเอียดกิจกรรม...
-                </p>
-            </div>
-            </a>
+            <?php endif; ?>
         </div>
 
     </div>

@@ -139,9 +139,27 @@
                                 <?= htmlspecialchars($event['title']) ?>
                             </h3>
 
-                            <p class="text-sm text-gray-700">
+                            <p class="text-sm text-gray-700 mb-3">
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
+
+                            <!-- Participant Count -->
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="fa-solid fa-users text-purple-600"></i>
+                                <span class="text-sm font-bold text-purple-800">
+                                    เข้าร่วมแล้ว: <?= (int)($event['approved_count'] ?? 0) ?> / <?= (int)($event['max_participants'] ?? 0) ?> คน
+                                </span>
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                                <?php 
+                                $approved = (int)($event['approved_count'] ?? 0);
+                                $max = (int)($event['max_participants'] ?? 1);
+                                $percentage = min(($approved / $max) * 100, 100);
+                                ?>
+                                <div class="bg-purple-600 h-2 rounded-full transition-all duration-300" style="width: <?= $percentage ?>%"></div>
+                            </div>
 
                             <?php
                             $status = $event['status'] ?? '';

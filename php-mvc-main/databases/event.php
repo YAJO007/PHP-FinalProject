@@ -49,6 +49,7 @@ function getEvents(
     $sql = "
         SELECT e.*,
                MIN(img.image_path) AS image_path,
+               (SELECT COUNT(*) FROM user_event ue WHERE ue.eid = e.eid AND ue.status = 'Approved') AS approved_count,
                CASE
                    WHEN e.start_date > CURDATE() THEN 'Upcoming'
                    WHEN e.end_date < CURDATE() THEN 'Completed'
