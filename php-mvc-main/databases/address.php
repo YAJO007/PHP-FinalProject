@@ -3,7 +3,11 @@
 function getAddressByEventId($event_id): mysqli_result
 {
     global $conn;
-    return $conn->query("SELECT * FROM address WHERE eid = $event_id");
+    $sql = "SELECT * FROM address WHERE eid = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $event_id);
+    $stmt->execute();
+    return $stmt->get_result();
 } 
 
 function addAddress($event_id, $province, $district, $address_line)
