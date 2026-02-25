@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ค้นหากิจกรรม</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black flex">
@@ -36,7 +37,6 @@
                     กิจกรรมของฉัน
                 </button>
                 </a>
-                
                 <a href="create_event">
                 <button class="px-6 py-2 bg-purple-500 text-white
                            border-2 border-black rounded-lg font-bold
@@ -54,7 +54,12 @@
                         โปรไฟล์
                     </button>
                 </a>
-
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
 
             </div>
 

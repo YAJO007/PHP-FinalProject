@@ -17,6 +17,7 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แก้ไขกิจกรรม</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
              min-h-screen p-4 sm:p-8 font-sans text-black flex">
@@ -44,6 +45,21 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                 <a href="my_event">
                     <button class="px-6 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-purple-100 hover:scale-110 transition-all">
                         กิจกรรมของฉัน
+                    </button>
+                </a>
+
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
+
+                <a href="create_event">
+                    <button class="px-6 py-2 bg-purple-500 text-white
+                           border-2 border-black rounded-lg font-bold
+                           hover:scale-110 transition-all">
+                        สร้างกิจกรรม
                     </button>
                 </a>
 

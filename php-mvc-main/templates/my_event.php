@@ -11,6 +11,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>กิจกรรมของฉัน</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
@@ -55,7 +56,12 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                         โปรไฟล์
                     </button>
                 </a>
-
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
 
             </div>
 
@@ -153,13 +159,13 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 case 'Upcoming':
                                     $statusBg = 'bg-green-100';
                                     $statusBorder = 'border-green-500';
-                                    $statusIcon = '&#x23F1;';
+                                    $statusIcon = '<i class="fa-regular fa-clock"></i>';
                                     $statusText = 'กำลังจะมาถึง';
                                     break;
                                 case 'Live':
                                     $statusBg = 'bg-yellow-100';
-                                    $statusBorder = 'border-yellow-500';
-                                    $statusIcon = '&#x1F534;';
+                                    $statusBorder = 'border-red-500';
+                                    $statusIcon = '<i class="fa-solid fa-hourglass-start"></i>';
                                     $statusText = 'กำลังดำเนินอยู่';
                                     break;
                                 case 'Completed':
@@ -171,7 +177,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                 default:
                                     $statusBg = 'bg-gray-50';
                                     $statusBorder = 'border-gray-400';
-                                    $statusIcon = '📋';
+                                    $statusIcon = '<i class="fa-solid fa-clipboard"></i>';
                                     $statusText = $status;
                             }
                             ?>

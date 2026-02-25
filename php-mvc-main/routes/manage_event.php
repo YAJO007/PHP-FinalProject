@@ -10,6 +10,14 @@ if (!function_exists('getEventParticipants')) {
     require_once DATABASES_DIR . '/event.php';
 }
 
+if (!function_exists('approveParticipant')) {
+    require_once DATABASES_DIR . '/event.php';
+}
+
+if (!function_exists('rejectParticipant')) {
+    require_once DATABASES_DIR . '/event.php';
+}
+
 $eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
 $action = isset($_GET['action']) ? $_GET['action'] : '';
 $uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;

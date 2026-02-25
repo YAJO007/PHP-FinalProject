@@ -13,6 +13,7 @@ if (!isset($user) || !is_array($user)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>แก้ไขโปรไฟล์</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.5.1/css/all.css">
 </head>
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black flex">
 
@@ -23,10 +24,11 @@ if (!isset($user) || !is_array($user)) {
             max-w-7xl mx-auto w-full">
 
         <!-- ===== NAVBAR ===== -->
-        <div class="flex justify-between items-center 
-                border-b-2 border-black 
+        <div class="flex justify-between items-center
+                border-b-2 border-black
                 bg-purple-300 px-6 py-4">
 
+            <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="event">
                     <button class="px-6 py-2 bg-purple-500 text-white
@@ -37,37 +39,43 @@ if (!isset($user) || !is_array($user)) {
                 </a>
 
                 <a href="my_event">
-                    <button class="px-6 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-purple-100 hover:scale-110 transition-all">
-                        กิจกรรมของฉัน
-                    </button>
+                <button class="px-6 py-2 bg-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                    กิจกรรมของฉัน
+                </button>
                 </a>
-
                 <a href="create_event">
-                    <button class="px-6 py-2 bg-purple-500 text-white
+                <button class="px-6 py-2 bg-purple-500 text-white
                            border-2 border-black rounded-lg font-bold
                            hover:scale-110 transition-all">
-                        สร้างกิจกรรม
-                    </button>
+                    สร้างกิจกรรม
+                </button>
                 </a>
 
                 <a href="profile">
-                    <button class="px-6 py-2 bg-white border-2 border-black rounded-lg font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                    <button class="px-6 py-2 bg-white
+                               border-2 border-black rounded-lg font-bold
+                               shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                               hover:translate-x-1 hover:translate-y-1
+                               hover:shadow-none transition-all duration-150">
                         โปรไฟล์
                     </button>
                 </a>
+                <a href="my_registrations">
+                    <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                        <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
+                    </button>
+                </a>
 
-                <a href="logout">
+            </div>
+
+           <a href="home">
                     <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
                         ออกจากระบบ
                     </button>
                 </a> 
-            </div>
-
-            <button class="w-10 h-10 flex items-center justify-center 
-                       bg-purple-600 text-white border-2 border-black rounded-md hover:scale-110 transition-all">
-                ☰
-            </button>
         </div>
 
         <!-- ===== CONTENT ZONE ===== -->

@@ -265,18 +265,57 @@ function approveParticipant(int $eid, int $uid): bool|string
 function rejectParticipant(int $eid, int $uid): bool|string
 {
     global $conn;
-    
-    $sql = "DELETE FROM user_event WHERE eid = ? AND uid = ?";
+
+    $status = 'Rejected';
+    $sql = "UPDATE user_event SET status = ? WHERE eid = ? AND uid = ?";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
-        return $conn->error;
+        return 'DB prepare failed: ' . $conn->error;
+    }
+
+    $stmt->bind_param("sii", $status, $eid, $uid);
+
+    if (!$stmt->execute()) {
+        $err = $stmt->error;
+        $stmt->close();
+        return 'DB execute failed: ' . $err;
+    }
+
+    $stmt->close();
+    return true;
+}
+
+/**
+ * Get user's rejection history
+ */
+function getUserRejectionHistory(int $uid): array
+{
+    global $conn;
+    
+    // Since rejection_history table doesn't exist, we'll get rejected registrations directly
+    $sql = "SELECT e.title, e.eid, ue.status
+            FROM user_event ue
+            JOIN event e ON ue.eid = e.eid
+            WHERE ue.uid = ? AND ue.status = 'Rejected'
+            ORDER BY ue.eid DESC";
+    
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    
+    $rejections = [];
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_assoc()) {
+        $rejections[] = [
+            'title' => $row['title'],
+            'eid' => $row['eid'],
+            'rejection_date' => 'N/A',
+            'rejection_reason' => 'Rejected by event organizer'
+        ];
     }
     
-    $stmt->bind_param("ii", $eid, $uid);
-    if ($stmt->execute()) {
-        return true;
-    }
-    return $stmt->error;
+    return $rejections;
 }
 
 function updateEventStatus(): void
