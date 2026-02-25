@@ -21,3 +21,4 @@ require_once DATABASES_DIR . '/event.php';
 require_once DATABASES_DIR . '/event_img.php';
 require_once DATABASES_DIR . '/address.php';
 require_once DATABASES_DIR . '/requirement.php';
+require_once DATABASES_DIR . '/user_event.php';
