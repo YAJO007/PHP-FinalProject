@@ -194,28 +194,48 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                             </div>
 
                             <div class="flex gap-2 mt-4">
-                                <a href="manage_event?eid=<?php echo htmlspecialchars($event['eid']); ?>" class="col-span-1">
-                                    <button type="button" class="w-full px-6 py-3 bg-indigo-600 text-white border-2 border-black rounded-lg font-bold
-                                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                   hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all text-sm flex items-center justify-center gap-2">
+
+                                <!-- ปุ่มจัดการ (ใหญ่) -->
+                                <a href="manage_event?eid=<?= htmlspecialchars($event['eid']); ?>" class="flex-[2]">
+                                    <button type="button"
+                                        class="w-full px-4 py-2.5 bg-indigo-600 text-white
+                                        border-2 border-black rounded-lg font-bold
+                                        shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
+                                        hover:translate-x-1 hover:translate-y-1 hover:shadow-none
+                                        transition-all text-sm flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-chart-bar"></i>
                                         จัดการ
                                     </button>
                                 </a>
 
-                                <a href="edit_event?eid=<?= $event['eid'] ?>">
-                                    <button class="px-3 bg-yellow-300 border-2 border-black rounded-lg font-bold flex items-center gap-1">
+                                <!-- ปุ่มแก้ไข (เล็ก) -->
+                                <a href="edit_event?eid=<?= $event['eid'] ?>" class="flex-[1]">
+                                    <button
+                                        class="w-full px-4 py-2.5 bg-yellow-400 text-black
+                                        border-2 border-black rounded-lg font-bold
+                                        shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
+                                        hover:translate-x-1 hover:translate-y-1 hover:shadow-none
+                                        transition-all text-sm flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-edit"></i>
                                         แก้ไข
                                     </button>
                                 </a>
 
-                                <a href="delete_event?eid=<?= $event['eid'] ?>" onclick="return confirm('ลบกิจกรรมนี้?')">
-                                    <button class="px-3 bg-red-400 border-2 border-black rounded-lg font-bold flex items-center gap-1">
+                                <!-- ปุ่มลบ (เล็ก) -->
+                                <a href="delete_event?eid=<?= $event['eid'] ?>"
+                                    onclick="return confirm('ลบกิจกรรมนี้?')"
+                                    class="flex-[1]">
+                                    <button
+                                        class="w-full px-4 py-2.5 bg-red-500 text-white
+                                        border-2 border-black rounded-lg font-bold
+                                        shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
+                                        hover:translate-x-1 hover:translate-y-1 hover:shadow-none
+                                        transition-all text-sm flex items-center justify-center gap-2">
                                         <i class="fa-solid fa-trash"></i>
                                         ลบ
                                     </button>
                                 </a>
+
                             </div>
 
                         </div>

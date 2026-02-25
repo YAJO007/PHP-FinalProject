@@ -2,6 +2,9 @@
 // routes/detail.php
 // Handle /detail?eid=... requests
 
+require_once DATABASES_DIR . '/event.php';
+require_once DATABASES_DIR . '/event_img.php';
+
 $eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
 if ($eid <= 0) {
     renderView('404');
@@ -31,16 +34,21 @@ if ($requiredment && $requiredment->num_rows > 0) {
 } else {
     $event['requirements'] = [];
 }
+
+// Get all event images
+$event['images'] = getEventImages($eid);
+
+// If no images found, try to get the single image from event table
+if (empty($event['images']) && !empty($event['image_path'])) {
+    $event['images'] = [$event['image_path']];
+}
+
+// Debug: Log image data (remove in production)
+error_log('Event ID: ' . $eid . ' - Images found: ' . json_encode($event['images']));
+
 if (!$event) {
     renderView('404');
     exit;
-}
-
-// Convert comma-separated images string to array
-if (!empty($event['images'])) {
-    $event['images'] = explode(',', $event['images']);
-} else {
-    $event['images'] = [];
 }
 
 renderView('detail', ['event' => $event]);

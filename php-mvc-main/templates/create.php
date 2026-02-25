@@ -150,29 +150,31 @@
                     </div>
 
                     <div>
-                        <label class="font-bold">รูปภาพกิจกรรม</label>
-                        <input type="file" name="image"
+                        <label class="font-bold">รูปภาพกิจกรรม (อัปโหลดได้หลายรูป)</label>
+                        <input type="file" name="images[]"
                             accept="image/jpeg,image/png"
+                            multiple
                             class="w-full px-4 py-2 border-2 border-black rounded-lg
                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <p class="text-xs text-gray-600 mt-1">เลือกหลายรูปได้โดยกดปุ่ม Ctrl หรือ Shift ค้างไว้ขณะเลือก</p>
                     </div>
 
                     <div class="flex gap-4 pt-4">
                         <button type="submit"
                             class="flex-1 bg-purple-600 text-white font-bold py-3
-                   border-2 border-black rounded-lg
-                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                   hover:translate-x-1 hover:translate-y-1
-                   hover:shadow-none transition-all flex items-center justify-center gap-2">
+                            border-2 border-black rounded-lg
+                            shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                            hover:translate-x-1 hover:translate-y-1
+                            hover:shadow-none transition-all flex items-center justify-center gap-2">
                             <i class="fa-solid fa-plus-circle"></i>
                             สร้างกิจกรรม
                         </button>
 
                         <button type="reset"
                             class="flex-1 bg-white font-bold py-3
-                   border-2 border-black rounded-lg
-                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                   hover:bg-purple-100 flex items-center justify-center gap-2">
+                            border-2 border-black rounded-lg
+                            shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                            hover:bg-purple-100 flex items-center justify-center gap-2">
                             <i class="fa-solid fa-undo"></i>
                             รีเซ็ต
                         </button>

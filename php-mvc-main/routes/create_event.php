@@ -1,4 +1,7 @@
 <?php
+require_once DATABASES_DIR . '/event.php';
+require_once DATABASES_DIR . '/event_img.php';
+
 if (!isset($_SESSION['email'])) {
     header("Location: login");
     exit();
@@ -34,20 +37,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $event_id = $res;
         addAddress($event_id, $_POST['province'], $_POST['district'], $_POST['address']);
         addRequirement($event_id, $_POST['requirement']);
-        if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        // Handle multiple images
+        $uploaded_images = [];
+        if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
+            foreach ($_FILES['images']['name'] as $key => $name) {
+                if (!empty($name) && $_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
+                    $tmp_name = $_FILES['images']['tmp_name'][$key];
+                    $ext = pathinfo($name, PATHINFO_EXTENSION);
+                    $new_name = uniqid('event_', true) . '.' . $ext;
 
-            $tmp_name = $_FILES['image']['tmp_name'];
-            $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $new_name = uniqid('event_', true) . '.' . $ext;
+                    $upload_dir = __DIR__ . '/../public/img/';
+                    if (!is_dir($upload_dir)) {
+                        mkdir($upload_dir, 0755, true);
+                    }
 
-            $upload_dir = __DIR__ . '/../public/img/';
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
+                    if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
+                        $uploaded_images[] = $new_name;
+                        addImage($event_id, $new_name);
+                    }
+                }
             }
-
-            move_uploaded_file($tmp_name, $upload_dir . $new_name);
-
-            addImage($event_id, $new_name); // ✅ ไม่ null แล้ว
         }
 
         echo "<script>alert('สร้างกิจกรรมสำเร็จ'); location.href='event';</script>";
