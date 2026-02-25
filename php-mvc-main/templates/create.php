@@ -55,11 +55,11 @@
             </div>
 
             <a href="home">
-                    <button class="px-6 py-2 bg-red-500 text-white
+                <button class="px-6 py-2 bg-red-500 text-white
                            border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                        ออกจากระบบ
-                    </button>
-                </a> 
+                    ออกจากระบบ
+                </button>
+            </a>
         </div>
 
         <!-- ===== CONTENT ZONE (เปลี่ยนเฉพาะตรงนี้) ===== -->
@@ -145,10 +145,12 @@
 
                     <div>
                         <label class="font-bold">รูปภาพกิจกรรม</label>
-                        <input type="file" name="image"
-                            accept="image/jpeg,image/png"
+                        <input
+                            type="file"
+                            name="image"
+                            accept=".png,.jpg,.jpeg"
                             class="w-full px-4 py-2 border-2 border-black rounded-lg
-                   shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+               shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     </div>
 
                     <div class="flex gap-4 pt-4">
