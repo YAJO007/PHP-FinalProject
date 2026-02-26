@@ -20,6 +20,95 @@ if (!isset($event) || !is_array($event)) {
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
+        .gallery-container {
+            position: relative;
+        }
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .main-image.fade-out {
+            opacity: 0;
+        }
+        .main-image.fade-in {
+            opacity: 1;
+        }
+        .thumbnail-carousel {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            overflow-x: auto;
+            padding: 5px 0;
+        }
+        .thumbnail-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+        .thumbnail-carousel::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .thumbnail-carousel::-webkit-scrollbar-thumb {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+        }
+        .thumbnail {
+            width: 60px;
+            height: 60px;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+        .thumbnail:hover {
+            transform: scale(1.05);
+            border-color: rgba(0,0,0,0.3);
+        }
+        .thumbnail.active {
+            border-color: #000;
+            box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+        .gallery-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .gallery-nav-btn:hover {
+            background: rgba(0,0,0,0.8);
+        }
+        .gallery-nav-btn.prev {
+            left: 10px;
+        }
+        .gallery-nav-btn.next {
+            right: 10px;
+        }
+        .image-counter {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -38,8 +127,61 @@ if (!isset($event) || !is_array($event)) {
 
         <div class="p-8 bg-purple-100 grid md:grid-cols-2 gap-8">
 
-            <div class="bg-purple-300 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
-                <img src="img/<?= htmlspecialchars($event['image_path']) ?>" class="w-full h-full object-cover" alt="<?php echo htmlspecialchars($event['title'] ?? ''); ?>">
+            <div class="gallery-container bg-purple-100 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden relative">
+                <?php 
+                $images = $event['images'] ?? [];
+                if (empty($images)) {
+                    $images = [];
+                }
+                ?>
+                
+                <!-- Main Image -->
+                <div class="relative w-full h-96">
+                    <?php if (!empty($images)): ?>
+                        <?php foreach ($images as $index => $image): ?>
+                            <img src="img/<?= htmlspecialchars($image) ?>" 
+                                 class="main-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
+                                 alt="<?php echo htmlspecialchars($event['title'] ?? ''); ?>"
+                                 data-index="<?= $index ?>"
+                                 <?= $index === 0 ? '' : 'style="opacity: 0; display: none;"' ?>>
+                        <?php endforeach; ?>
+                        
+                        <?php if (count($images) > 1): ?>
+                            <!-- Navigation Buttons -->
+                            <button class="gallery-nav-btn prev" onclick="changeImage(-1)">
+                                <i class="fa-solid fa-chevron-left"></i>
+                            </button>
+                            <button class="gallery-nav-btn next" onclick="changeImage(1)">
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                            
+                            <!-- Image Counter -->
+                            <div class="image-counter">
+                                <span id="current-image">1</span> / <span id="total-images"><?= count($images) ?></span>
+                            </div>
+                        <?php endif; ?>
+                    <?php else: ?>
+                        <div class="w-full h-96 flex items-center justify-center bg-gray-300">
+                            <div class="text-center">
+                                <i class="fa-solid fa-image text-4xl text-gray-500 mb-2"></i>
+                                <p class="text-gray-600">ไม่มีรูปภาพ</p>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Thumbnail Carousel -->
+                <?php if (!empty($images) && count($images) > 1): ?>
+                    <div class="thumbnail-carousel">
+                        <?php foreach ($images as $index => $image): ?>
+                            <img src="img/<?= htmlspecialchars($image) ?>"
+                                 class="thumbnail <?= $index === 0 ? 'active' : '' ?>"
+                                 alt="Thumbnail <?= $index + 1 ?>"
+                                 onclick="showImage(<?= $index ?>)"
+                                 data-index="<?= $index ?>">
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <div class="space-y-4">
@@ -207,3 +349,64 @@ if (!isset($event) || !is_array($event)) {
 </body>
 
 </html>
+
+<script>
+let currentImageIndex = 0;
+const images = document.querySelectorAll('.main-image');
+const thumbnails = document.querySelectorAll('.thumbnail');
+const totalImages = images.length;
+
+function showImage(index) {
+    if (totalImages === 0) return;
+    
+    // Normalize index
+    if (index < 0) {
+        currentImageIndex = totalImages - 1;
+    } else if (index >= totalImages) {
+        currentImageIndex = 0;
+    } else {
+        currentImageIndex = index;
+    }
+
+    // Update main image with fade effect
+    images.forEach((img, idx) => {
+        if (idx === currentImageIndex) {
+            img.style.opacity = '1';
+            img.style.display = 'block';
+        } else {
+            img.style.opacity = '0';
+            img.style.display = 'none';
+        }
+    });
+
+    // Update thumbnails
+    thumbnails.forEach((thumb, idx) => {
+        if (idx === currentImageIndex) {
+            thumb.classList.add('active');
+        } else {
+            thumb.classList.remove('active');
+        }
+    });
+
+    // Update counter
+    const counter = document.getElementById('current-image');
+    if (counter) {
+        counter.textContent = currentImageIndex + 1;
+    }
+}
+
+function changeImage(direction) {
+    showImage(currentImageIndex + direction);
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(event) {
+    if (totalImages <= 1) return;
+    
+    if (event.key === 'ArrowLeft') {
+        changeImage(-1);
+    } else if (event.key === 'ArrowRight') {
+        changeImage(1);
+    }
+});
+</script>

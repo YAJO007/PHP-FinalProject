@@ -51,21 +51,23 @@
                         โปรไฟล์
                     </button>
                 </a>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="flex items-center gap-4">
                 <a href="my_registrations">
                     <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
                         <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
                     </button>
                 </a>
+                <a href="home">
+                    <button class="px-6 py-2 bg-red-500 text-white
+                               border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                        ออกจากระบบ
+                    </button>
+                </a>
             </div>
-
-            <!-- RIGHT -->
-            <a href="home">
-                <button class="px-6 py-2 bg-red-500 text-white
-                           border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                    ออกจากระบบ
-                </button>
-            </a>
         </div>
 
         <!-- ===== SEARCH SECTION ===== -->
