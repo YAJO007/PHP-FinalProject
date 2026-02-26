@@ -1,5 +1,4 @@
 <?php
-// เทมเพลต detail ใช้ตัวแปร $event ที่ส่งมาจาก route
 if (!isset($event) || !is_array($event)) {
     echo "ไม่พบกิจกรรม";
     return;
@@ -170,7 +169,6 @@ if (!isset($event) || !is_array($event)) {
                     <?php endif; ?>
                 </div>
 
-                <!-- Thumbnail Carousel -->
                 <?php if (!empty($images) && count($images) > 1): ?>
                     <div class="thumbnail-carousel">
                         <?php foreach ($images as $index => $image): ?>
@@ -265,18 +263,14 @@ if (!isset($event) || !is_array($event)) {
                 <?php endif; ?>
 
                 <?php 
-                // Check if user is logged in
                 $is_logged_in = isset($_SESSION['email']);
                 $user_id = $is_logged_in ? getUidByEmail($_SESSION['email']) : null;
                 $is_registered = $user_id ? isUserReg($user_id, (int)$event['eid']) : false;
                 $registration_status = $user_id ? getUserRegStatus($user_id, (int)$event['eid']) : null;
-                
-                // Check if event is completed
                 $event_status = $event['status'] ?? '';
                 $is_completed = ($event_status === 'Completed');
                 ?>
                 
-                <!-- Registration Status -->
                 <?php if ($is_logged_in && $is_registered): ?>
                     <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         <div class="flex items-center gap-2">
@@ -294,7 +288,6 @@ if (!isset($event) || !is_array($event)) {
                     </div>
                 <?php endif; ?>
 
-                <!-- Buttons -->
                 <div class="grid grid-cols-4 gap-2 pt-2 max-w-3xl">
                     <?php if (!$is_logged_in): ?>
                         <a href="login" class="col-span-4">
@@ -359,27 +352,22 @@ const totalImages = images.length;
 function showImage(index) {
     if (totalImages === 0) return;
     
-    // Normalize index
     if (index < 0) {
         currentImageIndex = totalImages - 1;
-    } else if (index >= totalImages) {
         currentImageIndex = 0;
     } else {
         currentImageIndex = index;
     }
 
-    // Update main image with fade effect
     images.forEach((img, idx) => {
         if (idx === currentImageIndex) {
             img.style.opacity = '1';
-            img.style.display = 'block';
         } else {
             img.style.opacity = '0';
             img.style.display = 'none';
         }
     });
 
-    // Update thumbnails
     thumbnails.forEach((thumb, idx) => {
         if (idx === currentImageIndex) {
             thumb.classList.add('active');
@@ -388,7 +376,6 @@ function showImage(index) {
         }
     });
 
-    // Update counter
     const counter = document.getElementById('current-image');
     if (counter) {
         counter.textContent = currentImageIndex + 1;
@@ -399,7 +386,6 @@ function changeImage(direction) {
     showImage(currentImageIndex + direction);
 }
 
-// Keyboard navigation
 document.addEventListener('keydown', function(event) {
     if (totalImages <= 1) return;
     

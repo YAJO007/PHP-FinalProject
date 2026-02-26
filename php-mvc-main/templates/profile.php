@@ -16,12 +16,10 @@
             flex flex-col overflow-hidden
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== TOP NAV ===== -->
         <div class="flex justify-between items-center
                 border-b-2 border-black
                 bg-purple-300 px-6 py-4">
 
-            <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="event">
                     <button class="px-6 py-2 bg-purple-500 text-white
@@ -70,7 +68,7 @@
                     </button>
                 </a> 
         </div>
-        <!-- ===== PROFILE SECTION ===== -->
+
        <?php
         $user = null;
         if (isset($data['result']) && $data['result']->num_rows === 1) {

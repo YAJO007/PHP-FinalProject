@@ -1,11 +1,9 @@
 <?php
-// Check if event data is passed
 if (!isset($event) || !is_array($event)) {
     echo "ไม่พบกิจกรรม";
     return;
 }
 
-// Get participants list
 $participants = isset($participants_data) ? $participants_data : [];
 ?>
 
@@ -20,12 +18,10 @@ $participants = isset($participants_data) ? $participants_data : [];
 </head>
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black">
 
-    <!-- MAIN CONTAINER -->
     <div class="bg-white border-2 border-black rounded-[24px] 
             shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
             max-w-6xl mx-auto">
 
-        <!-- HEADER -->
         <div class="border-b-2 border-black bg-purple-300 px-6 py-4 flex justify-between items-center rounded-t-[22px]">
             <div>
                 <h1 class="text-3xl font-black text-purple-900"><i class="fa-solid fa-chart-bar"></i> สถิติกิจกรรม</h1>
@@ -38,10 +34,8 @@ $participants = isset($participants_data) ? $participants_data : [];
             </a>
         </div>
 
-        <!-- CONTENT -->
         <div class="p-8 bg-purple-100">
 
-            <!-- STATS OVERVIEW -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
                     <i class="fa-solid fa-user-plus text-2xl text-purple-600 mb-2"></i>
@@ -99,7 +93,6 @@ $participants = isset($participants_data) ? $participants_data : [];
                 </div>
             </div>
 
-            <!-- ADDITIONAL STATS -->
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
                     <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
@@ -141,7 +134,6 @@ $participants = isset($participants_data) ? $participants_data : [];
                 </div>
             </div>
 
-            <!-- PARTICIPANTS TABLE -->
             <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
                 
                 <div class="bg-purple-400 border-b-2 border-black px-6 py-4">
@@ -210,10 +202,8 @@ $participants = isset($participants_data) ? $participants_data : [];
                 <?php endif; ?>
             </div>
 
-            <!-- EVENT DETAILS -->
             <div class="mt-8 grid md:grid-cols-2 gap-6">
                 
-                <!-- OTP Check-in Section -->
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
                     <h3 class="text-xl font-black text-purple-800 mb-4">🔑 เช็คชื่อด้วย OTP</h3>
                     

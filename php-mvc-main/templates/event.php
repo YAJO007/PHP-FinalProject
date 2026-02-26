@@ -16,12 +16,10 @@
             flex flex-col overflow-hidden
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== TOP NAV ===== -->
         <div class="flex justify-between items-center
                 border-b-2 border-black
                 bg-purple-300 px-6 py-4">
 
-            <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <button class="px-6 py-2 bg-purple-600 text-white
                            border-2 border-black rounded-lg font-bold
@@ -51,26 +49,22 @@
                         โปรไฟล์
                     </button>
                 </a>
-            </div>
-
-            <!-- RIGHT -->
-            <div class="flex items-center gap-4">
                 <a href="my_registrations">
                     <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
                         <i class="fa-solid fa-users"></i> ดูการลงทะเบียน
                     </button>
                 </a>
-                <a href="home">
-                    <button class="px-6 py-2 bg-red-500 text-white
-                               border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                        ออกจากระบบ
-                    </button>
-                </a>
             </div>
+
+            <a href="home">
+                <button class="px-6 py-2 bg-red-500 text-white
+                           border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                    ออกจากระบบ
+                </button>
+            </a>
         </div>
 
-        <!-- ===== SEARCH SECTION ===== -->
         <div class="p-8 bg-purple-100 border-b-2 border-black">
             <div class="bg-purple-200 border-2 border-black
                     rounded-xl p-6
@@ -80,7 +74,6 @@
                     ค้นหากิจกรรม
                 </h2>
 
-                <!-- Search -->
                 <form action="event" method="get">
                     <div class="flex gap-3 mb-6">
                         <input type="text" placeholder="ค้นหากิจกรรม..." name="search"
@@ -96,7 +89,6 @@
 
                     </div>
 
-                    <!-- Date Filter -->
                     <div class="flex flex-wrap gap-6 items-center">
 
                         <div class="flex items-center gap-3">
@@ -120,7 +112,6 @@
             </div>
         </div>
 
-        <!-- ===== CARD SECTION ===== -->
         <div class="flex-1 bg-purple-100 p-10">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
 
@@ -145,7 +136,6 @@
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
 
-                            <!-- Participant Count -->
                             <div class="flex items-center gap-2 mb-3">
                                 <i class="fa-solid fa-users text-purple-600"></i>
                                 <span class="text-sm font-bold text-purple-800">
@@ -153,7 +143,6 @@
                                 </span>
                             </div>
 
-                            <!-- Progress Bar -->
                             <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
                                 <?php 
                                 $approved = (int)($event['approved_count'] ?? 0);

@@ -1,11 +1,9 @@
 <?php
-// Check if event data is passed
 if (!isset($event) || !is_array($event)) {
     echo "ไม่พบกิจกรรมที่ต้องการแก้ไข";
     return;
 }
 
-// Format dates for datetime-local input
 $start_date = isset($event['start_date']) ? date('Y-m-d\\TH:i', strtotime($event['start_date'])) : '';
 $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['end_date'])) : '';
 ?>
@@ -22,13 +20,11 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 
              min-h-screen p-4 sm:p-8 font-sans text-black flex">
 
-    <!-- MAIN CONTAINER -->
     <div class="bg-white border-2 border-black rounded-[24px] 
             shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== NAVBAR ===== -->
         <div class="flex justify-between items-center 
                 border-b-2 border-black 
                 bg-purple-300 px-6 py-4">
@@ -76,15 +72,12 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
             </button>
         </div>
 
-        <!-- ===== CONTENT ZONE ===== -->
         <div class="flex-1 bg-purple-100 p-10 flex justify-center">
 
-            <!-- FORM BOX -->
             <div class="bg-white border-2 border-black rounded-[24px]
                     shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                     p-8 w-full max-w-xl">
 
-                <!-- HEADER -->
                 <div class="flex items-center gap-3 mb-6">
                     <img src="/LOGO/LOGOCAT.png" class="w-12 bg-white p-1 border-2 border-black rounded-xl shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     <h1 class="text-3xl font-black text-purple-800">แก้ไขกิจกรรม</h1>

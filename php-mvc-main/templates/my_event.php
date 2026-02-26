@@ -22,7 +22,6 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== TOP NAV ===== -->
         <div class="flex justify-between items-center border-b-2 border-black bg-purple-300 px-6 py-4">
 
             <div class="flex items-center gap-4 flex-wrap">
@@ -73,9 +72,6 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
             </a>
         </div>
 
-        <!-- ================= MIDDLE CONTENT ================= -->
-
-        <!-- DASHBOARD -->
         <div class="p-8 bg-purple-100 border-b-2 border-black">
             <div class="bg-purple-200 border-2 border-black rounded-xl p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
 
@@ -122,19 +118,16 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
             </div>
         </div>
 
-        <!-- GAME CARDS -->
         <div class="flex-1 bg-purple-100 p-10">
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
 
                 <?php if (isset($data['result']) && $data['result']->num_rows > 0): ?>
                     <?php while ($event = $data['result']->fetch_assoc()): ?>
 
-                        <!-- Card -->
                         <div class="bg-white border-2 border-black rounded-xl
                             p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                             hover:scale-105 hover:-translate-y-2 transition-all">
 
-                            <!-- Image -->
                             <div class="bg-purple-300 h-40 rounded-lg mb-6 overflow-hidden">
                                 <img
                                     src="img/<?= htmlspecialchars($event['image_path']) ?>"
@@ -142,12 +135,10 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                     class="w-full h-full object-cover">
                             </div>
 
-                            <!-- Title -->
                             <h3 class="font-bold text-lg mb-2 text-purple-800">
                                 <?= htmlspecialchars($event['title']) ?>
                             </h3>
 
-                            <!-- Details -->
                             <p class="text-sm text-gray-700 mb-2 line-clamp-3">
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
@@ -195,7 +186,6 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
 
                             <div class="flex gap-2 mt-4">
 
-                                <!-- ปุ่มจัดการ (ใหญ่) -->
                                 <a href="manage_event?eid=<?= htmlspecialchars($event['eid']); ?>" class="flex-[2]">
                                     <button type="button"
                                         class="w-full px-4 py-2.5 bg-indigo-600 text-white
@@ -208,7 +198,6 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                     </button>
                                 </a>
 
-                                <!-- ปุ่มแก้ไข (เล็ก) -->
                                 <a href="edit_event?eid=<?= $event['eid'] ?>" class="flex-[1]">
                                     <button
                                         class="w-full px-4 py-2.5 bg-yellow-400 text-black
@@ -221,7 +210,6 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                     </button>
                                 </a>
 
-                                <!-- ปุ่มลบ (เล็ก) -->
                                 <a href="delete_event?eid=<?= $event['eid'] ?>"
                                     onclick="return confirm('ลบกิจกรรมนี้?')"
                                     class="flex-[1]">

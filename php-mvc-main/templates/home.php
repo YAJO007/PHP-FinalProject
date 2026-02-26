@@ -16,15 +16,12 @@
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-    <!-- ===== TOP NAV ===== -->
 <div class="flex justify-between items-center 
             border-b-2 border-black 
             bg-purple-300 px-6 py-4">
 
-    <!-- LEFT SIDE -->
     <div class="flex items-center gap-4 flex-wrap">
 
-        <!-- ปุ่มเข้าสู่ระบบ (ย้ายมาไว้ซ้ายสุด) -->
          <a href="login">
         <button class="px-6 py-2 bg-purple-600 text-white 
                        border-2 border-black rounded-lg font-bold 
@@ -59,7 +56,6 @@
 
     </div>
 
-    <!-- RIGHT SIDE (เมนูไอคอน) -->
     <button class="w-10 h-10 flex items-center justify-center 
                    bg-purple-600 text-white 
                    border-2 border-black rounded-md
@@ -69,7 +65,6 @@
 </div>
 
 
-    <!-- ===== SEARCH SECTION ===== -->
     <div class="p-8 bg-purple-100 border-b-2 border-black">
 
         <div class="bg-purple-200 border-2 border-black 
@@ -80,7 +75,6 @@
                 ค้นหากิจกรรม
             </h2>
 
-            <!-- search bar -->
             <div class="flex gap-3 mb-6">
                 <input type="text" placeholder="ค้นหากิจกรรม..."
                        class="flex-1 px-4 py-3 border-2 border-black 
@@ -95,7 +89,6 @@
                 </button>
             </div>
 
-            <!-- date filter -->
             <div class="flex flex-wrap gap-6 items-center">
 
                 <div class="flex items-center gap-3">
@@ -121,7 +114,6 @@
     </div>
 
 
-    <!-- ===== CARD SECTION ===== -->
     <div class="flex-1 bg-purple-100 p-10">
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -149,7 +141,6 @@
                                 <?= htmlspecialchars($event['Details']) ?>
                             </p>
 
-                            <!-- Participant Count -->
                             <div class="flex items-center gap-2 mb-3">
                                 <i class="fa-solid fa-users text-purple-600"></i>
                                 <span class="text-sm font-bold text-purple-800">
@@ -157,7 +148,6 @@
                                 </span>
                             </div>
 
-                            <!-- Progress Bar -->
                             <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
                                 <?php 
                                 $approved = (int)($event['approved_count'] ?? 0);

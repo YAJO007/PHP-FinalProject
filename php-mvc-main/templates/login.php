@@ -17,7 +17,6 @@
                 p-8 md:p-10
                 transition-all duration-300">
 
-        <!-- Header -->
         <div class="text-center mb-8">
             <h1 class="text-4xl font-black tracking-tight mb-2 text-purple-700">
                 Login
@@ -27,10 +26,8 @@
             </p>
         </div>
 
-        <!-- Form -->
         <form action="login" method="post" class="space-y-6">
 
-            <!-- Email -->
             <div>
                 <label for="email" class="block text-sm font-bold mb-2">
                     Emailชื่อผู้ใช้ 
@@ -48,7 +45,6 @@
                               focus:scale-[1.02]" />
             </div>
 
-            <!-- Password -->
             <div>
                 <div class="flex justify-between items-center mb-2">
                     <label for="password" class="block text-sm font-bold">
@@ -74,7 +70,6 @@
                               focus:scale-[1.02]" />
             </div>
 
-            <!-- Submit Button -->
             <div class="pt-4">
                 <button type="submit"
                         class="w-full
@@ -101,7 +96,6 @@
 
         </form>
 
-        <!-- Footer -->
         <p class="mt-8 text-center text-xs font-semibold text-gray-700">
             ยังไม่มีบัญชี?
             <a href="register"

@@ -1,5 +1,4 @@
 <?php
-// Check if user data is passed
 if (!isset($user) || !is_array($user)) {
     echo "ไม่พบข้อมูลผู้ใช้";
     return;
@@ -17,18 +16,15 @@ if (!isset($user) || !is_array($user)) {
 </head>
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black flex">
 
-    <!-- MAIN CONTAINER -->
     <div class="bg-white border-2 border-black rounded-[24px] 
             shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== NAVBAR ===== -->
         <div class="flex justify-between items-center
                 border-b-2 border-black
                 bg-purple-300 px-6 py-4">
 
-            <!-- LEFT -->
             <div class="flex items-center gap-4 flex-wrap">
                 <a href="event">
                     <button class="px-6 py-2 bg-purple-500 text-white
@@ -78,15 +74,12 @@ if (!isset($user) || !is_array($user)) {
                 </a> 
         </div>
 
-        <!-- ===== CONTENT ZONE ===== -->
         <div class="flex-1 bg-purple-100 p-10 flex justify-center">
 
-            <!-- FORM BOX -->
             <div class="bg-white border-2 border-black rounded-[24px]
                     shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                     p-8 w-full max-w-2xl">
 
-                <!-- HEADER -->
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-12 h-12 bg-purple-300 rounded-xl border-2 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center text-2xl">
                         <i class="fa-solid fa-user"></i>
@@ -95,9 +88,7 @@ if (!isset($user) || !is_array($user)) {
                 </div>
 
                 <p class="text-sm text-gray-700 mb-6">อัปเดตข้อมูลส่วนตัวของคุณ</p>
-
                 <?php 
-                // Show success/error messages
                 if (isset($_GET['success']) && $_GET['success'] === 'updated') {
                     echo '<div class="bg-green-100 border-2 border-green-500 text-green-800 px-4 py-3 rounded-lg mb-6 font-bold"><i class="fa-solid fa-check"></i> บันทึกข้อมูลสำเร็จ</div>';
                 }
@@ -108,7 +99,6 @@ if (!isset($user) || !is_array($user)) {
 
                 <form method="POST" action="edit_profile" class="space-y-5">
 
-                    <!-- First Name -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">ชื่อ *</label>
                         <input type="text" name="first_name" required 
@@ -119,7 +109,6 @@ if (!isset($user) || !is_array($user)) {
                                    transition-all">
                     </div>
 
-                    <!-- Last Name -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">นามสกุล *</label>
                         <input type="text" name="last_name" required 
@@ -130,7 +119,6 @@ if (!isset($user) || !is_array($user)) {
                                    transition-all">
                     </div>
 
-                    <!-- Email (Read-only) -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">อีเมล (ไม่สามารถเปลี่ยน)</label>
                         <input type="email" readonly
@@ -139,7 +127,6 @@ if (!isset($user) || !is_array($user)) {
                                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     </div>
 
-                    <!-- Date of Birth -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">วันเกิด *</label>
                         <input type="date" name="date_of_birth" required 
@@ -150,7 +137,6 @@ if (!isset($user) || !is_array($user)) {
                                    transition-all">
                     </div>
 
-                    <!-- Gender -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">เพศ *</label>
                         <div class="flex gap-4 flex-wrap">
@@ -175,7 +161,6 @@ if (!isset($user) || !is_array($user)) {
                         </div>
                     </div>
 
-                    <!-- Phone Number -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">เบอร์โทรศัพท์ *</label>
                         <input type="tel" name="phone_number" required 
@@ -186,7 +171,6 @@ if (!isset($user) || !is_array($user)) {
                                    transition-all">
                     </div>
 
-                    <!-- Congenital Disease -->
                     <div>
                         <label class="font-bold text-gray-800 block mb-2">โรคประจำตัว (ไม่บังคับ)</label>
                         <textarea name="congenital_disease" rows="3"
@@ -196,7 +180,6 @@ if (!isset($user) || !is_array($user)) {
                                    transition-all"><?php echo htmlspecialchars($user['congenital_disease'] ?? ''); ?></textarea>
                     </div>
 
-                    <!-- Buttons -->
                     <div class="flex gap-4 justify-center mt-8 border-t-2 border-black pt-6">
                         <button type="submit" 
                             class="px-8 py-3 bg-green-400 text-black border-2 border-black rounded-xl font-black text-lg shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-green-500 hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all">

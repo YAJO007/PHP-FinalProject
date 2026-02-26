@@ -1,5 +1,4 @@
 <?php
-// Check if user is logged in
 if (!isset($_SESSION['email'])) {
     header('Location: login');
     exit;
@@ -21,13 +20,11 @@ $registrations = $registrations ?? [];
 
 <body class="bg-gradient-to-br from-purple-200 via-purple-300 to-purple-400 min-h-screen p-4 sm:p-8 font-sans text-black flex">
 
-    <!-- MAIN CONTAINER -->
     <div class="bg-white border-2 border-black rounded-[24px] 
             shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] 
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-        <!-- ===== TOP NAV ===== -->
         <div class="flex justify-between items-center border-b-2 border-black bg-purple-300 px-6 py-4">
 
             <div class="flex items-center gap-4 flex-wrap">
@@ -77,7 +74,6 @@ $registrations = $registrations ?? [];
             </a>
         </div>
 
-        <!-- ===== CONTENT ===== -->
         <div class="p-8 bg-purple-100 border-b-2 border-black">
             <div class="bg-purple-200 border-2 border-black rounded-xl p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
 
@@ -85,7 +81,6 @@ $registrations = $registrations ?? [];
                     <i class="fa-solid fa-users"></i> การลงทะเบียนของฉัน
                 </h2>
 
-                <!-- STATS -->
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
                         <i class="fa-solid fa-list text-2xl text-blue-600 mb-2"></i>
@@ -138,7 +133,6 @@ $registrations = $registrations ?? [];
             </div>
         </div>
 
-        <!-- ===== REGISTRATIONS LIST ===== -->
         <div class="flex-1 bg-purple-100 p-10">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
@@ -157,29 +151,24 @@ $registrations = $registrations ?? [];
                     </div>
                 <?php else: ?>
                     <?php foreach ($registrations as $registration): ?>
-                        <!-- Registration Card -->
                         <div class="bg-white border-2 border-black rounded-xl 
                             p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                             hover:scale-105 hover:-translate-y-2 transition-all">
 
-                            <!-- Event Image -->
                             <div class="bg-purple-300 h-40 rounded-lg mb-4 overflow-hidden">
                                 <img src="img/<?= htmlspecialchars($registration['image_path']) ?>" 
                                      class="w-full h-full object-cover" 
                                      alt="<?= htmlspecialchars($registration['title']) ?>">
                             </div>
 
-                            <!-- Event Title -->
                             <h3 class="font-bold text-lg mb-2 text-purple-800">
                                 <?= htmlspecialchars($registration['title']) ?>
                             </h3>
 
-                            <!-- Event Details -->
                             <p class="text-sm text-gray-700 mb-3 line-clamp-2">
                                 <?= htmlspecialchars($registration['Details']) ?>
                             </p>
 
-                            <!-- Event Dates -->
                             <div class="text-xs text-gray-600 mb-3 space-y-1">
                                 <p><i class="fa-regular fa-calendar"></i> 
                                     เริ่ม: <?= htmlspecialchars($registration['start_date']) ?></p>
@@ -189,7 +178,6 @@ $registrations = $registrations ?? [];
                                     รับสมัคร: <?= htmlspecialchars($registration['max_participants']) ?> คน</p>
                             </div>
 
-                            <!-- Registration Status -->
                             <div class="mb-4">
                                 <?php
                                 $status = $registration['registration_status'] ?? '';
@@ -200,7 +188,6 @@ $registrations = $registrations ?? [];
                                 $statusText = '';
 
                                 if ($has_attended) {
-                                    // Override status if attended
                                     $statusBg = 'bg-blue-100';
                                     $statusBorder = 'border-blue-500';
                                     $statusIcon = '<i class="fa-solid fa-check-double"></i>';
@@ -242,7 +229,6 @@ $registrations = $registrations ?? [];
                                 </div>
                             </div>
 
-                            <!-- Action Buttons -->
                             <div class="flex flex-col gap-2">
                                 <div class="flex gap-2">
                                     <a href="detail?eid=<?= (int)$registration['eid'] ?>" class="flex-1">
@@ -282,7 +268,6 @@ $registrations = $registrations ?? [];
             </div>
         </div>
 
-        <!-- ===== REJECTION HISTORY ===== -->
         <?php if (!empty($rejection_history)): ?>
         <div class="p-8 bg-purple-100 border-t-2 border-black">
             <div class="bg-purple-200 border-2 border-black rounded-xl p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
@@ -323,7 +308,6 @@ $registrations = $registrations ?? [];
 
     </div>
 
-    <!-- OTP Modal -->
     <div id="otpModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white border-4 border-black rounded-2xl p-8 max-w-md w-full mx-4 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
             <div class="text-center">
