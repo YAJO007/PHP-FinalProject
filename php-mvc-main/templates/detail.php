@@ -53,7 +53,7 @@ if (!isset($event) || !is_array($event)) {
                     <p>📅 วันที่เริ่ม: <?php echo htmlspecialchars($event['start_date'] ?? ''); ?></p>
                     <p>📅 วันที่สิ้นสุด: <?php echo htmlspecialchars($event['end_date'] ?? ''); ?></p>
                     <p>👤 รับสมัคร: <?php echo htmlspecialchars($event['max_participants'] ?? ''); ?> คน</p>
-<<<<<<< HEAD
+
                     <p>🟢 สถานะ: <?php echo htmlspecialchars($event['status'] ?? ''); ?></p>
                 </div>
 

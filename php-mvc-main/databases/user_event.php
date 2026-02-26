@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 <?php
 //25/2/2026 11:03
 //ต้องใช้ Database ตัวใหม่ที่ Export ให้
@@ -86,8 +86,6 @@ function getUserEvent(
     $stmt->execute();
     return $stmt->get_result();
 }
-=======
-<?php
 
 function registerForEvent(int $uid, int $eid): bool|string
 {
@@ -159,5 +157,3 @@ function getUserRegistrationStatus(int $uid, int $eid): ?string
     return null;
 }
 
-?>
->>>>>>> Duckydoo
