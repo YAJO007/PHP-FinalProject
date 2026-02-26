@@ -1,29 +1,24 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $first_name = $_POST['first_name'];
-    $last_name = $_POST['last_name'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $birthdate = $_POST['birthdate'];
-    $gender = $_POST['gender'];
-    $phone = $_POST['phone'];
-    $congenital = $_POST['congenital'];
-    
-    $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-    $result = adduser($username, $first_name, $last_name, $email, $hashed_password, $birthdate, $gender, $phone, $congenital);
-    
-    if ($result === true) {
-        header('Location: login');
-        exit();
-    } else {
-        $error_message = $result;
-        echo "<script>alert('$error_message');</script>";
-        renderView('register'); 
-    }
+    $u = $_POST['username'];
+    $fn = $_POST['first_name'];
+    $ln = $_POST['last_name'];
+    $em = $_POST['email'];
+    $pwd = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $dob = $_POST['birthdate'];
+    $gen = $_POST['gender'];
+    $ph = $_POST['phone'];
+    $dis = $_POST['congenital'];
 
+    $res = addUser($u, $fn, $ln, $em, $pwd, $dob, $gen, $ph, $dis);
+
+    if ($res === true) {
+        header('Location: login');
+    } else {
+        echo "<script>alert('$res');</script>";
+        renderView('register');
+    }
 } else {
     renderView('register');
 }
-?>

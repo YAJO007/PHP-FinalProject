@@ -2,10 +2,8 @@
 
 if (!isset($_SESSION['email'])) {
     header('Location: login');
-    exit();
+    exit;
 }
 
-$email  = $_SESSION['email'];
-$result = getUserByEmail($email);
-
-renderView('profile', ['result' => $result]);
+$res = getUserByEmail($_SESSION['email']);
+renderView('profile', ['result' => $res]);

@@ -267,9 +267,9 @@ if (!isset($event) || !is_array($event)) {
                 <?php 
                 // Check if user is logged in
                 $is_logged_in = isset($_SESSION['email']);
-                $user_id = $is_logged_in ? getUseridbyEmail($_SESSION['email']) : null;
-                $is_registered = $user_id ? isUserRegistered($user_id, (int)$event['eid']) : false;
-                $registration_status = $user_id ? getUserRegistrationStatus($user_id, (int)$event['eid']) : null;
+                $user_id = $is_logged_in ? getUidByEmail($_SESSION['email']) : null;
+                $is_registered = $user_id ? isUserReg($user_id, (int)$event['eid']) : false;
+                $registration_status = $user_id ? getUserRegStatus($user_id, (int)$event['eid']) : null;
                 
                 // Check if event is completed
                 $event_status = $event['status'] ?? '';

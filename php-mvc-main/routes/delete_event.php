@@ -1,10 +1,4 @@
 <?php
-// routes/delete_event.php - Handle event deletion
-
-// Ensure functions are loaded
-if (!function_exists('deleteEvent')) {
-    require_once DATABASES_DIR . '/event.php';
-}
 
 $eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
 
@@ -13,28 +7,17 @@ if ($eid <= 0) {
     exit;
 }
 
-// Verify event exists
-if (!function_exists('getEventById')) {
-    require_once DATABASES_DIR . '/event.php';
-}
-
-$event = getEventById($eid);
-if (!$event) {
+$evt = getEventById($eid);
+if (!$evt) {
     renderView('404');
     exit;
 }
 
-// Delete the event
-$result = deleteEvent($eid);
+$res = deleteEvent($eid);
 
-if ($result === true) {
-    // Success - redirect to events list
-    header('Location: my_event?deleted=success');
-    exit;
+if ($res === true) {
+    header('Location: my_event?deleted=1');
 } else {
-    // Error - redirect back with error message
-    header('Location: detail?eid=' . $eid . '&error=delete_failed');
-    exit;
+    header('Location: detail?eid=' . $eid . '&err=1');
 }
-
-?>
+exit;

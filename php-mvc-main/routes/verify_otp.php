@@ -1,80 +1,51 @@
 <?php
-// routes/verify_otp.php - Verify OTP for event check-in
 
-// Check if user is logged in
 if (!isset($_SESSION['email'])) {
     header('Location: login');
     exit;
 }
 
-// Get event ID and OTP from POST
 $eid = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
-$otp_input = isset($_POST['otp']) ? trim($_POST['otp']) : '';
+$otpIn = isset($_POST['otp']) ? trim($_POST['otp']) : '';
 
-if ($eid <= 0 || empty($otp_input)) {
-    header('Location: manage_event?eid=' . $eid . '&error=invalid_input');
+if ($eid <= 0 || empty($otpIn)) {
+    header('Location: manage_event?eid=' . $eid . '&err=inv');
     exit;
 }
 
-// Search for matching OTP in session
-$found = false;
-$participant_info = null;
-$participant_uid = null;
+$ok = false;
+$pInfo = null;
+$pUid = null;
 
-// Load user functions
-if (!function_exists('getUserById')) {
-    require_once DATABASES_DIR . '/user.php';
-}
+foreach ($_SESSION as $k => $v) {
+    if (strpos($k, "otp_{$eid}_") === 0 && is_array($v)) {
+        if ((string)$v['code'] === (string)$otpIn && $v['expires'] > time()) {
+            $parts = explode('_', $k);
+            $pUid = (int)end($parts);
 
-if (!function_exists('markAsAttended')) {
-    require_once DATABASES_DIR . '/user_event.php';
-}
-
-if (!function_exists('hasAttended')) {
-    require_once DATABASES_DIR . '/user_event.php';
-}
-
-// Check all OTP sessions for this event
-foreach ($_SESSION as $key => $value) {
-    if (strpos($key, "otp_{$eid}_") === 0 && is_array($value)) {
-        // Check if OTP matches and not expired
-        if ($value['code'] === $otp_input && $value['expires'] > time()) {
-            // Extract user ID from key
-            $parts = explode('_', $key);
-            $participant_uid = (int)end($parts);
-            
-            // Check if already attended
-            if (hasAttended($participant_uid, $eid)) {
-                $_SESSION['checkin_error'] = 'ผู้เข้าร่วมท่านนี้เช็คชื่อเข้าร่วมงานแล้ว';
-                header('Location: manage_event?eid=' . $eid . '&error=already_attended');
+            if (hasAttended($pUid, $eid)) {
+                $_SESSION['checkin_error'] = 'เช็คชื่อแล้ว';
+                header('Location: manage_event?eid=' . $eid . '&err=att');
                 exit;
             }
-            
-            // Get user info
-            $participant_info = getUserById($participant_uid);
-            $found = true;
-            
-            // Clear the used OTP
-            unset($_SESSION[$key]);
+
+            $pInfo = getUserById($pUid);
+            $ok = true;
+            unset($_SESSION[$k]);
             break;
         }
     }
 }
 
-if ($found && $participant_info && $participant_uid) {
-    // Mark as attended
-    markAsAttended($participant_uid, $eid);
-    
-    // Success - redirect with participant info
+if ($ok && $pInfo && $pUid) {
+    markAttended($pUid, $eid);
     $_SESSION['checkin_success'] = [
-        'name' => $participant_info['first_name'] . ' ' . $participant_info['last_name'],
-        'email' => $participant_info['email'],
+        'name' => $pInfo['first_name'] . ' ' . $pInfo['last_name'],
+        'email' => $pInfo['email'],
         'time' => date('H:i:s')
     ];
-    header('Location: manage_event?eid=' . $eid . '&checkin=success');
+    header('Location: manage_event?eid=' . $eid . '&ok=1');
 } else {
-    // Failed - OTP not found or expired
-    header('Location: manage_event?eid=' . $eid . '&error=invalid_otp');
+    header('Location: manage_event?eid=' . $eid . '&err=otp');
 }
 exit;
-

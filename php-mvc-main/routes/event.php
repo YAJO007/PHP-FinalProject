@@ -1,13 +1,10 @@
 <?php
 
-$start_date = $_GET['start_date'] ?? null;
-$end_date   = $_GET['end_date'] ?? null;
-$search     = $_GET['search'] ?? null;
+$sd = $_GET['start_date'] ?? null;
+$ed = $_GET['end_date'] ?? null;
+$s = $_GET['search'] ?? null;
 
 updateEventStatus();
+$res = getEvents($sd, $ed, $s);
 
-// เรียกฟังก์ชันเดียวจบ เพราะเราทำ Default Parameter ไว้แล้ว
-$result = getEvents($start_date, $end_date, $search);
-
-renderView('event', ['result' => $result]);
-
+renderView('event', ['result' => $res]);

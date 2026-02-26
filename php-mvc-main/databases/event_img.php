@@ -1,7 +1,6 @@
 <?php
-// databases/event_img.php
 
-function addImage(int $event_id, string $image_path)
+function addImg(int $eid, string $path): bool|string
 {
     global $conn;
 
@@ -12,38 +11,29 @@ function addImage(int $event_id, string $image_path)
         return 'DB prepare failed: ' . $conn->error;
     }
 
-    $stmt->bind_param("is", $event_id, $image_path);
-
-    if (!$stmt->execute()) {
-        $err = $stmt->error;
-        $stmt->close();
-        return 'DB execute failed: ' . $err;
-    }
-
-    $stmt->close();
-    return true;
+    $stmt->bind_param("is", $eid, $path);
+    return $stmt->execute() ? true : ('DB execute failed: ' . $stmt->error);
 }
 
-function getEventImages(int $eid): array
+function getImgs(int $eid): array
 {
     global $conn;
-    
+
     $sql = "SELECT image_path FROM event_img WHERE eid = ?";
     $stmt = $conn->prepare($sql);
-    
+
     if (!$stmt) {
         return [];
     }
-    
+
     $stmt->bind_param("i", $eid);
     $stmt->execute();
-    
-    $images = [];
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $images[] = $row['image_path'];
+
+    $res = $stmt->get_result();
+    $imgs = [];
+    while ($row = $res->fetch_assoc()) {
+        $imgs[] = $row['image_path'];
     }
-    
-    $stmt->close();
-    return $images;
+
+    return $imgs;
 }

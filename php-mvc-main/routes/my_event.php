@@ -1,41 +1,29 @@
 <?php
 
 updateEventStatus();
+$uid = getUidByEmail($_SESSION['email']);
+$res = getEventByUser($uid);
 
-$user_id = getUseridbyEmail($_SESSION['email']);
-$result = getEventByUserId($user_id);
+$tot = 0;
+$up = 0;
+$live = 0;
+$done = 0;
 
-// นับสถานะ
-$total = 0;
-$upcoming = 0;
-$ongoing = 0;
-$finished = 0;
-
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $total++;
-
+if ($res && $res->num_rows > 0) {
+    while ($row = $res->fetch_assoc()) {
+        $tot++;
         switch ($row['status']) {
-            case 'Upcoming':
-                $upcoming++;
-                break;
-            case 'Live':
-                $ongoing++;
-                break;
-            case 'Completed':
-                $finished++;
-                break;
+            case 'Upcoming': $up++; break;
+            case 'Live': $live++; break;
+            case 'Completed': $done++; break;
         }
     }
-
-    // reset pointer เพื่อเอาไปใช้ loop แสดง card ต่อ
-    $result->data_seek(0);
+    $res->data_seek(0);
 }
 
 renderView('my_event', [
-    'result'   => $result,
-    'total'    => $total,
-    'upcoming' => $upcoming,
-    'ongoing'  => $ongoing,
-    'finished' => $finished
-]);
+    'result' => $res,
+    'total' => $tot,
+    'upcoming' => $up,
+    'ongoing' => $live,
+    'finished' => $done]);

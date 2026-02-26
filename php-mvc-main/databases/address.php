@@ -1,34 +1,25 @@
 <?php
 
-function getAddressByEventId($event_id): mysqli_result
+function getAddr(int $eid): mysqli_result
 {
     global $conn;
     $sql = "SELECT * FROM address WHERE eid = ?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $event_id);
+    $stmt->bind_param("i", $eid);
     $stmt->execute();
     return $stmt->get_result();
-} 
+}
 
-function addAddress($event_id, $province, $district, $address_line)
+function addAddr(int $eid, string $prov, string $dist, string $line): bool|string
 {
     global $conn;
-    $sql = "INSERT INTO address (eid, province, district, Address_line) 
-            VALUES (?, ?, ?, ?)";
-    
+    $sql = "INSERT INTO address (eid, province, district, address_line) VALUES (?, ?, ?, ?)";
+
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         return 'DB prepare failed: ' . $conn->error;
     }
 
-    $stmt->bind_param("isss", $event_id, $province, $district, $address_line);
-
-    if (!$stmt->execute()) {
-        $err = $stmt->error;
-        $stmt->close();
-        return 'DB execute failed: ' . $err;
-    }
-
-    $stmt->close();
-    return true;
+    $stmt->bind_param("isss", $eid, $prov, $dist, $line);
+    return $stmt->execute() ? true : ('DB execute failed: ' . $stmt->error);
 }

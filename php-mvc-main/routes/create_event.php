@@ -1,69 +1,51 @@
 <?php
-require_once DATABASES_DIR . '/event.php';
-require_once DATABASES_DIR . '/event_img.php';
 
 if (!isset($_SESSION['email'])) {
     header("Location: login");
-    exit();
+    exit;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $user_id = getUseridbyEmail($_SESSION['email']);
-
-    if ($user_id === null) {
+    $uid = getUidByEmail($_SESSION['email']);
+    if ($uid === null) {
         die("ไม่พบ user จาก email นี้");
     }
-    $title   = $_POST['title'] ?? '';
-    $details = $_POST['detail'] ?? '';
-    $creator_email = $_SESSION['email'];
-    $start_date = $_POST['start_date'] ?? '';
-    $end_date = $_POST['end_date'] ?? '';
-    $max_participants = $_POST['max_participants'] ?? '';
-    $status = 'active';
-    $create_at = date('Y-m-d');
-    $res = addEvent(
-        $user_id,
-        $title,
-        $max_participants,
-        $start_date,
-        $end_date,
-        $status,
-        $details,
-        $create_at
+
+    $eid = addEvent(
+        $uid,
+        $_POST['title'] ?? '',
+        (int)($_POST['max_participants'] ?? 0),
+        $_POST['start_date'] ?? '',
+        $_POST['end_date'] ?? '',
+        'active',
+        $_POST['detail'] ?? ''
     );
 
-    if (is_int($res)) {
+    if (is_int($eid)) {
+        addAddr($eid, $_POST['province'], $_POST['district'], $_POST['address']);
+        addReq($eid, $_POST['requirement']);
 
-        $event_id = $res;
-        addAddress($event_id, $_POST['province'], $_POST['district'], $_POST['address']);
-        addRequirement($event_id, $_POST['requirement']);
-        // Handle multiple images
-        $uploaded_images = [];
         if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
-            foreach ($_FILES['images']['name'] as $key => $name) {
-                if (!empty($name) && $_FILES['images']['error'][$key] === UPLOAD_ERR_OK) {
-                    $tmp_name = $_FILES['images']['tmp_name'][$key];
-                    $ext = pathinfo($name, PATHINFO_EXTENSION);
-                    $new_name = uniqid('event_', true) . '.' . $ext;
+            foreach ($_FILES['images']['name'] as $k => $n) {
+                if (empty($n) || $_FILES['images']['error'][$k] !== UPLOAD_ERR_OK) continue;
 
-                    $upload_dir = __DIR__ . '/../public/img/';
-                    if (!is_dir($upload_dir)) {
-                        mkdir($upload_dir, 0755, true);
-                    }
+                $tmp = $_FILES['images']['tmp_name'][$k];
+                $ext = pathinfo($n, PATHINFO_EXTENSION);
+                $fn = uniqid('event_', true) . '.' . $ext;
+                $dir = __DIR__ . '/../public/img/';
 
-                    if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
-                        $uploaded_images[] = $new_name;
-                        addImage($event_id, $new_name);
-                    }
+                if (!is_dir($dir)) mkdir($dir, 0755, true);
+                if (move_uploaded_file($tmp, $dir . $fn)) {
+                    addImg($eid, $fn);
                 }
             }
         }
 
         echo "<script>alert('สร้างกิจกรรมสำเร็จ'); location.href='event';</script>";
-        exit();
+        exit;
     }
 
-    echo "<script>alert('Error: $res');</script>";
+    echo "<script>alert('Error: $eid');</script>";
 }
 
 renderView('create');

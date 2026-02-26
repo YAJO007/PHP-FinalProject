@@ -1,79 +1,46 @@
 <?php
-// routes/manage_event.php - Manage event participants and statistics
-
-// Ensure functions are loaded
-if (!function_exists('getEventById')) {
-    require_once DATABASES_DIR . '/event.php';
-}
-
-if (!function_exists('getEventParticipants')) {
-    require_once DATABASES_DIR . '/event.php';
-}
-
-if (!function_exists('approveParticipant')) {
-    require_once DATABASES_DIR . '/event.php';
-}
-
-if (!function_exists('rejectParticipant')) {
-    require_once DATABASES_DIR . '/event.php';
-}
 
 $eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
-$action = isset($_GET['action']) ? $_GET['action'] : '';
+$act = isset($_GET['action']) ? $_GET['action'] : '';
 $uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
 
-// Validate event ID
 if ($eid <= 0) {
     renderView('404');
     exit;
 }
 
-// Get event details
-$event = getEventById($eid);
-if (!$event) {
+$evt = getEventById($eid);
+if (!$evt) {
     renderView('404');
     exit;
 }
 
-// Handle approve/reject actions
-if ($action && $uid > 0) {
-    if ($action === 'approve') {
-        $result = approveParticipant($eid, $uid);
-        if ($result === true) {
-            header('Location: manage_event?eid=' . $eid . '&message=approved');
+if ($act && $uid > 0) {
+    if ($act === 'approve') {
+        $res = approveParticipant($eid, $uid);
+        if ($res === true) {
+            header('Location: manage_event?eid=' . $eid . '&msg=ok');
             exit;
         }
-    } elseif ($action === 'reject') {
-        $result = rejectParticipant($eid, $uid);
-        if ($result === true) {
-            header('Location: manage_event?eid=' . $eid . '&message=rejected');
+    } elseif ($act === 'reject') {
+        $res = rejectParticipant($eid, $uid);
+        if ($res === true) {
+            header('Location: manage_event?eid=' . $eid . '&msg=rej');
             exit;
         }
     }
 }
 
-// Get participants list
-$participants_result = getEventParticipants($eid);
-$participants_data = [];
-while ($row = $participants_result->fetch_assoc()) {
-    $participants_data[] = $row;
+$pres = getEventParticipants($eid);
+$pdata = [];
+while ($row = $pres->fetch_assoc()) {
+    $pdata[] = $row;
 }
 
-// Load attendance functions
-if (!function_exists('getAttendedUsers')) {
-    require_once DATABASES_DIR . '/user_event.php';
-}
-
-// Get attended users count
-$attended_users = getAttendedUsers($eid);
-$attended_count = count($attended_users);
-
-// Render the manage event template
+$att = getAttendedUsers($eid);
 renderView('manage_event', [
-    'event' => $event,
-    'participants_data' => $participants_data,
-    'attended_count' => $attended_count,
-    'attended_users' => $attended_users
+    'event' => $evt,
+    'participants_data' => $pdata,
+    'attended_count' => count($att),
+    'attended_users' => $att
 ]);
-
-?>

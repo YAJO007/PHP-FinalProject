@@ -53,6 +53,12 @@ $participants = isset($participants_data) ? $participants_data : [];
                     <i class="fa-solid fa-users text-2xl text-blue-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">ทั้งหมด</p>
                     <p class="text-3xl font-black text-blue-600"><?php echo count($participants); ?></p>
+                    <p class="text-xs text-gray-500 mt-1"><?php 
+                        if ($event['max_participants'] > 0) {
+                            $percentage = round((count($participants) / $event['max_participants']) * 100);
+                            echo $percentage . '%';
+                        }
+                    ?></p>
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
@@ -67,13 +73,70 @@ $participants = isset($participants_data) ? $participants_data : [];
                         echo $approved;
                         ?>
                     </p>
+                    <p class="text-xs text-gray-500 mt-1"><?php 
+                        if (count($participants) > 0) {
+                            $percentage = round(($approved / count($participants)) * 100);
+                            echo $percentage . '%';
+                        }
+                    ?></p>
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
                     <i class="fa-solid fa-check-double text-2xl text-blue-600 mb-2"></i>
                     <p class="text-gray-700 font-bold text-sm">เข้าร่วมงานแล้ว</p>
                     <p class="text-3xl font-black text-blue-600">
-                        <?php echo isset($attended_count) ? $attended_count : 0; ?>
+                        <?php 
+                        $attended = isset($attended_count) ? $attended_count : 0;
+                        echo $attended;
+                        ?>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1"><?php 
+                        if ($approved > 0) {
+                            $percentage = round(($attended / $approved) * 100);
+                            echo $percentage . '%';
+                        }
+                    ?></p>
+                </div>
+            </div>
+
+            <!-- ADDITIONAL STATS -->
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
+                    <p class="text-gray-700 font-bold text-sm">รอการอนุมัติ</p>
+                    <p class="text-3xl font-black text-yellow-600">
+                        <?php 
+                        $pending = 0;
+                        foreach ($participants as $p) {
+                            if ($p['status'] === 'Pending') $pending++;
+                        }
+                        echo $pending;
+                        ?>
+                    </p>
+                </div>
+
+                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-times-circle text-2xl text-red-600 mb-2"></i>
+                    <p class="text-gray-700 font-bold text-sm">ปฏิเสธ</p>
+                    <p class="text-3xl font-black text-red-600">
+                        <?php 
+                        $rejected = 0;
+                        foreach ($participants as $p) {
+                            if ($p['status'] === 'Rejected') $rejected++;
+                        }
+                        echo $rejected;
+                        ?>
+                    </p>
+                </div>
+
+                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
+                    <i class="fa-solid fa-user-slash text-2xl text-orange-600 mb-2"></i>
+                    <p class="text-gray-700 font-bold text-sm">ยังไม่เข้าร่วม</p>
+                    <p class="text-3xl font-black text-orange-600">
+                        <?php 
+                        $not_attended = $approved - $attended;
+                        echo max(0, $not_attended);
+                        ?>
                     </p>
                 </div>
             </div>

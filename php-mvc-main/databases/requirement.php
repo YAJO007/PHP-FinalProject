@@ -1,6 +1,6 @@
 <?php
 
-function addRequirement(int $eid, string $requirement)
+function addReq(int $eid, string $req): bool|string
 {
     global $conn;
     $sql = "INSERT INTO requirement (eid, requirement) VALUES (?, ?)";
@@ -10,20 +10,12 @@ function addRequirement(int $eid, string $requirement)
         return 'DB prepare failed: ' . $conn->error;
     }
 
-    $stmt->bind_param("is", $eid, $requirement);
-
-    if (!$stmt->execute()) {
-        $err = $stmt->error;
-        $stmt->close();
-        return 'DB execute failed: ' . $err;
-    }
-
-    $stmt->close();
-    return true;
+    $stmt->bind_param("is", $eid, $req);
+    return $stmt->execute() ? true : ('DB execute failed: ' . $stmt->error);
 }
 
-function getRequirementsByEventId(int $event_id): mysqli_result
+function getReqs(int $eid): mysqli_result
 {
     global $conn;
-    return $conn->query("SELECT * FROM requirement WHERE eid = $event_id");
+    return $conn->query("SELECT * FROM requirement WHERE eid = $eid");
 }

@@ -1,100 +1,100 @@
 <?php
-// ฟังก์ชันสำหรับดึงข้อมูลนักเรียนจากฐานข้อมูล
-function getuser(): mysqli_result
+
+function getUsers(): mysqli_result
 {
     global $conn;
-    $sql = "SELECT * FROM user";
-    return $conn->query($sql);
+    return $conn->query("SELECT * FROM user");
 }
 
-function adduser($username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital)
-{
+function addUser(
+    string $user, 
+    string $fname, 
+    string $lname, 
+    string $email, 
+    string $pwd, 
+    string $dob, 
+    string $gen, 
+    string $phone, 
+    string $disease
+): bool|string {
     global $conn;
+
     $sql = "INSERT INTO user 
             (user_name, first_name, last_name, email, password, date_of_birth, gender, phone_number, congenital_disease) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssssss", $username, $first_name, $last_name, $email, $password, $birthdate, $gender, $phone, $congenital);
-    
+    $stmt->bind_param("sssssssss", $user, $fname, $lname, $email, $pwd, $dob, $gen, $phone, $disease);
+
     try {
-        // ลองสั่งบันทึกข้อมูล
         $stmt->execute();
         $stmt->close();
-        return true; // สำเร็จ คืนค่า true
-        
+        return true;
     } catch (mysqli_sql_exception $e) {
-        $stmt->close(); 
+        $stmt->close();
         if ($e->getCode() == 1062) {
             return "ข้อมูลซ้ำ: มีอีเมล ชื่อผู้ใช้ หรือเบอร์โทรศัพท์นี้ในระบบแล้ว";
-        } else {
-            return "เกิดข้อผิดพลาดจากระบบ: " . $e->getMessage();
         }
+        return "เกิดข้อผิดพลาดจากระบบ: " . $e->getMessage();
     }
 }
 
-function checklogin($email): bool
+function checkLogin(string $email): bool
 {
     global $conn;
     $sql = "SELECT 1 FROM user WHERE email = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $result = $stmt->get_result();
-    $exists = ($result->num_rows > 0);
+    $res = ($stmt->get_result()->num_rows > 0);
     $stmt->close();
-    return $exists;
+    return $res;
 }
+
 function getUserByEmail(string $email): mysqli_result
 {
     global $conn;
-    $sql  = "SELECT * FROM user WHERE email = ?";
+    $sql = "SELECT * FROM user WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
     return $stmt->get_result();
 }
 
-function getUseridbyEmail(string $email): ?int
+function getUidByEmail(string $email): ?int
 {
     global $conn;
-
     $sql = "SELECT uid FROM user WHERE email = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
 
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        return (int)$row['uid'];
-    }
-
-    return null;
+    $row = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return $row ? (int)$row['uid'] : null;
 }
 
-function updateUserProfile(string $email, string $first_name, string $last_name, 
-                          string $phone_number, string $date_of_birth, 
-                          string $gender, string $congenital_disease)
-{
+function updateUser(
+    string $email,
+    string $fname,
+    string $lname,
+    string $phone,
+    string $dob,
+    string $gen,
+    string $disease
+): bool|string {
     global $conn;
-    
-    $sql = "UPDATE user SET 
-            first_name = ?, 
-            last_name = ?, 
-            phone_number = ?, 
-            date_of_birth = ?, 
-            gender = ?, 
-            congenital_disease = ? 
-            WHERE email = ?";
-    
+
+    $sql = "UPDATE user SET first_name = ?, last_name = ?, phone_number = ?, 
+            date_of_birth = ?, gender = ?, congenital_disease = ? WHERE email = ?";
+
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sssssss", $first_name, $last_name, $phone_number, 
-                      $date_of_birth, $gender, $congenital_disease, $email);
-    
+    $stmt->bind_param("sssssss", $fname, $lname, $phone, $dob, $gen, $disease, $email);
+
     try {
         $stmt->execute();
         $stmt->close();
-        return true; // สำเร็จ
+        return true;
     } catch (mysqli_sql_exception $e) {
         $stmt->close();
         return "เกิดข้อผิดพลาด: " . $e->getMessage();
@@ -104,18 +104,13 @@ function updateUserProfile(string $email, string $first_name, string $last_name,
 function getUserById(int $uid): ?array
 {
     global $conn;
-    
+
     $sql = "SELECT * FROM user WHERE uid = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("i", $uid);
     $stmt->execute();
-    
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        $stmt->close();
-        return $row;
-    }
-    
+
+    $row = $stmt->get_result()->fetch_assoc();
     $stmt->close();
-    return null;
+    return $row ?: null;
 }
