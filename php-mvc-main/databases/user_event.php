@@ -70,4 +70,56 @@ function getUserRegistrationStatus(int $uid, int $eid): ?string
     return null;
 }
 
+/**
+ * Mark user as attended for an event (stored in session only)
+ */
+function markAsAttended(int $uid, int $eid): bool
+{
+    // Store attendance in session
+    if (!isset($_SESSION['attended_events'])) {
+        $_SESSION['attended_events'] = [];
+    }
+    
+    $key = "{$eid}_{$uid}";
+    $_SESSION['attended_events'][$key] = [
+        'eid' => $eid,
+        'uid' => $uid,
+        'timestamp' => time()
+    ];
+    
+    return true;
+}
+
+/**
+ * Check if user has attended the event (from session)
+ */
+function hasAttended(int $uid, int $eid): bool
+{
+    if (!isset($_SESSION['attended_events'])) {
+        return false;
+    }
+    
+    $key = "{$eid}_{$uid}";
+    return isset($_SESSION['attended_events'][$key]);
+}
+
+/**
+ * Get all attended users for an event (from session)
+ */
+function getAttendedUsers(int $eid): array
+{
+    if (!isset($_SESSION['attended_events'])) {
+        return [];
+    }
+    
+    $attended = [];
+    foreach ($_SESSION['attended_events'] as $key => $data) {
+        if ($data['eid'] === $eid) {
+            $attended[] = $data;
+        }
+    }
+    
+    return $attended;
+}
+
 ?>

@@ -100,3 +100,22 @@ function updateUserProfile(string $email, string $first_name, string $last_name,
         return "เกิดข้อผิดพลาด: " . $e->getMessage();
     }
 }
+
+function getUserById(int $uid): ?array
+{
+    global $conn;
+    
+    $sql = "SELECT * FROM user WHERE uid = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $uid);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    if ($row = $result->fetch_assoc()) {
+        $stmt->close();
+        return $row;
+    }
+    
+    $stmt->close();
+    return null;
+}

@@ -70,16 +70,10 @@ $participants = isset($participants_data) ? $participants_data : [];
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">รอการอนุมัติ</p>
-                    <p class="text-3xl font-black text-yellow-600">
-                        <?php 
-                        $pending = 0;
-                        foreach ($participants as $p) {
-                            if ($p['status'] === 'Pending') $pending++;
-                        }
-                        echo $pending;
-                        ?>
+                    <i class="fa-solid fa-check-double text-2xl text-blue-600 mb-2"></i>
+                    <p class="text-gray-700 font-bold text-sm">เข้าร่วมงานแล้ว</p>
+                    <p class="text-3xl font-black text-blue-600">
+                        <?php echo isset($attended_count) ? $attended_count : 0; ?>
                     </p>
                 </div>
             </div>
@@ -155,6 +149,73 @@ $participants = isset($participants_data) ? $participants_data : [];
 
             <!-- EVENT DETAILS -->
             <div class="mt-8 grid md:grid-cols-2 gap-6">
+                
+                <!-- OTP Check-in Section -->
+                <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
+                    <h3 class="text-xl font-black text-purple-800 mb-4">🔑 เช็คชื่อด้วย OTP</h3>
+                    
+                    <?php if (isset($_GET['checkin']) && $_GET['checkin'] === 'success' && isset($_SESSION['checkin_success'])): ?>
+                        <div class="bg-green-100 border-2 border-green-500 rounded-lg p-4 mb-4">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="text-3xl">✅</div>
+                                <div>
+                                    <p class="font-black text-green-800 text-lg">เช็คชื่อสำเร็จ!</p>
+                                    <p class="text-sm text-green-700">เวลา: <?= htmlspecialchars($_SESSION['checkin_success']['time']) ?></p>
+                                </div>
+                            </div>
+                            <div class="border-t-2 border-green-300 pt-2 mt-2">
+                                <p class="font-bold text-gray-800"><?= htmlspecialchars($_SESSION['checkin_success']['name']) ?></p>
+                                <p class="text-sm text-gray-600"><?= htmlspecialchars($_SESSION['checkin_success']['email']) ?></p>
+                            </div>
+                        </div>
+                        <?php unset($_SESSION['checkin_success']); ?>
+                    <?php endif; ?>
+
+                    <?php if (isset($_GET['error']) && $_GET['error'] === 'invalid_otp'): ?>
+                        <div class="bg-red-100 border-2 border-red-500 rounded-lg p-4 mb-4">
+                            <p class="font-bold text-red-800">❌ รหัส OTP ไม่ถูกต้องหรือหมดอายุ</p>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (isset($_GET['error']) && $_GET['error'] === 'already_attended'): ?>
+                        <div class="bg-orange-100 border-2 border-orange-500 rounded-lg p-4 mb-4">
+                            <p class="font-bold text-orange-800">⚠️ ผู้เข้าร่วมท่านนี้เช็คชื่อเข้าร่วมงานแล้ว</p>
+                        </div>
+                    <?php endif; ?>
+
+                    <form action="verify_otp" method="POST" class="space-y-4">
+                        <input type="hidden" name="eid" value="<?php echo htmlspecialchars($event['eid']); ?>">
+                        
+                        <div>
+                            <label class="block text-sm font-bold mb-2 text-gray-800">กรอกรหัส OTP (6 หลัก)</label>
+                            <input type="text" 
+                                   name="otp" 
+                                   maxlength="6" 
+                                   pattern="[0-9]{6}"
+                                   placeholder="000000"
+                                   required
+                                   class="w-full px-4 py-3 text-2xl font-bold text-center tracking-widest
+                                          border-2 border-black rounded-lg
+                                          focus:ring-4 focus:ring-purple-300 transition-all">
+                        </div>
+                        
+                        <button type="submit" 
+                                class="w-full px-6 py-3 bg-green-500 text-white border-2 border-black rounded-lg font-bold
+                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                            <i class="fa-solid fa-check-circle"></i> ยืนยันเช็คชื่อ
+                        </button>
+                    </form>
+
+                    <div class="mt-4 p-3 bg-purple-50 border border-purple-300 rounded-lg">
+                        <p class="text-xs text-gray-600">
+                            <i class="fa-solid fa-info-circle"></i> 
+                            ผู้เข้าร่วมที่ได้รับการอนุมัติสามารถสร้าง OTP จากหน้า "ดูการลงทะเบียน" 
+                            และนำมาให้คุณกรอกเพื่อเช็คชื่อเข้าร่วมกิจกรรม
+                        </p>
+                    </div>
+                </div>
+
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
                     <h3 class="text-xl font-black text-purple-800 mb-4"><i class="fa-solid fa-file-lines"></i> รายละเอียดกิจกรรม</h3>
                     <div class="space-y-2 text-sm">

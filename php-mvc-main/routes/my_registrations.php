@@ -39,11 +39,16 @@ if (!$user_id) {
 $registrations = [];
 $all_events = getEvents(); // Get all events
 
+if (!function_exists('hasAttended')) {
+    require_once DATABASES_DIR . '/user_event.php';
+}
+
 if ($all_events && $all_events->num_rows > 0) {
     while ($event = $all_events->fetch_assoc()) {
         // Check if user is registered for this event
         if (isUserRegistered($user_id, (int)$event['eid'])) {
             $event['registration_status'] = getUserRegistrationStatus($user_id, (int)$event['eid']);
+            $event['has_attended'] = hasAttended($user_id, (int)$event['eid']);
             $registrations[] = $event;
         }
     }

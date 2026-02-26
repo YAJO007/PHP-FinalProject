@@ -59,10 +59,21 @@ while ($row = $participants_result->fetch_assoc()) {
     $participants_data[] = $row;
 }
 
+// Load attendance functions
+if (!function_exists('getAttendedUsers')) {
+    require_once DATABASES_DIR . '/user_event.php';
+}
+
+// Get attended users count
+$attended_users = getAttendedUsers($eid);
+$attended_count = count($attended_users);
+
 // Render the manage event template
 renderView('manage_event', [
     'event' => $event,
-    'participants_data' => $participants_data
+    'participants_data' => $participants_data,
+    'attended_count' => $attended_count,
+    'attended_users' => $attended_users
 ]);
 
 ?>
