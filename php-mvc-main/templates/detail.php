@@ -134,7 +134,6 @@ if (!isset($event) || !is_array($event)) {
                 }
                 ?>
                 
-                <!-- Main Image -->
                 <div class="relative w-full h-96">
                     <?php if (!empty($images)): ?>
                         <?php foreach ($images as $index => $image): ?>
@@ -146,7 +145,6 @@ if (!isset($event) || !is_array($event)) {
                         <?php endforeach; ?>
                         
                         <?php if (count($images) > 1): ?>
-                            <!-- Navigation Buttons -->
                             <button class="gallery-nav-btn prev" onclick="changeImage(-1)">
                                 <i class="fa-solid fa-chevron-left"></i>
                             </button>
@@ -154,7 +152,6 @@ if (!isset($event) || !is_array($event)) {
                                 <i class="fa-solid fa-chevron-right"></i>
                             </button>
                             
-                            <!-- Image Counter -->
                             <div class="image-counter">
                                 <span id="current-image">1</span> / <span id="total-images"><?= count($images) ?></span>
                             </div>
@@ -354,6 +351,7 @@ function showImage(index) {
     
     if (index < 0) {
         currentImageIndex = totalImages - 1;
+    } else if (index >= totalImages) {
         currentImageIndex = 0;
     } else {
         currentImageIndex = index;
@@ -362,6 +360,7 @@ function showImage(index) {
     images.forEach((img, idx) => {
         if (idx === currentImageIndex) {
             img.style.opacity = '1';
+            img.style.display = 'block';
         } else {
             img.style.opacity = '0';
             img.style.display = 'none';
@@ -384,6 +383,10 @@ function showImage(index) {
 
 function changeImage(direction) {
     showImage(currentImageIndex + direction);
+}
+
+if (totalImages > 0) {
+    showImage(0);
 }
 
 document.addEventListener('keydown', function(event) {

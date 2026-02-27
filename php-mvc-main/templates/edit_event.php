@@ -126,7 +126,6 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     </div>
 
-                    <!-- BUTTONS -->
                     <div class="pt-4 flex gap-4">
                         <button type="submit"
                             class="flex-1 px-6 py-3 bg-purple-600 text-white
