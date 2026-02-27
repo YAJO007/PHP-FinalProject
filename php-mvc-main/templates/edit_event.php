@@ -86,7 +86,7 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                 <p class="text-sm text-gray-700 mb-6">อัปเดตข้อมูลกิจกรรมของคุณ</p>
 
                 <form method="POST" action="edit_event"
-                    class="space-y-5">
+                    class="space-y-5" enctype="multipart/form-data">
 
                     <input type="hidden" name="eid" value="<?php echo htmlspecialchars($event['eid']); ?>">
 
@@ -124,6 +124,30 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                         <input type="number" name="max_participants" required value="<?php echo htmlspecialchars($event['max_participants'] ?? ''); ?>"
                             class="w-full px-4 py-2 border-2 border-black rounded-lg
                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    </div>
+
+                    <div>
+                        <label class="font-bold">รูปภาพกิจกรรม</label>
+                        <?php if (!empty($event['image_path'])): ?>
+                            <div class="mb-3 p-3 border-2 border-gray-300 rounded-lg bg-gray-50">
+                                <p class="text-sm text-gray-600 mb-2">รูปภาพปัจจุบัน:</p>
+                                <div class="relative">
+                                    <img src="/img/<?php echo htmlspecialchars($event['image_path']); ?>" 
+                                         alt="Event Image" 
+                                         class="w-full h-48 object-cover border-2 border-black rounded-lg">
+                                    <button type="submit" name="action" value="delete_image"
+                                        class="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white border-2 border-black rounded-lg font-bold text-sm hover:scale-110 transition-all"
+                                        onclick="return confirm('ลบรูปภาพนี้ใช่หรือไม่?')">
+                                        <i class="fa-solid fa-trash"></i> ลบ
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                        <label class="block px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center">
+                            <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปภาพใหม่
+                            <input type="file" name="image" accept="image/*" class="hidden" id="image_input">
+                        </label>
+                        <p class="text-xs text-gray-600 mt-2">ฟอร์แมตที่รองรับ: JPG, PNG, GIF (ขนาดสูงสุด 5MB)</p>
                     </div>
 
                     <div class="pt-4 flex gap-4">

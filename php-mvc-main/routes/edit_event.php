@@ -20,6 +20,29 @@ if ($m === 'GET') {
 
 } elseif ($m === 'POST') {
     $eid = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
+    $action = isset($_POST['action']) ? $_POST['action'] : '';
+
+    // Handle delete image
+    if ($action === 'delete_image') {
+        if ($eid > 0) {
+            $old_path = getImagePath($eid);
+            if ($old_path) {
+                $upload_dir = __DIR__ . '/../public/img/';
+                $file_path = $upload_dir . $old_path;
+                
+                // Delete from database
+                deleteImage($eid);
+                
+                // Delete file
+                if (file_exists($file_path)) {
+                    unlink($file_path);
+                }
+            }
+        }
+        header('Location: edit_event?eid=' . $eid);
+        exit;
+    }
+
     $ttl = isset($_POST['title']) ? trim($_POST['title']) : '';
     $det = isset($_POST['detail']) ? trim($_POST['detail']) : '';
     $sd = isset($_POST['start_date']) ? $_POST['start_date'] : '';
@@ -36,10 +59,35 @@ if ($m === 'GET') {
 
     $res = updateEvent($eid, $ttl, $mp, $sd, $ed, $det);
 
-    if ($res === true) {
-        header('Location: detail?eid=' . $eid . '&ok=1');
-    } else {
+    if ($res !== true) {
         header('Location: edit_event?eid=' . $eid . '&err=1');
+        exit;
     }
-    exit;
+
+    // Handle image upload
+    if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+        $tmp_name = $_FILES['image']['tmp_name'];
+        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+        $new_name = uniqid('event_', true) . '.' . $ext;
+
+        $upload_dir = __DIR__ . '/../public/img/';
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+
+        // Get old image path
+        $old_image_path = getImagePath($eid);
+
+        // Move new image
+        if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
+            // Update image in database
+            $img_result = updateImage($eid, $new_name);
+
+            if ($img_result === true && $old_image_path && file_exists($upload_dir . $old_image_path)) {
+                unlink($upload_dir . $old_image_path);
+            }
+        }
+    }
+
+    header('Location: detail?eid=' . $eid . '&ok=1');    exit;
 }
