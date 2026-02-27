@@ -143,11 +143,11 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                                 </div>
                             </div>
                         <?php endif; ?>
-                        <label class="block px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center">
+                        <label for="image_input" class="block px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center">
                             <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปภาพใหม่
-                            <input type="file" name="image" accept="image/*" class="hidden" id="image_input">
                         </label>
-                        <p class="text-xs text-gray-600 mt-2">ฟอร์แมตที่รองรับ: JPG, PNG, GIF (ขนาดสูงสุด 5MB)</p>
+                        <input type="file" name="image" id="image_input" accept="image/*" class="hidden">
+                        <p class="text-xs text-gray-600 mt-2" id="filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF (ขนาดสูงสุด 5MB)</p>
                     </div>
 
                     <div class="pt-4 flex gap-4">
@@ -174,6 +174,31 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
             </div>
         </div>
     </div>
+
+    <script>
+        // Handle image input display
+        const imageInput = document.getElementById('image_input');
+        const filenameDisplay = document.getElementById('filename-display');
+        
+        imageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const fileName = this.files[0].name;
+                const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2);
+                filenameDisplay.textContent = `✓ เลือกไฟล์: ${fileName} (${fileSize} MB)`;
+            }
+        });
+
+        // Clear action field when uploading new image
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(e) {
+            const imageFile = imageInput.files.length;
+            if (imageFile > 0) {
+                // Remove the action field to prevent delete_image action
+                const actionInput = document.querySelector('input[name="action"]');
+                if (actionInput) actionInput.remove();
+            }
+        });
+    </script>
 
 </body>
 </html>

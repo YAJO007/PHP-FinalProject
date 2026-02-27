@@ -266,9 +266,10 @@ if (!isset($event) || !is_array($event)) {
                 $registration_status = $user_id ? getUserRegStatus($user_id, (int)$event['eid']) : null;
                 $event_status = $event['status'] ?? '';
                 $is_completed = ($event_status === 'Completed');
+                $is_owner = $is_logged_in && $user_id && $user_id === (int)($event['uid'] ?? 0);
                 ?>
                 
-                <?php if ($is_logged_in && $is_registered): ?>
+                <?php if ($is_logged_in && $is_registered && !$is_owner): ?>
                     <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                         <div class="flex items-center gap-2">
                             <?php if ($registration_status === 'Approved'): ?>
@@ -286,7 +287,27 @@ if (!isset($event) || !is_array($event)) {
                 <?php endif; ?>
 
                 <div class="grid grid-cols-4 gap-2 pt-2 max-w-3xl">
-                    <?php if (!$is_logged_in): ?>
+                    <?php if ($is_owner): ?>
+                        <!-- Owner Controls -->
+                        <a href="edit_event?eid=<?= (int)$event['eid'] ?>" class="col-span-2">
+                            <button class="w-full px-6 py-3 bg-blue-600 text-white border-2 border-black rounded-lg font-bold
+                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
+                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-edit"></i>
+                                แก้ไข
+                            </button>
+                        </a>
+                        <a href="manage_event?eid=<?= (int)$event['eid'] ?>" class="col-span-2">
+                            <button class="w-full px-6 py-3 bg-green-600 text-white border-2 border-black rounded-lg font-bold
+                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
+                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap">
+                                <i class="fa-solid fa-cogs"></i>
+                                จัดการ
+                            </button>
+                        </a>
+                    <?php elseif (!$is_logged_in): ?>
                         <a href="login" class="col-span-4">
                             <button class="w-full px-6 py-3 bg-orange-500 text-white border-2 border-black rounded-lg font-bold
                                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]

@@ -67,24 +67,32 @@ if ($m === 'GET') {
     // Handle image upload
     if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
         $tmp_name = $_FILES['image']['tmp_name'];
-        $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-        $new_name = uniqid('event_', true) . '.' . $ext;
+        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+        
+        // Validate file extension
+        $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+        if (in_array($ext, $allowed_ext)) {
+            $new_name = uniqid('event_', true) . '.' . $ext;
 
-        $upload_dir = __DIR__ . '/../public/img/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
+            $upload_dir = __DIR__ . '/../public/img/';
+            if (!is_dir($upload_dir)) {
+                mkdir($upload_dir, 0755, true);
+            }
 
-        // Get old image path
-        $old_image_path = getImagePath($eid);
+            // Get old image path
+            $old_image_path = getImagePath($eid);
 
-        // Move new image
-        if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
-            // Update image in database
-            $img_result = updateImage($eid, $new_name);
+            // Move new image
+            if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
+                // Update image in database
+                $img_result = updateImage($eid, $new_name);
 
-            if ($img_result === true && $old_image_path && file_exists($upload_dir . $old_image_path)) {
-                unlink($upload_dir . $old_image_path);
+                if ($img_result === true && $old_image_path && file_exists($upload_dir . $old_image_path)) {
+                    unlink($upload_dir . $old_image_path);
+                }
+            } else {
+                // Log upload error
+                error_log('Upload failed for event ' . $eid . ': ' . $_FILES['image']['error']);
             }
         }
     }
