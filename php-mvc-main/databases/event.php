@@ -209,8 +209,9 @@ function getRejectionHistory(int $uid): array
     $stmt->bind_param("i", $uid);
     $stmt->execute();
 
+    $result = $stmt->get_result();
     $rejects = [];
-    while ($row = $stmt->get_result()->fetch_assoc()) {
+    while ($row = $result->fetch_assoc()) {
         $rejects[] = [
             'title' => $row['title'],
             'eid' => $row['eid'],
@@ -218,6 +219,7 @@ function getRejectionHistory(int $uid): array
             'rejection_reason' => 'Rejected by organizer'
         ];
     }
+    $stmt->close();
 
     return $rejects;
 }
