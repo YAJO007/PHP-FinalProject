@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($uid === null) {
         die("ไม่พบ user จาก email นี้");
     }
-
+    
     $eid = addEvent(
         $uid,
         $_POST['title'] ?? '',

@@ -16,22 +16,34 @@ if ($m === 'GET') {
         exit;
     }
 
+    // Get all images for the event
+    $evt['images'] = getImgs($eid);
+
     renderView('edit_event', ['event' => $evt]);
 
 } elseif ($m === 'POST') {
+    global $conn;
+    
     $eid = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
-    // Handle delete image
-    if ($action === 'delete_image') {
-        if ($eid > 0) {
-            $old_path = getImagePath($eid);
-            if ($old_path) {
+    // Handle delete multiple images (can be combined with update)
+    if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
+        $images_to_delete = $_POST['delete_images'];
+        
+        if ($eid > 0 && !empty($images_to_delete)) {
+            foreach ($images_to_delete as $image_path) {
+                $image_path = basename($image_path); // Security: prevent directory traversal
                 $upload_dir = __DIR__ . '/../public/img/';
-                $file_path = $upload_dir . $old_path;
+                $file_path = $upload_dir . $image_path;
                 
                 // Delete from database
-                deleteImage($eid);
+                $sql = "DELETE FROM event_img WHERE eid = ? AND image_path = ?";
+                $stmt = $conn->prepare($sql);
+                if ($stmt) {
+                    $stmt->bind_param("is", $eid, $image_path);
+                    $stmt->execute();
+                }
                 
                 // Delete file
                 if (file_exists($file_path)) {
@@ -39,6 +51,10 @@ if ($m === 'GET') {
                 }
             }
         }
+    }
+
+    // If only deleting images, redirect
+    if ($action === 'delete_images' && !isset($_POST['title'])) {
         header('Location: edit_event?eid=' . $eid);
         exit;
     }
@@ -64,38 +80,78 @@ if ($m === 'GET') {
         exit;
     }
 
-    // Handle image upload
-    if (!empty($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        $tmp_name = $_FILES['image']['tmp_name'];
-        $ext = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
-        
-        // Validate file extension
-        $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
-        if (in_array($ext, $allowed_ext)) {
-            $new_name = uniqid('event_', true) . '.' . $ext;
+    // DEBUG: Log files
+    error_log('DEBUG: FILES received: ' . json_encode([
+        'files_keys' => array_keys($_FILES),
+        'images_exists' => isset($_FILES['images']),
+        'images_names' => isset($_FILES['images']) ? $_FILES['images']['name'] : null,
+        'images_errors' => isset($_FILES['images']) ? $_FILES['images']['error'] : null,
+    ], JSON_PRETTY_PRINT));
 
-            $upload_dir = __DIR__ . '/../public/img/';
-            if (!is_dir($upload_dir)) {
-                mkdir($upload_dir, 0755, true);
+    // Handle multiple image uploads
+    if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
+        $upload_count = 0;
+        foreach ($_FILES['images']['name'] as $k => $n) {
+            if (empty($n)) {
+                continue;
+            }
+            
+            $error_code = $_FILES['images']['error'][$k];
+            if ($error_code !== UPLOAD_ERR_OK) {
+                error_log("Upload error for file $n (index $k): " . $error_code);
+                continue;
             }
 
-            // Get old image path
-            $old_image_path = getImagePath($eid);
+            $tmp = $_FILES['images']['tmp_name'][$k];
+            
+            // Verify temp file exists
+            if (!file_exists($tmp) || !is_uploaded_file($tmp)) {
+                error_log("Temp file not valid: $tmp");
+                continue;
+            }
+            
+            $ext = strtolower(pathinfo($n, PATHINFO_EXTENSION));
+            
+            // Validate file extension
+            $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+            if (!in_array($ext, $allowed_ext)) {
+                error_log("Invalid extension: $ext for file $n");
+                continue;
+            }
+            
+            // Check file size (5MB max)
+            $file_size = $_FILES['images']['size'][$k];
+            if ($file_size > 5 * 1024 * 1024) {
+                error_log("File too large: $file_size bytes for file $n");
+                continue;
+            }
+            
+            $fn = uniqid('event_', true) . '.' . $ext;
+            $dir = __DIR__ . '/../public/img/';
 
-            // Move new image
-            if (move_uploaded_file($tmp_name, $upload_dir . $new_name)) {
-                // Update image in database
-                $img_result = updateImage($eid, $new_name);
-
-                if ($img_result === true && $old_image_path && file_exists($upload_dir . $old_image_path)) {
-                    unlink($upload_dir . $old_image_path);
+            if (!is_dir($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+            
+            $full_path = $dir . $fn;
+            if (move_uploaded_file($tmp, $full_path)) {
+                error_log("Successfully moved file to: $full_path");
+                $add_result = addImg($eid, $fn);
+                if ($add_result !== true) {
+                    error_log("ERROR: addImg failed with message: " . $add_result);
+                } else {
+                    error_log("Successfully added image $fn to database for event $eid");
+                    $upload_count++;
                 }
             } else {
-                // Log upload error
-                error_log('Upload failed for event ' . $eid . ': ' . $_FILES['image']['error']);
+                error_log("Failed to move uploaded file from $tmp to $full_path");
             }
         }
+        error_log("Total files uploaded: $upload_count out of " . count($_FILES['images']['name']));
+    } else {
+        error_log("No files in _FILES or not array. FILES keys: " . implode(',', array_keys($_FILES)));
     }
 
-    header('Location: detail?eid=' . $eid . '&ok=1');    exit;
+    header('Location: edit_event?eid=' . $eid . '&success=1');
+    exit;
 }

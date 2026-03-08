@@ -137,7 +137,7 @@ if (!isset($event) || !is_array($event)) {
                 <div class="relative w-full h-96">
                     <?php if (!empty($images)): ?>
                         <?php foreach ($images as $index => $image): ?>
-                            <img src="img/<?= htmlspecialchars($image) ?>" 
+                            <img src="/img/<?= htmlspecialchars($image) ?>" 
                                  class="main-image absolute inset-0 w-full h-full object-cover transition-opacity duration-300"
                                  alt="<?php echo htmlspecialchars($event['title'] ?? ''); ?>"
                                  data-index="<?= $index ?>"
@@ -169,7 +169,7 @@ if (!isset($event) || !is_array($event)) {
                 <?php if (!empty($images) && count($images) > 1): ?>
                     <div class="thumbnail-carousel">
                         <?php foreach ($images as $index => $image): ?>
-                            <img src="img/<?= htmlspecialchars($image) ?>"
+                            <img src="/img/<?= htmlspecialchars($image) ?>"
                                  class="thumbnail <?= $index === 0 ? 'active' : '' ?>"
                                  alt="Thumbnail <?= $index + 1 ?>"
                                  onclick="showImage(<?= $index ?>)"

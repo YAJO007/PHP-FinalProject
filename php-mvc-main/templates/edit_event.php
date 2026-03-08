@@ -6,6 +6,7 @@ if (!isset($event) || !is_array($event)) {
 
 $start_date = isset($event['start_date']) ? date('Y-m-d\\TH:i', strtotime($event['start_date'])) : '';
 $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['end_date'])) : '';
+$show_success = isset($_GET['success']) && $_GET['success'] === '1';
 ?>
 
 <!DOCTYPE html>
@@ -74,6 +75,13 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
 
         <div class="flex-1 bg-purple-100 p-10 flex justify-center">
 
+            <?php if ($show_success): ?>
+                <div class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-2 z-50">
+                    <i class="fa-solid fa-check-circle"></i>
+                    <span>บันทึกสำเร็จ! รูปภาพถูกอัพโหลดแล้ว</span>
+                </div>
+            <?php endif; ?>
+
             <div class="bg-white border-2 border-black rounded-[24px]
                     shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]
                     p-8 w-full max-w-xl">
@@ -84,11 +92,17 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                 </div>
 
                 <p class="text-sm text-gray-700 mb-6">อัปเดตข้อมูลกิจกรรมของคุณ</p>
+                
+                <!-- DEBUG: Show image count -->
+                <div class="bg-yellow-100 border-2 border-yellow-400 px-3 py-2 rounded text-sm text-yellow-800 mb-4">
+                    <?php echo "รูปภาพปัจจุบัน: " . count($event['images'] ?? []) . " รูป"; ?>
+                </div>
 
                 <form method="POST" action="edit_event"
                     class="space-y-5" enctype="multipart/form-data">
 
                     <input type="hidden" name="eid" value="<?php echo htmlspecialchars($event['eid']); ?>">
+                    <input type="hidden" name="action" value="update">
 
                     <div>
                         <label class="font-bold">ชื่อกิจกรรม</label>
@@ -128,26 +142,46 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
 
                     <div>
                         <label class="font-bold">รูปภาพกิจกรรม</label>
-                        <?php if (!empty($event['image_path'])): ?>
-                            <div class="mb-3 p-3 border-2 border-gray-300 rounded-lg bg-gray-50">
-                                <p class="text-sm text-gray-600 mb-2">รูปภาพปัจจุบัน:</p>
-                                <div class="relative">
-                                    <img src="/img/<?php echo htmlspecialchars($event['image_path']); ?>" 
-                                         alt="Event Image" 
-                                         class="w-full h-48 object-cover border-2 border-black rounded-lg">
-                                    <button type="submit" name="action" value="delete_image"
-                                        class="absolute top-2 right-2 px-3 py-1 bg-red-500 text-white border-2 border-black rounded-lg font-bold text-sm hover:scale-110 transition-all"
-                                        onclick="return confirm('ลบรูปภาพนี้ใช่หรือไม่?')">
-                                        <i class="fa-solid fa-trash"></i> ลบ
-                                    </button>
-                                </div>
+                        
+                        <!-- Display existing images -->
+                        <?php 
+                        $images = $event['images'] ?? [];
+                        error_log("DEBUG template: Found " . count($images) . " images for event " . $event['eid']);
+                        if (!empty($images)) {
+                            echo '<div class="mb-4 p-3 border-2 border-gray-300 rounded-lg bg-gray-50">';
+                            echo '<p class="text-sm text-gray-600 mb-3 font-bold">รูปภาพปัจจุบัน:</p>';
+                            echo '<div class="space-y-3" id="existing-images-container">';
+                            
+                            foreach ($images as $image) {
+                                echo '<div class="relative border-2 border-gray-400 rounded-lg overflow-hidden bg-white">';
+                                echo '  <div class="flex items-start gap-3 p-2">';
+                                echo '    <input type="checkbox" name="delete_images[]" value="' . htmlspecialchars($image) . '" class="mt-1 w-5 h-5 cursor-pointer">';
+                                echo '    <div class="flex-1">';
+                                echo '      <img src="/img/' . htmlspecialchars($image) . '" alt="Event Image" class="w-24 h-24 object-cover border-2 border-gray-300 rounded">';
+                                echo '      <p class="text-xs text-gray-500 mt-1 break-all">' . htmlspecialchars($image) . '</p>';
+                                echo '    </div>';
+                                echo '  </div>';
+                                echo '</div>';
+                            }
+                            
+                            echo '</div>';
+                            echo '<p class="text-xs text-red-600 mt-2"><i class="fa-solid fa-info-circle"></i> เลือกรูปที่ต้องการลบ แล้วคลิค "บันทึก"</p>';
+                            echo '</div>';
+                        }
+                        ?>
+                        
+                        <!-- Upload new images -->
+                        <div class="mt-3">
+                            <button type="button" class="block w-full px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center" onclick="document.getElementById('images_input').click()">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปภาพใหม่
+                            </button>
+                            <input type="file" name="images" id="images_input" accept="image/*" multiple style="display: none;">
+                            <p class="text-xs text-gray-600 mt-2" id="filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป</p>
+                            <div id="image-preview-container" class="mt-3 grid grid-cols-3 gap-2 hidden">
+                                <!-- Preview images here -->
                             </div>
-                        <?php endif; ?>
-                        <label for="image_input" class="block px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center">
-                            <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปภาพใหม่
-                        </label>
-                        <input type="file" name="image" id="image_input" accept="image/*" class="hidden">
-                        <p class="text-xs text-gray-600 mt-2" id="filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF (ขนาดสูงสุด 5MB)</p>
+                        </div>
+
                     </div>
 
                     <div class="pt-4 flex gap-4">
@@ -170,32 +204,90 @@ $end_date = isset($event['end_date']) ? date('Y-m-d\\TH:i', strtotime($event['en
                             </button>
                         </a>
                     </div>
+
+                    <!-- Handle delete_images action -->
+                    <script>
+                        const form = document.querySelector('form');
+                        form.addEventListener('submit', function(e) {
+                            const checkboxes = document.querySelectorAll('input[name="delete_images[]"]:checked');
+                            const newImages = document.getElementById('images_input').files.length;
+                            
+                            // If deleting images, set action
+                            if (checkboxes.length > 0 && newImages === 0) {
+                                const actionInput = document.querySelector('input[name="action"]');
+                                if (actionInput) {
+                                    actionInput.value = 'delete_images';
+                                }
+                            }
+                        });
+                    </script>
                 </form>
             </div>
         </div>
     </div>
 
     <script>
-        // Handle image input display
-        const imageInput = document.getElementById('image_input');
-        const filenameDisplay = document.getElementById('filename-display');
-        
-        imageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const fileName = this.files[0].name;
-                const fileSize = (this.files[0].size / 1024 / 1024).toFixed(2);
-                filenameDisplay.textContent = `✓ เลือกไฟล์: ${fileName} (${fileSize} MB)`;
-            }
-        });
+        // Auto-hide success notification and refresh page
+        const successNotif = document.querySelector('[class*="bg-green-500"]');
+        if (successNotif) {
+            setTimeout(() => {
+                // Reload page to show newly uploaded images
+                location.reload();
+            }, 1500);
+        }
 
-        // Clear action field when uploading new image
-        const form = document.querySelector('form');
-        form.addEventListener('submit', function(e) {
-            const imageFile = imageInput.files.length;
-            if (imageFile > 0) {
-                // Remove the action field to prevent delete_image action
-                const actionInput = document.querySelector('input[name="action"]');
-                if (actionInput) actionInput.remove();
+        // Handle multiple image input display
+        const imagesInput = document.getElementById('images_input');
+        const filenameDisplay = document.getElementById('filename-display');
+        const previewContainer = document.getElementById('image-preview-container');
+        
+        if (!imagesInput) {
+            console.error('File input not found!');
+        } else {
+            console.log('File input found, ready for upload');
+        }
+        
+        imagesInput.addEventListener('change', function() {
+            console.log('Files selected:', this.files.length);
+            previewContainer.innerHTML = '';
+            
+            if (this.files && this.files.length > 0) {
+                previewContainer.classList.remove('hidden');
+                let totalSize = 0;
+                let validFiles = 0;
+                
+                console.log('Processing', this.files.length, 'selected files');
+                
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    const fileSize = file.size / 1024 / 1024;
+                    console.log(`File ${i}:`, file.name, `(${fileSize.toFixed(2)} MB)`);
+                    
+                    // Check file size
+                    if (fileSize > 5) {
+                        continue; // Skip files larger than 5MB
+                    }
+                    
+                    validFiles++;
+                    totalSize += fileSize;
+                    
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const preview = document.createElement('div');
+                        preview.className = 'relative border-2 border-purple-300 rounded overflow-hidden';
+                        preview.innerHTML = `
+                            <img src="${e.target.result}" class="w-full h-24 object-cover">
+                            <p class="text-xs text-gray-600 p-1 bg-purple-50 truncate">${file.name}</p>
+                        `;
+                        previewContainer.appendChild(preview);
+                    };
+                    reader.readAsDataURL(file);
+                }
+                
+                filenameDisplay.textContent = `✓ เลือก ${validFiles} รูป (รวม ${totalSize.toFixed(2)} MB)`;
+            } else {
+                previewContainer.classList.add('hidden');
+                filenameDisplay.textContent = 'ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป';
             }
         });
     </script>
