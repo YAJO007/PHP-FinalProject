@@ -33,16 +33,26 @@ function addUser(
     }
 }
 
-function checkLogin(string $email): bool
+function checkLogin(string $email, string $password): bool
 {
     global $conn;
     $sql = "SELECT 1 FROM user WHERE email = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $res = ($stmt->get_result()->num_rows > 0);
+    $res = $stmt->get_result();
+
+    if ($row = $res->fetch_assoc()) {
+        $hashedPasswordDb = $row['password'];
+        
+        if (password_verify($password, $hashedPasswordDb)) {
+            $stmt->close();
+            return true;
+        }
+    }
+
     $stmt->close();
-    return $res;
+    return false;
 }
 
 function getUserByEmail(string $email): mysqli_result
