@@ -1,13 +1,13 @@
 <?php
 
-$sd = $_GET['start_date'] ?? null;
-$ed = $_GET['end_date'] ?? null;
-$s = $_GET['search'] ?? null;
+$startDate = $_GET['start_date'] ?? null;
+$endDate = $_GET['end_date'] ?? null;
+$search = $_GET['search'] ?? null;
 
 // Get current user ID to exclude their own events
-$current_user_id = isset($_SESSION['email']) ? getUidByEmail($_SESSION['email']) : null;
+$currentUserId = isset($_SESSION['email']) ? getUidByEmail($_SESSION['email']) : null;
 
 updateEventStatus();
-$res = getEvents($sd, $ed, $s, $current_user_id);
+$events = getEvents($startDate, $endDate, $search, $currentUserId);
 
-renderView('event', ['result' => $res]);
+renderView('event', ['result' => $events]);

@@ -1,46 +1,51 @@
 <?php
 
-$eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
-$act = isset($_GET['action']) ? $_GET['action'] : '';
-$uid = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
+if (!isset($_SESSION['email'])) {
+    header('Location: login');
+    exit;
+}
 
-if ($eid <= 0) {
+$eventId = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+$userId = isset($_GET['uid']) ? (int)$_GET['uid'] : 0;
+
+if ($eventId <= 0) {
     renderView('404');
     exit;
 }
 
-$evt = getEventById($eid);
-if (!$evt) {
+$event = getEventById($eventId);
+if (!$event) {
     renderView('404');
     exit;
 }
 
-if ($act && $uid > 0) {
-    if ($act === 'approve') {
-        $res = approveParticipant($eid, $uid);
-        if ($res === true) {
-            header('Location: manage_event?eid=' . $eid . '&msg=ok');
+if ($action && $userId > 0) {
+    if ($action === 'approve') {
+        $result = approveParticipant($eventId, $userId);
+        if ($result === true) {
+            header('Location: manage_event?eid=' . $eventId . '&msg=ok');
             exit;
         }
-    } elseif ($act === 'reject') {
-        $res = rejectParticipant($eid, $uid);
-        if ($res === true) {
-            header('Location: manage_event?eid=' . $eid . '&msg=rej');
+    } elseif ($action === 'reject') {
+        $result = rejectParticipant($eventId, $userId);
+        if ($result === true) {
+            header('Location: manage_event?eid=' . $eventId . '&msg=rej');
             exit;
         }
     }
 }
 
-$pres = getEventParticipants($eid);
-$pdata = [];
-while ($row = $pres->fetch_assoc()) {
-    $pdata[] = $row;
+$participants = getEventParticipants($eventId);
+$participantsData = [];
+while ($row = $participants->fetch_assoc()) {
+    $participantsData[] = $row;
 }
 
-$att = getAttendedUsers($eid);
+$attendedUsers = getAttendedUsers($eventId);
 renderView('manage_event', [
-    'event' => $evt,
-    'participants_data' => $pdata,
-    'attended_count' => count($att),
-    'attended_users' => $att
+    'event' => $event,
+    'participants_data' => $participantsData,
+    'attended_count' => count($attendedUsers),
+    'attended_users' => $attendedUsers
 ]);

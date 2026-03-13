@@ -1,23 +1,28 @@
 <?php
 
-$eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
+if (!isset($_SESSION['email'])) {
+    header('Location: login');
+    exit;
+}
 
-if ($eid <= 0) {
+$eventId = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
+
+if ($eventId <= 0) {
     header('Location: event');
     exit;
 }
 
-$evt = getEventById($eid);
-if (!$evt) {
+$event = getEventById($eventId);
+if (!$event) {
     renderView('404');
     exit;
 }
 
-$res = deleteEvent($eid);
+$result = deleteEvent($eventId);
 
-if ($res === true) {
+if ($result === true) {
     header('Location: my_event?deleted=1');
 } else {
-    header('Location: detail?eid=' . $eid . '&err=1');
+    header('Location: detail?eid=' . $eventId . '&err=1');
 }
 exit;

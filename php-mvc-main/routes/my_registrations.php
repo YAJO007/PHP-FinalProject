@@ -5,28 +5,28 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
-$uid = getUidByEmail($_SESSION['email']);
-if (!$uid) {
+$userId = getUidByEmail($_SESSION['email']);
+if (!$userId) {
     $_SESSION['error'] = "ไม่พบผู้ใช้";
     header('Location: login');
     exit;
 }
 
-$regs = [];
-$evts = getEvents();
+$registrations = [];
+$events = getEvents();
 
-if ($evts && $evts->num_rows > 0) {
-    while ($e = $evts->fetch_assoc()) {
-        if (isUserReg($uid, (int)$e['eid'])) {
-            $e['registration_status'] = getUserRegStatus($uid, (int)$e['eid']);
-            $e['has_attended'] = hasAttended($uid, (int)$e['eid']);
-            $regs[] = $e;
+if ($events && $events->num_rows > 0) {
+    while ($event = $events->fetch_assoc()) {
+        if (isUserReg($userId, (int)$event['eid'])) {
+            $event['registration_status'] = getUserRegStatus($userId, (int)$event['eid']);
+            $event['has_attended'] = hasAttended($userId, (int)$event['eid']);
+            $registrations[] = $event;
         }
     }
 }
 
-$rejHist = getRejectionHistory($uid);
+$rejectionHistory = getRejectionHistory($userId);
 renderView('my_registrations', [
-    'registrations' => $regs,
-    'rejection_history' => $rejHist
+    'registrations' => $registrations,
+    'rejection_history' => $rejectionHistory
 ]);

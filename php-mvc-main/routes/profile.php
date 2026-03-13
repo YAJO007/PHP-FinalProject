@@ -5,5 +5,5 @@ if (!isset($_SESSION['email'])) {
     exit;
 }
 
-$res = getUserByEmail($_SESSION['email']);
-renderView('profile', ['result' => $res]);
+$user = getUserByEmail($_SESSION['email']);
+renderView('profile', ['result' => $user]);

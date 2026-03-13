@@ -1,38 +1,38 @@
 <?php
 
-$eid = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
-if ($eid <= 0) {
+$eventId = isset($_GET['eid']) ? (int)$_GET['eid'] : 0;
+if ($eventId <= 0) {
     renderView('404');
     exit;
 }
 
 updateEventStatus();
-$evt = getEventById($eid);
+$event = getEventById($eventId);
 
-if (!$evt) {
+if (!$event) {
     renderView('404');
     exit;
 }
 
-$addr = getAddr($eid);
-if ($addr && $addr->num_rows > 0) {
-    $evt['address'] = $addr->fetch_assoc();
+$address = getAddr($eventId);
+if ($address && $address->num_rows > 0) {
+    $event['address'] = $address->fetch_assoc();
 } else {
-    $evt['address'] = null;
+    $event['address'] = null;
 }
 
-$reqs = getReqs($eid);
-$reqList = [];
-if ($reqs && $reqs->num_rows > 0) {
-    while ($row = $reqs->fetch_assoc()) {
-        $reqList[] = $row['requirement'];
+$requirements = getReqs($eventId);
+$requirementList = [];
+if ($requirements && $requirements->num_rows > 0) {
+    while ($row = $requirements->fetch_assoc()) {
+        $requirementList[] = $row['requirement'];
     }
 }
-$evt['requirements'] = $reqList;
-$evt['images'] = getImgs($eid);
+$event['requirements'] = $requirementList;
+$event['images'] = getImgs($eventId);
 
-if (empty($evt['images']) && !empty($evt['image_path'])) {
-    $evt['images'] = [$evt['image_path']];
+if (empty($event['images']) && !empty($event['image_path'])) {
+    $event['images'] = [$event['image_path']];
 }
 
-renderView('detail', ['event' => $evt]);
+renderView('detail', ['event' => $event]);

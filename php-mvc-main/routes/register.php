@@ -1,23 +1,23 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $u = $_POST['username'];
-    $fn = $_POST['first_name'];
-    $ln = $_POST['last_name'];
-    $em = $_POST['email'];
-    $pwd = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $dob = $_POST['birthdate'];
-    $gen = $_POST['gender'];
-    $ph = $_POST['phone'];
-    $dis = $_POST['congenital'];
+    $username = $_POST['username'];
+    $firstName = $_POST['first_name'];
+    $lastName = $_POST['last_name'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $birthdate = $_POST['birthdate'];
+    $gender = $_POST['gender'];
+    $phone = $_POST['phone'];
+    $congenital = $_POST['congenital'];
 
-    $res = addUser($u, $fn, $ln, $em, $pwd, $dob, $gen, $ph, $dis);
+    $result = addUser($username, $firstName, $lastName, $email, $password, $birthdate, $gender, $phone, $congenital);
 
-    if ($res === true) {
+    if ($result === true) {
         header('Location: login');
+        exit;
     } else {
-        echo "<script>alert('$res');</script>";
-        renderView('register');
+        renderView('register', ['error' => $result]);
     }
 } else {
     renderView('register');

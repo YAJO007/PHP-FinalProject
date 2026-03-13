@@ -6,13 +6,13 @@ if (!isset($_SESSION['email'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $uid = getUidByEmail($_SESSION['email']);
-    if ($uid === null) {
+    $userId = getUidByEmail($_SESSION['email']);
+    if ($userId === null) {
         die("ไม่พบ user จาก email นี้");
     }
     
-    $eid = addEvent(
-        $uid,
+    $eventId = addEvent(
+        $userId,
         $_POST['title'] ?? '',
         (int)($_POST['max_participants'] ?? 0),
         $_POST['start_date'] ?? '',
@@ -21,46 +21,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_POST['detail'] ?? ''
     );
 
-    if (is_int($eid)) {
-        addAddr($eid, $_POST['province'], $_POST['district'], $_POST['address']);
-        addReq($eid, $_POST['requirement']);
+    if (is_int($eventId)) {
+        addAddr($eventId, $_POST['province'], $_POST['district'], $_POST['address']);
+        addReq($eventId, $_POST['requirement']);
 
-        // Handle cover image (single image - will be first in array)
+        $imageDir = __DIR__ . '/../public/img/';
+        if (!is_dir($imageDir)) {
+            mkdir($imageDir, 0755, true);
+        }
+
         if (!empty($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
-            $tmp = $_FILES['cover_image']['tmp_name'];
-            $name = $_FILES['cover_image']['name'];
-            $ext = pathinfo($name, PATHINFO_EXTENSION);
-            $fn = uniqid('event_', true) . '.' . $ext;
-            $dir = __DIR__ . '/../public/img/';
+            $tmpName = $_FILES['cover_image']['tmp_name'];
+            $fileName = $_FILES['cover_image']['name'];
+            $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+            $newFileName = uniqid('event_', true) . '.' . $extension;
 
-            if (!is_dir($dir)) mkdir($dir, 0755, true);
-            if (move_uploaded_file($tmp, $dir . $fn)) {
-                addImg($eid, $fn);
+            if (move_uploaded_file($tmpName, $imageDir . $newFileName)) {
+                addImg($eventId, $newFileName);
             }
         }
 
-        // Handle additional images (multiple images)
         if (!empty($_FILES['additional_images']) && is_array($_FILES['additional_images']['name'])) {
-            foreach ($_FILES['additional_images']['name'] as $k => $n) {
-                if (empty($n) || $_FILES['additional_images']['error'][$k] !== UPLOAD_ERR_OK) continue;
+            foreach ($_FILES['additional_images']['name'] as $key => $name) {
+                if (empty($name) || $_FILES['additional_images']['error'][$key] !== UPLOAD_ERR_OK) {
+                    continue;
+                }
 
-                $tmp = $_FILES['additional_images']['tmp_name'][$k];
-                $ext = pathinfo($n, PATHINFO_EXTENSION);
-                $fn = uniqid('event_', true) . '.' . $ext;
-                $dir = __DIR__ . '/../public/img/';
+                $tmpName = $_FILES['additional_images']['tmp_name'][$key];
+                $extension = pathinfo($name, PATHINFO_EXTENSION);
+                $newFileName = uniqid('event_', true) . '.' . $extension;
 
-                if (!is_dir($dir)) mkdir($dir, 0755, true);
-                if (move_uploaded_file($tmp, $dir . $fn)) {
-                    addImg($eid, $fn);
+                if (move_uploaded_file($tmpName, $imageDir . $newFileName)) {
+                    addImg($eventId, $newFileName);
                 }
             }
         }
 
-        echo "<script>alert('สร้างกิจกรรมสำเร็จ'); location.href='event';</script>";
+        header('Location: event');
         exit;
     }
 
-    echo "<script>alert('Error: $eid');</script>";
+    echo "<script>alert('Error: $eventId');</script>";
 }
 
 renderView('create');

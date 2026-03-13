@@ -1,15 +1,14 @@
 <?php
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $em = $_POST['email'];
-    $ok = checkLogin($em);
-
-    if ($ok) {
-        $_SESSION['email'] = $em;
+    $email = $_POST['email'];
+    
+    if (checkLogin($email)) {
+        $_SESSION['email'] = $email;
         header('Location: event');
+        exit;
     } else {
-        echo "<script>alert('อีเมลไม่ถูกต้อง');</script>";
-        renderView('login');
+        renderView('login', ['error' => 'อีเมลไม่ถูกต้อง']);
     }
 } else {
     renderView('login');

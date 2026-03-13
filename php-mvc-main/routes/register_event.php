@@ -6,29 +6,29 @@ if (!isset($_SESSION['email'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $eid = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
+    $eventId = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
 
-    if ($eid <= 0) {
+    if ($eventId <= 0) {
         $_SESSION['error'] = "ข้อมูลไม่ถูกต้อง";
         header('Location: event');
         exit;
     }
 
-    $uid = getUidByEmail($_SESSION['email']);
-    if (!$uid) {
+    $userId = getUidByEmail($_SESSION['email']);
+    if (!$userId) {
         $_SESSION['error'] = "ไม่พบผู้ใช้";
         header('Location: event');
         exit;
     }
 
-    $res = registerEvent($uid, $eid);
-    if ($res === true) {
+    $result = registerEvent($userId, $eventId);
+    if ($result === true) {
         $_SESSION['success'] = "ลงทะเบียนสำเร็จ รอการอนุมัติ";
     } else {
-        $_SESSION['error'] = $res;
+        $_SESSION['error'] = $result;
     }
 
-    header('Location: detail?eid=' . $eid);
+    header('Location: detail?eid=' . $eventId);
     exit;
 }
 
