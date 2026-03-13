@@ -188,7 +188,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
 
                                 <a href="manage_event?eid=<?= htmlspecialchars($event['eid']); ?>" class="flex-[2]">
                                     <button type="button"
-                                        class="w-full px-4 py-2.5 bg-indigo-600 text-white
+                                        class="w-full px-4 py-2.5 bg-indigo-500 text-white
                                         border-2 border-black rounded-lg font-bold
                                         shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
                                         hover:translate-x-1 hover:translate-y-1 hover:shadow-none
@@ -200,7 +200,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
 
                                 <a href="edit_event?eid=<?= $event['eid'] ?>" class="flex-[1]">
                                     <button
-                                        class="w-full px-4 py-2.5 bg-yellow-400 text-black
+                                        class="w-full px-4 py-2.5 bg-yellow-300 text-black
                                         border-2 border-black rounded-lg font-bold
                                         shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
                                         hover:translate-x-1 hover:translate-y-1 hover:shadow-none
@@ -214,7 +214,7 @@ $stats  = $stats ?? ['total' => 0, 'upcoming' => 0, 'running' => 0, 'finished' =
                                     onclick="return confirm('ลบกิจกรรมนี้?')"
                                     class="flex-[1]">
                                     <button
-                                        class="w-full px-4 py-2.5 bg-red-500 text-white
+                                        class="w-full px-4 py-2.5 bg-red-400 text-white
                                         border-2 border-black rounded-lg font-bold
                                         shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]
                                         hover:translate-x-1 hover:translate-y-1 hover:shadow-none

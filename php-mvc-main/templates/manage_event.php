@@ -37,101 +37,293 @@ $eid = isset($event['eid']) ? (int)$event['eid'] : 0;
 
         <div class="p-8 bg-purple-100">
 
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-user-plus text-2xl text-purple-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">รับสมัครสูงสุด</p>
-                    <p class="text-3xl font-black text-purple-600"><?php echo htmlspecialchars($event['max_participants']); ?></p>
+            <div class="mb-8">
+                <!-- Progress Overview -->
+                <div class="bg-gradient-to-r from-purple-400 to-blue-400 border-2 border-black rounded-[24px] p-6 mb-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-white">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-black flex items-center gap-2">
+                            <i class="fa-solid fa-chart-line"></i> ภาพรวมสถิติ
+                        </h2>
+                        <div class="text-right">
+                            <p class="text-3xl font-black"><?php 
+                                if ($event['max_participants'] > 0) {
+                                    $percentage = round((count($participants) / $event['max_participants']) * 100);
+                                    echo $percentage . '%';
+                                } else {
+                                    echo '0%';
+                                }
+                            ?></p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-white/20 rounded-full h-4 overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-green-300 to-blue-400 rounded-full transition-all duration-500 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]" 
+                             style="width: <?php 
+                                if ($event['max_participants'] > 0) {
+                                    echo min(100, round((count($participants) / $event['max_participants']) * 100));
+                                } else {
+                                    echo '0';
+                                }
+                            ?>%"></div>
+                    </div>
                 </div>
 
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-users text-2xl text-blue-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">ทั้งหมด</p>
-                    <p class="text-3xl font-black text-blue-600"><?php echo count($participants); ?></p>
-                    <p class="text-xs text-gray-500 mt-1"><?php 
-                        if ($event['max_participants'] > 0) {
-                            $percentage = round((count($participants) / $event['max_participants']) * 100);
-                            echo $percentage . '%';
-                        }
-                    ?></p>
+                <!-- Main Statistics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <div class="group bg-gradient-to-br from-purple-300 to-purple-400 border-2 border-black rounded-[16px] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-user-plus text-xl"></i>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs opacity-80 font-bold">รับสมัครสูงสุด</p>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black mb-1"><?php echo htmlspecialchars($event['max_participants']); ?></p>
+                        <div class="h-1 bg-white/30 rounded-full"></div>
+                    </div>
+
+                    <div class="group bg-gradient-to-br from-blue-300 to-blue-400 border-2 border-black rounded-[16px] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-users text-xl"></i>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs opacity-80 font-bold">ทั้งหมด</p>
+                                <p class="text-sm font-bold"><?php 
+                                    if ($event['max_participants'] > 0) {
+                                        $percentage = round((count($participants) / $event['max_participants']) * 100);
+                                        echo $percentage . '%';
+                                    }
+                                ?></p>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black mb-1"><?php echo count($participants); ?></p>
+                        <div class="h-1 bg-white/30 rounded-full"></div>
+                    </div>
+
+                    <div class="group bg-gradient-to-br from-green-300 to-green-400 border-2 border-black rounded-[16px] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-check-circle text-xl"></i>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs opacity-80 font-bold">อนุมัติ</p>
+                                <p class="text-sm font-bold"><?php 
+                                    $approved = 0;
+                                    foreach ($participants as $p) {
+                                        if ($p['status'] === 'Approved') $approved++;
+                                    }
+                                    if (count($participants) > 0) {
+                                        $percentage = round(($approved / count($participants)) * 100);
+                                        echo $percentage . '%';
+                                    }
+                                ?></p>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black mb-1"><?php echo $approved; ?></p>
+                        <div class="h-1 bg-white/30 rounded-full"></div>
+                    </div>
+
+                    <div class="group bg-gradient-to-br from-cyan-300 to-cyan-400 border-2 border-black rounded-[16px] p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-check-double text-xl"></i>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs opacity-80 font-bold">เข้าร่วมงานแล้ว</p>
+                                <p class="text-sm font-bold"><?php 
+                                    $attended = isset($attended_count) ? $attended_count : 0;
+                                    if ($approved > 0) {
+                                        $percentage = round(($attended / $approved) * 100);
+                                        echo $percentage . '%';
+                                    }
+                                ?></p>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-black mb-1"><?php echo $attended; ?></p>
+                        <div class="h-1 bg-white/30 rounded-full"></div>
+                    </div>
                 </div>
 
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-check-circle text-2xl text-green-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">อนุมัติ</p>
-                    <p class="text-3xl font-black text-green-600">
-                        <?php 
-                        $approved = 0;
-                        foreach ($participants as $p) {
-                            if ($p['status'] === 'Approved') $approved++;
-                        }
-                        echo $approved;
-                        ?>
-                    </p>
-                    <p class="text-xs text-gray-500 mt-1"><?php 
-                        if (count($participants) > 0) {
-                            $percentage = round(($approved / count($participants)) * 100);
-                            echo $percentage . '%';
-                        }
-                    ?></p>
-                </div>
+                <!-- Status Details -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="group bg-gradient-to-br from-yellow-200 to-yellow-300 border-2 border-black rounded-[12px] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:rotate-12 transition-transform">
+                                <i class="fa-solid fa-clock text-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs opacity-90 font-bold">รอการอนุมัติ</p>
+                                <p class="text-xl font-black"><?php 
+                                    $pending = 0;
+                                    foreach ($participants as $p) {
+                                        if ($p['status'] === 'Pending') $pending++;
+                                    }
+                                    echo $pending;
+                                ?></p>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-check-double text-2xl text-blue-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">เข้าร่วมงานแล้ว</p>
-                    <p class="text-3xl font-black text-blue-600">
-                        <?php 
-                        $attended = isset($attended_count) ? $attended_count : 0;
-                        echo $attended;
-                        ?>
-                    </p>
-                    <p class="text-xs text-gray-500 mt-1"><?php 
-                        if ($approved > 0) {
-                            $percentage = round(($attended / $approved) * 100);
-                            echo $percentage . '%';
-                        }
-                    ?></p>
+                    <div class="group bg-gradient-to-br from-red-300 to-red-400 border-2 border-black rounded-[12px] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:rotate-12 transition-transform">
+                                <i class="fa-solid fa-times-circle text-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs opacity-90 font-bold">ปฏิเสธ</p>
+                                <p class="text-xl font-black"><?php 
+                                    $rejected = 0;
+                                    foreach ($participants as $p) {
+                                        if ($p['status'] === 'Rejected') $rejected++;
+                                    }
+                                    echo $rejected;
+                                ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group bg-gradient-to-br from-orange-200 to-orange-300 border-2 border-black rounded-[12px] p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] text-white transform hover:scale-105 transition-all duration-200">
+                        <div class="flex items-center gap-3">
+                            <div class="bg-white/20 backdrop-blur-sm rounded-full p-2 group-hover:rotate-12 transition-transform">
+                                <i class="fa-solid fa-user-slash text-lg"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs opacity-90 font-bold">ยังไม่เข้าร่วม</p>
+                                <p class="text-xl font-black"><?php 
+                                    $not_attended = $approved - $attended;
+                                    echo max(0, $not_attended);
+                                ?></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-clock text-2xl text-yellow-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">รอการอนุมัติ</p>
-                    <p class="text-3xl font-black text-yellow-600">
-                        <?php 
-                        $pending = 0;
+            <!-- Gender and Age Statistics -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Gender Statistics -->
+                <div class="bg-white border-2 border-black rounded-[20px] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                    <div class="bg-gradient-to-r from-pink-300 to-purple-300 border-b-2 border-black px-6 py-4">
+                        <h3 class="text-xl font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-venus-mars"></i> สถิติเพศ
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <?php
+                        $gender_stats = ['Male' => 0, 'Female' => 0, 'Other' => 0];
+                        $total_gender = 0;
                         foreach ($participants as $p) {
-                            if ($p['status'] === 'Pending') $pending++;
+                            if (!empty($p['gender'])) {
+                                $gender = ucfirst(strtolower(trim($p['gender'])));
+                                if ($gender === 'Male' || $gender === 'ชาย') {
+                                    $gender_stats['Male']++;
+                                    $total_gender++;
+                                } elseif ($gender === 'Female' || $gender === 'หญิง') {
+                                    $gender_stats['Female']++;
+                                    $total_gender++;
+                                } else {
+                                    $gender_stats['Other']++;
+                                    $total_gender++;
+                                }
+                            }
                         }
-                        echo $pending;
                         ?>
-                    </p>
+                        <div class="space-y-4">
+                            <?php foreach ($gender_stats as $gender => $count): ?>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-20 text-sm font-bold text-gray-700">
+                                        <?php 
+                                        $gender_th = $gender === 'Male' ? 'ชาย' : ($gender === 'Female' ? 'หญิง' : 'อื่นๆ');
+                                        echo $gender_th;
+                                        ?>
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                                            <?php 
+                                            $percentage = $total_gender > 0 ? round(($count / $total_gender) * 100) : 0;
+                                            $bar_color = $gender === 'Male' ? 'from-purple-200 to-purple-300' : 
+                                                           ($gender === 'Female' ? 'from-pink-200 to-pink-300' : 'from-indigo-200 to-indigo-300');
+                                            ?>
+                                            <div class="h-full bg-gradient-to-r <?php echo $bar_color; ?> rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                                                 style="width: <?php echo $percentage; ?>%">
+                                                <span class="text-xs font-bold text-white"><?php echo $percentage; ?>%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-12 text-sm font-bold text-gray-700 text-right"><?php echo $count; ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-times-circle text-2xl text-red-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">ปฏิเสธ</p>
-                    <p class="text-3xl font-black text-red-600">
-                        <?php 
-                        $rejected = 0;
+                <!-- Age Group Statistics -->
+                <div class="bg-white border-2 border-black rounded-[20px] shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-300 to-cyan-300 border-b-2 border-black px-6 py-4">
+                        <h3 class="text-xl font-black text-purple-900 flex items-center gap-2">
+                            <i class="fa-solid fa-birthday-cake"></i> สถิติช่วงอายุ
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <?php
+                        $age_groups = [
+                            '0-17' => 0,
+                            '18-25' => 0,
+                            '26-35' => 0,
+                            '36-45' => 0,
+                            '46-55' => 0,
+                            '56+' => 0
+                        ];
+                        $total_age = 0;
                         foreach ($participants as $p) {
-                            if ($p['status'] === 'Rejected') $rejected++;
+                            if (!empty($p['date_of_birth'])) {
+                                $birth_date = new DateTime($p['date_of_birth']);
+                                $today = new DateTime();
+                                $age = $today->diff($birth_date)->y;
+                                
+                                if ($age <= 17) $age_groups['0-17']++;
+                                elseif ($age <= 25) $age_groups['18-25']++;
+                                elseif ($age <= 35) $age_groups['26-35']++;
+                                elseif ($age <= 45) $age_groups['36-45']++;
+                                elseif ($age <= 55) $age_groups['46-55']++;
+                                else $age_groups['56+']++;
+                                
+                                $total_age++;
+                            }
                         }
-                        echo $rejected;
                         ?>
-                    </p>
-                </div>
-
-                <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-center">
-                    <i class="fa-solid fa-user-slash text-2xl text-orange-600 mb-2"></i>
-                    <p class="text-gray-700 font-bold text-sm">ยังไม่เข้าร่วม</p>
-                    <p class="text-3xl font-black text-orange-600">
-                        <?php 
-                        $not_attended = $approved - $attended;
-                        echo max(0, $not_attended);
-                        ?>
-                    </p>
+                        <div class="space-y-3">
+                            <?php foreach ($age_groups as $group => $count): ?>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-20 text-sm font-bold text-gray-700">
+                                        <?php echo $group; ?> ปี
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="w-full bg-gray-200 rounded-full h-6 overflow-hidden">
+                                            <?php 
+                                            $percentage = $total_age > 0 ? round(($count / $total_age) * 100) : 0;
+                                            $colors = [
+                                                '0-17' => 'from-purple-200 to-purple-400',
+                                                '18-25' => 'from-purple-300 to-purple-500',
+                                                '26-35' => 'from-purple-400 to-purple-600',
+                                                '36-45' => 'from-purple-500 to-purple-700',
+                                                '46-55' => 'from-purple-600 to-purple-800',
+                                                '56+' => 'from-purple-700 to-purple-900'
+                                            ];
+                                            $bar_color = $colors[$group] ?? 'from-gray-400 to-gray-600';
+                                            ?>
+                                            <div class="h-full bg-gradient-to-r <?php echo $bar_color; ?> rounded-full transition-all duration-500 flex items-center justify-end pr-2"
+                                                 style="width: <?php echo $percentage; ?>%">
+                                                <span class="text-xs font-bold text-white"><?php echo $percentage; ?>%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="w-12 text-sm font-bold text-gray-700 text-right"><?php echo $count; ?></div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
 

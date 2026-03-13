@@ -24,7 +24,8 @@ function addEvent(
 function getEvents(
     ?string $sDate = null,
     ?string $eDate = null,
-    ?string $search = null
+    ?string $search = null,
+    ?int $currentUserId = null
 ): mysqli_result {
     global $conn;
 
@@ -41,6 +42,13 @@ function getEvents(
 
     $params = [];
     $types = "";
+
+    // Exclude current user's own events
+    if ($currentUserId) {
+        $sql .= " AND e.uid != ?";
+        $params[] = $currentUserId;
+        $types .= "i";
+    }
 
     if ($sDate) {
         $sql .= " AND e.start_date >= ?";
@@ -148,7 +156,7 @@ function getEventParticipants(int $eid): mysqli_result
 {
     global $conn;
 
-    $sql = "SELECT u.uid, u.first_name, u.last_name, u.email, u.phone_number, ue.status
+    $sql = "SELECT u.uid, u.first_name, u.last_name, u.email, u.phone_number, u.gender, u.date_of_birth, ue.status
             FROM user_event ue
             JOIN user u ON ue.uid = u.uid
             WHERE ue.eid = ?
