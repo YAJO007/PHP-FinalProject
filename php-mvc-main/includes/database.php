@@ -5,9 +5,9 @@ $dbName = 'k1god_comecat';
 $username = 'k1god_comecat';
 $password = 'qWo3Nqqj~$55mjyG';
 
-$conn = new mysqli($host, $user, $pass, $db, 3306);
+$conn = new mysqli($hostname, $username, $password, $dbName, 3306);
 if ($conn->connect_error) {
-    $conn = new mysqli($host, $user, $pass, $db, 3307);
+    $conn = new mysqli($hostname, $username, $password, $dbName, 3307);
 }
 
 function getConnection(): mysqli
