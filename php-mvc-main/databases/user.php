@@ -1,11 +1,5 @@
 <?php
 
-function getUsers(): mysqli_result
-{
-    global $conn;
-    return $conn->query("SELECT * FROM user");
-}
-
 function addUser(
     string $user, 
     string $fname, 

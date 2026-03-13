@@ -46,22 +46,6 @@ function getUserRegStatus(int $uid, int $eid): ?string
     return $row ? $row['status'] : null;
 }
 
-function markAttended(int $uid, int $eid): bool
-{
-    if (!isset($_SESSION['attended_events'])) {
-        $_SESSION['attended_events'] = [];
-    }
-
-    $key = "{$eid}_{$uid}";
-    $_SESSION['attended_events'][$key] = [
-        'eid' => $eid,
-        'uid' => $uid,
-        'time' => time()
-    ];
-
-    return true;
-}
-
 function hasAttended(int $uid, int $eid): bool
 {
     if (!isset($_SESSION['attended_events'])) {

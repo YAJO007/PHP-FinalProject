@@ -41,7 +41,8 @@ function dispatch(string $uri, string $method): void
 
     $file = getFilePath($uri);
     if (file_exists($file)) {
-        include($file);    } else {
+        include($file);
+    } else {
         notFound();
     }
 }
