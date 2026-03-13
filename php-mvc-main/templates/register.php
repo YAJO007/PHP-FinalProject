@@ -81,7 +81,7 @@
                     <label class="block text-sm font-bold mb-2 text-gray-800">เพศ <span class="text-red-500">*</span></label>
                     <div class="flex items-center space-x-3">
                         <label class="cursor-pointer group">
-                            <input type="radio" name="gender" value="male" class="peer sr-only" />
+                            <input type="radio" name="gender" value="male" class="peer sr-only" required/>
                             <div class="w-12 h-12 flex items-center justify-center text-xl border-2 border-purple-300 rounded-xl bg-white peer-checked:bg-purple-600 peer-checked:text-white peer-checked:border-black peer-checked:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:bg-purple-50 transition-all">
                                 ♂
                             </div>

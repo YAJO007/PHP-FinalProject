@@ -237,6 +237,38 @@ function cancelReg(int $uid, int $eid): bool|string
     return $stmt->execute() ? true : $stmt->error;
 }
 
+function getEventGenderStats(int $eid): array
+{
+    global $conn;
+
+    $sql = "SELECT u.gender, COUNT(*) as count
+            FROM user_event ue
+            JOIN user u ON ue.uid = u.uid
+            WHERE ue.eid = ? AND ue.status = 'Approved'
+            GROUP BY u.gender
+            ORDER BY u.gender ASC";
+
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $eid);
+    $stmt->execute();
+    
+    $result = $stmt->get_result();
+    $stats = [];
+    
+    while ($row = $result->fetch_assoc()) {
+        $stats[$row['gender']] = (int)$row['count'];
+    }
+    
+    $stmt->close();
+    
+    // Ensure all gender categories exist
+    if (!isset($stats['ชาย'])) $stats['ชาย'] = 0;
+    if (!isset($stats['หญิง'])) $stats['หญิง'] = 0;
+    if (!isset($stats['อื่นๆ'])) $stats['อื่นๆ'] = 0;
+    
+    return $stats;
+}
+
 function updateEventStatus(): void
 {
     global $conn;

@@ -38,9 +38,12 @@ while ($row = $pres->fetch_assoc()) {
 }
 
 $att = getAttendedUsers($eid);
+$gender_stats = getEventGenderStats($eid);
+
 renderView('manage_event', [
     'event' => $evt,
     'participants_data' => $pdata,
     'attended_count' => count($att),
-    'attended_users' => $att
+    'attended_users' => $att,
+    'gender_stats' => $gender_stats
 ]);
