@@ -249,14 +249,13 @@ $registrations = $registrations ?? [];
                                     <?php endif; ?>
                                 </div>
 
-                                <?php if ($status === 'Approved' && !$has_attended): ?>
-                                    <button onclick="generateOTP(<?= (int)$registration['eid'] ?>)" 
-                                            class="w-full px-4 py-2 bg-green-500 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all text-sm">
-                                        <i class="fa-solid fa-key"></i> รับ OTP เช็คชื่อ
-                                    </button>
-                                <?php elseif ($has_attended): ?>
+                                <?php if ($has_attended): ?>
                                     <div class="w-full px-4 py-2 bg-blue-100 border-2 border-blue-500 rounded-lg font-bold text-center text-sm text-blue-800">
                                         <i class="fa-solid fa-check-double"></i> คุณได้เช็คชื่อเข้าร่วมงานแล้ว
+                                    </div>
+                                <?php else: ?>
+                                    <div class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-300 rounded-lg font-bold text-center text-sm text-gray-600">
+                                        <i class="fa-solid fa-info-circle"></i> รอการเช็คชื่อ
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -307,77 +306,6 @@ $registrations = $registrations ?? [];
         <?php endif; ?>
 
     </div>
-
-    <div id="otpModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="bg-white border-4 border-black rounded-2xl p-8 max-w-md w-full mx-4 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
-            <div class="text-center">
-                <div class="text-6xl mb-4">🔑</div>
-                <h3 class="text-3xl font-black text-purple-800 mb-4">รหัส OTP ของคุณ</h3>
-                <div id="otpDisplay" class="text-5xl font-black text-green-600 mb-4 tracking-widest bg-green-100 border-2 border-black rounded-lg py-4">
-                    ------
-                </div>
-                <p class="text-sm text-gray-600 mb-2">แสดงรหัสนี้ให้ผู้จัดงานเพื่อเช็คชื่อเข้าร่วมกิจกรรม</p>
-                <p class="text-xs text-red-600 font-bold mb-6">⏱️ รหัสนี้จะหมดอายุใน <span id="otpTimer">5:00</span> นาที</p>
-                <button onclick="closeOTPModal()" 
-                        class="w-full px-6 py-3 bg-purple-600 text-white border-2 border-black rounded-lg font-bold hover:scale-105 transition-all">
-                    ปิด
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        let timerInterval;
-
-        function generateOTP(eid) {
-            fetch('generate_otp?eid=' + eid + '&ajax=1')
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('otpDisplay').textContent = data.otp;
-                        document.getElementById('otpModal').classList.remove('hidden');
-                        startTimer(data.expires_in);
-                    } else {
-                        alert('ไม่สามารถสร้าง OTP ได้');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('เกิดข้อผิดพลาด');
-                });
-        }
-
-        function closeOTPModal() {
-            document.getElementById('otpModal').classList.add('hidden');
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-        }
-
-        function startTimer(seconds) {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-
-            let remaining = seconds;
-            const timerElement = document.getElementById('otpTimer');
-
-            timerInterval = setInterval(() => {
-                remaining--;
-                const minutes = Math.floor(remaining / 60);
-                const secs = remaining % 60;
-                timerElement.textContent = `${minutes}:${secs.toString().padStart(2, '0')}`;
-
-                if (remaining <= 0) {
-                    clearInterval(timerInterval);
-                    timerElement.textContent = 'หมดอายุ';
-                    document.getElementById('otpDisplay').textContent = 'EXPIRED';
-                    document.getElementById('otpDisplay').classList.add('text-red-600');
-                    document.getElementById('otpDisplay').classList.remove('text-green-600');
-                }
-            }, 1000);
-        }
-    </script>
 
 </body>
 

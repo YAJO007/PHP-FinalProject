@@ -268,46 +268,72 @@ if (!isset($event) || !is_array($event)) {
                 $is_completed = ($event_status === 'Completed');
                 $is_owner = $is_logged_in && $user_id && $user_id === (int)($event['uid'] ?? 0);
                 ?>
-                
-                <?php if ($is_logged_in && $is_registered && !$is_owner): ?>
-                    <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                        <div class="flex items-center gap-2">
-                            <?php if ($registration_status === 'Approved'): ?>
-                                <i class="fa-solid fa-check-circle text-green-600"></i>
-                                <span class="text-green-700 font-bold">ได้รับการอนุมัติให้เข้าร่วมกิจกรรมแล้ว</span>
-                            <?php elseif ($registration_status === 'Pending'): ?>
-                                <i class="fa-solid fa-clock text-yellow-600"></i>
-                                <span class="text-yellow-700 font-bold">รอการอนุมัติจากผู้จัดงาน</span>
-                            <?php elseif ($registration_status === 'Rejected'): ?>
-                                <i class="fa-solid fa-times-circle text-red-600"></i>
-                                <span class="text-red-700 font-bold">ไม่ได้รับการอนุมัติ</span>
-                            <?php endif; ?>
+                    
+                    <?php if ($is_logged_in && $is_registered && !$is_owner): ?>
+                        <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="flex items-center gap-2">
+                                <?php if ($registration_status === 'Approved'): ?>
+                                    <div class="flex-1">
+                                        <div class="bg-green-100 border-2 border-green-500 rounded-lg p-3">
+                                            <p class="font-bold text-green-800 mb-2">✅ ได้รับการอนุมัติแล้ว!</p>
+                                            <p class="text-sm text-green-700">สร้าง OTP เพื่อเข้าร่วมกิจกรรม</p>
+                                            
+                                            <!-- OTP Generation for Participants -->
+                                            <div class="mt-3">
+                                                <button onclick="generateParticipantOTP(<?= (int)$event['eid'] ?>)" 
+                                                        class="w-full px-4 py-2 bg-green-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                                                    <i class="fa-solid fa-key"></i> สร้าง OTP สำหรับเข้างาน
+                                                </button>
+                                                <div id="participantOtpDisplay" class="hidden mt-3 p-3 bg-white border-2 border-green-400 rounded-lg text-center">
+                                                    <p class="text-sm text-gray-600 mb-1">รหัส OTP ของคุณ:</p>
+                                                    <div id="participantOtpCode" class="text-3xl font-black text-green-600 tracking-widest"></div>
+                                                    <p class="text-xs text-gray-500 mt-1">แสดงรหัสนี้ให้ผู้จัดงาน</p>
+                                                    <p class="text-xs text-orange-600 font-bold mt-2">⏱️ เหลือเวลา: <span id="participantOtpTimer">10:00</span></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php elseif ($registration_status === 'Pending'): ?>
+                                    <i class="fa-solid fa-clock text-yellow-600"></i>
+                                    <span class="text-yellow-700 font-bold">รอการอนุมัติจากผู้จัดงาน</span>
+                                <?php elseif ($registration_status === 'Rejected'): ?>
+                                    <i class="fa-solid fa-times-circle text-red-600"></i>
+                                    <span class="text-red-700 font-bold">ไม่ได้รับการอนุมัติ</span>
+                                <?php endif; ?>
+                            </div>
                         </div>
-                    </div>
-                <?php endif; ?>
+                    <?php endif; ?>
 
-                <div class="grid grid-cols-4 gap-2 pt-2 max-w-3xl">
                     <?php if ($is_owner): ?>
                         <!-- Owner Controls -->
-                        <a href="edit_event?eid=<?= (int)$event['eid'] ?>" class="col-span-2">
-                            <button class="w-full px-6 py-3 bg-blue-600 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
-                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                                <i class="fa-solid fa-edit"></i>
-                                แก้ไข
-                            </button>
-                        </a>
-                        <a href="manage_event?eid=<?= (int)$event['eid'] ?>" class="col-span-2">
-                            <button class="w-full px-6 py-3 bg-green-600 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
-                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                                <i class="fa-solid fa-cogs"></i>
-                                จัดการ
-                            </button>
-                        </a>
-                    <?php elseif (!$is_logged_in): ?>
+                        <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                            <div class="flex items-center gap-2">
+                                <div class="flex-1">
+                                    <div class="bg-yellow-100 border-2 border-yellow-500 rounded-lg p-3">
+                                        <p class="font-bold text-yellow-800 mb-2">🔑 Enter OTP for Check-in</p>
+                                        <form action="verify_event_otp" method="POST" class="mt-3">
+                                            <input type="hidden" name="eid" value="<?= (int)$event['eid'] ?>">
+                                            <div class="flex gap-2">
+                                                <input type="text" 
+                                                       name="otp" 
+                                                       maxlength="6" 
+                                                       pattern="[0-9]{6}"
+                                                       placeholder="Enter OTP"
+                                                       required
+                                                       class="flex-1 px-3 py-2 border-2 border-black rounded-lg font-bold text-center tracking-widest focus:ring-2 focus:ring-yellow-300">
+                                                <button type="submit"
+                                                        class="px-4 py-2 bg-yellow-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                                                    <i class="fa-solid fa-sign-in-alt"></i> Check-in
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!$is_logged_in): ?>
                         <a href="login" class="col-span-4">
                             <button class="w-full px-6 py-3 bg-orange-500 text-white border-2 border-black rounded-lg font-bold
                                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
@@ -355,6 +381,46 @@ if (!isset($event) || !is_array($event)) {
 
         </div>
     </div>
+
+    <?php if (isset($_GET['checkin']) && $_GET['checkin'] === 'success' && isset($_SESSION['checkin_success'])): ?>
+        <div class="fixed top-4 right-4 bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-lg z-50">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">✅</div>
+                <div>
+                    <p class="font-bold text-green-800">เช็คชื่อสำเร็จ!</p>
+                    <p class="text-sm text-green-700">เวลา: <?= htmlspecialchars($_SESSION['checkin_success']['time']) ?></p>
+                </div>
+            </div>
+        </div>
+        <?php unset($_SESSION['checkin_success']); ?>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= (int)$event['eid'] ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['err']) && $_GET['err'] === 'otp'): ?>
+        <div class="fixed top-4 right-4 bg-red-100 border-2 border-red-500 rounded-lg p-4 shadow-lg z-50">
+            <p class="font-bold text-red-800">❌ รหัส OTP ไม่ถูกต้องหรือหมดอายุ</p>
+        </div>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= (int)$event['eid'] ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['err']) && $_GET['err'] === 'inv'): ?>
+        <div class="fixed top-4 right-4 bg-red-100 border-2 border-red-500 rounded-lg p-4 shadow-lg z-50">
+            <p class="font-bold text-red-800">❌ ข้อมูลไม่ครบถ้วน</p>
+        </div>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= (int)$event['eid'] ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
 
 
 </body>
@@ -419,4 +485,61 @@ document.addEventListener('keydown', function(event) {
         changeImage(1);
     }
 });
+
+// Participant OTP Generation
+function generateParticipantOTP(eid) {
+    console.log('Generating OTP for participant:', eid);
+    
+    // Add timestamp to prevent caching
+    const timestamp = new Date().getTime();
+    
+    fetch('generate_event_otp?eid=' + eid + '&ajax=1&t=' + timestamp)
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                document.getElementById('participantOtpCode').textContent = data.otp;
+                document.getElementById('participantOtpDisplay').classList.remove('hidden');
+                
+                // Show success message
+                alert('สร้าง OTP สำเร็จ: ' + data.otp + '\n\nแสดงรหัสนี้ให้ผู้จัดงาน\n(ใช้ได้ 10 นาที)');
+                
+                // Start countdown timer
+                startParticipantCountdown();
+            } else {
+                alert('Failed to generate OTP: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error generating OTP: ' + error.message);
+        });
+}
+
+function startParticipantCountdown() {
+    let remaining = 600; // 10 minutes
+    const timerElement = document.getElementById('participantOtpTimer');
+    
+    const countdownInterval = setInterval(() => {
+        remaining--;
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+        
+        if (timerElement) {
+            timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        
+        if (remaining <= 0) {
+            clearInterval(countdownInterval);
+            if (timerElement) {
+                timerElement.textContent = 'หมดอายุ';
+            }
+            document.getElementById('participantOtpCode').classList.add('text-red-600');
+            document.getElementById('participantOtpCode').classList.remove('text-green-600');
+        }
+    }, 1000);
+}
 </script>

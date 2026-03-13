@@ -5,6 +5,7 @@ if (!isset($event) || !is_array($event)) {
 }
 
 $participants = isset($participants_data) ? $participants_data : [];
+$eid = isset($event['eid']) ? (int)$event['eid'] : 0;
 ?>
 
 <!DOCTYPE html>
@@ -205,68 +206,50 @@ $participants = isset($participants_data) ? $participants_data : [];
             <div class="mt-8 grid md:grid-cols-2 gap-6">
                 
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
-                    <h3 class="text-xl font-black text-purple-800 mb-4">🔑 เช็คชื่อด้วย OTP</h3>
+                    <h3 class="text-xl font-black text-purple-800 mb-4">🔑 จัดการ OTP สำหรับกิจกรรม</h3>
                     
-                    <?php if (isset($_GET['checkin']) && $_GET['checkin'] === 'success' && isset($_SESSION['checkin_success'])): ?>
-                        <div class="bg-green-100 border-2 border-green-500 rounded-lg p-4 mb-4">
-                            <div class="flex items-center gap-3 mb-2">
-                                <div class="text-3xl">✅</div>
-                                <div>
-                                    <p class="font-black text-green-800 text-lg">เช็คชื่อสำเร็จ!</p>
-                                    <p class="text-sm text-green-700">เวลา: <?= htmlspecialchars($_SESSION['checkin_success']['time']) ?></p>
-                                </div>
-                            </div>
-                            <div class="border-t-2 border-green-300 pt-2 mt-2">
-                                <p class="font-bold text-gray-800"><?= htmlspecialchars($_SESSION['checkin_success']['name']) ?></p>
-                                <p class="text-sm text-gray-600"><?= htmlspecialchars($_SESSION['checkin_success']['email']) ?></p>
-                            </div>
-                        </div>
-                        <?php unset($_SESSION['checkin_success']); ?>
-                    <?php endif; ?>
-
-                    <?php if (isset($_GET['error']) && $_GET['error'] === 'invalid_otp'): ?>
-                        <div class="bg-red-100 border-2 border-red-500 rounded-lg p-4 mb-4">
-                            <p class="font-bold text-red-800">❌ รหัส OTP ไม่ถูกต้องหรือหมดอายุ</p>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (isset($_GET['error']) && $_GET['error'] === 'already_attended'): ?>
-                        <div class="bg-orange-100 border-2 border-orange-500 rounded-lg p-4 mb-4">
-                            <p class="font-bold text-orange-800">⚠️ ผู้เข้าร่วมท่านนี้เช็คชื่อเข้าร่วมงานแล้ว</p>
-                        </div>
-                    <?php endif; ?>
-
-                    <form action="verify_otp" method="POST" class="space-y-4">
-                        <input type="hidden" name="eid" value="<?php echo htmlspecialchars($event['eid']); ?>">
+                    <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-4 mb-4">
+                        <p class="font-bold text-blue-800 mb-2">📋 วิธีใช้งาน:</p>
+                        <ol class="text-sm text-gray-700 list-decimal list-inside">
+                            <li>ผู้เข้าร่วมคลิก "สร้าง OTP สำหรับกิจกรรม"</li>
+                            <li>OTP ใช้ได้ 10 นาที และจะเปลี่ยนทุก 10 นาที</li>
+                            <li>ผู้จัดงานกรอก OTP ในหน้ารายละเอียดกิจกรรม</li>
+                            <li>ระบบจะบันทึกการเข้าร่วมอัตโนมัติ</li>
+                        </ol>
                         
-                        <div>
-                            <label class="block text-sm font-bold mb-2 text-gray-800">กรอกรหัส OTP (6 หลัก)</label>
-                            <input type="text" 
-                                   name="otp" 
-                                   maxlength="6" 
-                                   pattern="[0-9]{6}"
-                                   placeholder="000000"
-                                   required
-                                   class="w-full px-4 py-3 text-2xl font-bold text-center tracking-widest
-                                          border-2 border-black rounded-lg
-                                          focus:ring-4 focus:ring-purple-300 transition-all">
+                        <div class="mt-3">
+                            <!-- OTP Verification for Event Creator -->
+                            <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                <h3 class="font-bold text-lg mb-3 text-purple-800">
+                                    <i class="fa-solid fa-shield-halved"></i> ยืนยันตัวตนผู้จัดงาน
+                                </h3>
+                                <p class="text-sm text-gray-600 mb-3">กรอกรหัส OTP เพื่อยืนยันว่าคุณเป็นผู้จัดงาน</p>
+                                <form action="verify_creator_otp" method="POST" class="mt-3">
+                                    <input type="hidden" name="eid" value="<?= $eid ?>">
+                                    <div class="flex gap-2">
+                                        <input type="text" 
+                                               name="otp" 
+                                               maxlength="6" 
+                                               pattern="[0-9]{6}"
+                                               placeholder="กรอก OTP 6 หลัก"
+                                               required
+                                               class="flex-1 px-3 py-2 border-2 border-black rounded-lg font-bold text-center tracking-widest focus:ring-2 focus:ring-blue-300">
+                                        <button type="submit"
+                                                class="px-4 py-2 bg-blue-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                                            <i class="fa-solid fa-shield-check"></i> ยืนยัน
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        
-                        <button type="submit" 
-                                class="w-full px-6 py-3 bg-green-500 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                            <i class="fa-solid fa-check-circle"></i> ยืนยันเช็คชื่อ
-                        </button>
-                    </form>
-
-                    <div class="mt-4 p-3 bg-purple-50 border border-purple-300 rounded-lg">
-                        <p class="text-xs text-gray-600">
-                            <i class="fa-solid fa-info-circle"></i> 
-                            ผู้เข้าร่วมที่ได้รับการอนุมัติสามารถสร้าง OTP จากหน้า "ดูการลงทะเบียน" 
-                            และนำมาให้คุณกรอกเพื่อเช็คชื่อเข้าร่วมกิจกรรม
-                        </p>
                     </div>
+                    
+                    <?php if (isset($_GET['otp_generated'])): ?>
+                        <div class="bg-green-100 border-2 border-green-500 rounded-lg p-4 mb-4">
+                            <p class="font-bold text-green-800">✅ สร้าง OTP สำเร็จแล้ว!</p>
+                            <p class="text-sm text-green-700">แสดงรหัสนี้ให้ผู้จัดงานเพื่อกรอกเข้างาน</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
 
                 <div class="bg-white border-2 border-black rounded-[24px] shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-6">
@@ -299,5 +282,46 @@ $participants = isset($participants_data) ? $participants_data : [];
         </div>
     </div>
 
+    <?php if (isset($_GET['verified']) && $_GET['verified'] === 'success' && isset($_SESSION['creator_verified'])): ?>
+        <div class="fixed top-4 right-4 bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-lg z-50">
+            <div class="flex items-center gap-3">
+                <div class="text-2xl">✅</div>
+                <div>
+                    <p class="font-bold text-green-800">ยืนยันตัวตนสำเร็จ!</p>
+                    <p class="text-sm text-green-700">เวลา: <?= htmlspecialchars($_SESSION['creator_verified']['time']) ?></p>
+                </div>
+            </div>
+        </div>
+        <?php unset($_SESSION['creator_verified']); ?>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= $eid ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['err']) && $_GET['err'] === 'otp'): ?>
+        <div class="fixed top-4 right-4 bg-red-100 border-2 border-red-500 rounded-lg p-4 shadow-lg z-50">
+            <p class="font-bold text-red-800">❌ รหัส OTP ไม่ถูกต้องหรือหมดอายุ</p>
+        </div>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= $eid ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['err']) && $_GET['err'] === 'inv'): ?>
+        <div class="fixed top-4 right-4 bg-red-100 border-2 border-red-500 rounded-lg p-4 shadow-lg z-50">
+            <p class="font-bold text-red-800">❌ ข้อมูลไม่ครบถ้วน</p>
+        </div>
+        <script>
+            setTimeout(() => {
+                window.location.href = window.location.pathname + '?eid=<?= $eid ?>';
+            }, 3000);
+        </script>
+    <?php endif; ?>
+
 </body>
+
 </html>
