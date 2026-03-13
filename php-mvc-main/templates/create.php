@@ -145,31 +145,28 @@
                     </div>
 
                     <div>
-                        <label class="font-bold">รูปหน้าปกภาพกิจกรรม</label>
-                        <input type="file" name="images[]"
+                        <label class="font-bold">รูปหน้าปกกิจกรรม</label>
+                        <input type="file" name="cover_image"
+                            accept="image/jpeg,image/png"
+                            class="w-full px-4 py-2 border-2 border-black rounded-lg
+                   shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                        <p class="text-xs text-gray-600 mt-1">
+                            ฟอร์แมตที่รองรับ: JPG, PNG | สูงสุด 5MB
+                        </p>
+                    </div>
+
+                    <div>
+                        <label class="font-bold">รูปกิจกรรมเพิ่มเติม</label>
+                        <input type="file" name="additional_images[]"
                             accept="image/jpeg,image/png"
                             multiple
                             class="w-full px-4 py-2 border-2 border-black rounded-lg
                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-                    </div>
-
-                    <div>
-                        <label class="font-bold">
-                            รูปเลือกแบบกิจกรรมเพิ่มเติม
-                        </label>
-
-                        <input type="file"
-                            name="images[]"
-                            accept="image/jpeg,image/png"
-                            multiple
-                            class="w-full px-4 py-2 border-2 border-black rounded-lg
-        shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
-
                         <p class="text-xs text-gray-600 mt-1">
-                            เลือกหลายรูปได้โดยกดปุ่ม Ctrl หรือ Shift ค้างไว้ขณะเลือก
+                            เลือกหลายรูปได้โดยกดปุ่ม Ctrl หรือ Shift ค้างไว้ขณะเลือก<br>
+                            ฟอร์แมตที่รองรับ: JPG, PNG | สูงสุด 5MB ต่อรูป
                         </p>
                     </div>
-
 
                     <div class="flex gap-4 pt-4">
                         <button type="submit"

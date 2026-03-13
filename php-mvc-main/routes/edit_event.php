@@ -27,35 +27,44 @@ if ($m === 'GET') {
     $eid = isset($_POST['eid']) ? (int)$_POST['eid'] : 0;
     $action = isset($_POST['action']) ? $_POST['action'] : '';
 
-    // Handle delete multiple images (can be combined with update)
-    if (isset($_POST['delete_images']) && is_array($_POST['delete_images'])) {
-        $images_to_delete = $_POST['delete_images'];
+    // Handle delete cover image
+    if (isset($_POST['delete_cover_image']) && !empty($_POST['delete_cover_image'])) {
+        $image_to_delete = $_POST['delete_cover_image'];
+        $file_path = __DIR__ . '/../public/img/' . $image_to_delete;
         
-        if ($eid > 0 && !empty($images_to_delete)) {
-            foreach ($images_to_delete as $image_path) {
-                $image_path = basename($image_path); // Security: prevent directory traversal
-                $upload_dir = __DIR__ . '/../public/img/';
-                $file_path = $upload_dir . $image_path;
+        if (file_exists($file_path)) {
+            unlink($file_path);
+        }
+        
+        // Remove from database
+        $stmt = $conn->prepare("DELETE FROM event_img WHERE eid = ? AND image_path = ?");
+        $stmt->bind_param("is", $eid, $image_to_delete);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    // Handle delete additional images
+    if (isset($_POST['delete_additional_images']) && is_array($_POST['delete_additional_images'])) {
+        foreach ($_POST['delete_additional_images'] as $image_to_delete) {
+            if (!empty($image_to_delete)) {
+                $file_path = __DIR__ . '/../public/img/' . $image_to_delete;
                 
-                // Delete from database
-                $sql = "DELETE FROM event_img WHERE eid = ? AND image_path = ?";
-                $stmt = $conn->prepare($sql);
-                if ($stmt) {
-                    $stmt->bind_param("is", $eid, $image_path);
-                    $stmt->execute();
-                }
-                
-                // Delete file
                 if (file_exists($file_path)) {
                     unlink($file_path);
                 }
+                
+                // Remove from database
+                $stmt = $conn->prepare("DELETE FROM event_img WHERE eid = ? AND image_path = ?");
+                $stmt->bind_param("is", $eid, $image_to_delete);
+                $stmt->execute();
+                $stmt->close();
             }
         }
     }
-
+    
     // If only deleting images, redirect
-    if ($action === 'delete_images' && !isset($_POST['title'])) {
-        header('Location: edit_event?eid=' . $eid);
+    if (($action === 'delete_cover_image' || $action === 'delete_additional_images') && !isset($_POST['title'])) {
+        header('Location: edit_event?eid=' . $eid . '&success=1');
         exit;
     }
 
@@ -83,73 +92,105 @@ if ($m === 'GET') {
     // DEBUG: Log files
     error_log('DEBUG: FILES received: ' . json_encode([
         'files_keys' => array_keys($_FILES),
-        'images_exists' => isset($_FILES['images']),
-        'images_names' => isset($_FILES['images']) ? $_FILES['images']['name'] : null,
-        'images_errors' => isset($_FILES['images']) ? $_FILES['images']['error'] : null,
+        'cover_image_exists' => isset($_FILES['cover_image']),
+        'cover_image_name' => isset($_FILES['cover_image']) ? $_FILES['cover_image']['name'] : null,
+        'cover_image_error' => isset($_FILES['cover_image']) ? $_FILES['cover_image']['error'] : null,
+        'cover_image_size' => isset($_FILES['cover_image']) ? $_FILES['cover_image']['size'] : null,
+        'additional_images_exists' => isset($_FILES['additional_images']),
+        'additional_images_count' => isset($_FILES['additional_images']) ? count($_FILES['additional_images']['name']) : 0,
+        'additional_images_errors' => isset($_FILES['additional_images']) ? $_FILES['additional_images']['error'] : null,
+        'post_data' => $_POST,
+        'eid' => $eid,
     ], JSON_PRETTY_PRINT));
 
-    // Handle multiple image uploads
-    if (!empty($_FILES['images']) && is_array($_FILES['images']['name'])) {
-        $upload_count = 0;
-        foreach ($_FILES['images']['name'] as $k => $n) {
-            if (empty($n)) {
-                continue;
-            }
-            
-            $error_code = $_FILES['images']['error'][$k];
-            if ($error_code !== UPLOAD_ERR_OK) {
-                error_log("Upload error for file $n (index $k): " . $error_code);
-                continue;
-            }
-
-            $tmp = $_FILES['images']['tmp_name'][$k];
-            
-            // Verify temp file exists
-            if (!file_exists($tmp) || !is_uploaded_file($tmp)) {
-                error_log("Temp file not valid: $tmp");
-                continue;
-            }
-            
-            $ext = strtolower(pathinfo($n, PATHINFO_EXTENSION));
+    // Handle cover image upload (single image)
+    if (!empty($_FILES['cover_image']) && $_FILES['cover_image']['error'] === UPLOAD_ERR_OK) {
+        $tmp = $_FILES['cover_image']['tmp_name'];
+        $name = $_FILES['cover_image']['name'];
+        
+        if (file_exists($tmp) && is_uploaded_file($tmp)) {
+            $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
             
             // Validate file extension
             $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
-            if (!in_array($ext, $allowed_ext)) {
-                error_log("Invalid extension: $ext for file $n");
-                continue;
-            }
-            
-            // Check file size (5MB max)
-            $file_size = $_FILES['images']['size'][$k];
-            if ($file_size > 5 * 1024 * 1024) {
-                error_log("File too large: $file_size bytes for file $n");
-                continue;
-            }
-            
-            $fn = uniqid('event_', true) . '.' . $ext;
-            $dir = __DIR__ . '/../public/img/';
+            if (in_array($ext, $allowed_ext)) {
+                // Check file size (5MB max)
+                $file_size = $_FILES['cover_image']['size'];
+                if ($file_size <= 5 * 1024 * 1024) {
+                    $fn = uniqid('event_', true) . '.' . $ext;
+                    $dir = __DIR__ . '/../public/img/';
 
-            if (!is_dir($dir)) {
-                @mkdir($dir, 0755, true);
-            }
-            
-            $full_path = $dir . $fn;
-            if (move_uploaded_file($tmp, $full_path)) {
-                error_log("Successfully moved file to: $full_path");
-                $add_result = addImg($eid, $fn);
-                if ($add_result !== true) {
-                    error_log("ERROR: addImg failed with message: " . $add_result);
+                    if (!is_dir($dir)) {
+                        @mkdir($dir, 0755, true);
+                    }
+                    
+                    $full_path = $dir . $fn;
+                    if (move_uploaded_file($tmp, $full_path)) {
+                        error_log("Successfully moved cover image to: $full_path");
+                        $add_result = addImg($eid, $fn);
+                        if ($add_result !== true) {
+                            error_log("ERROR: addImg failed with message: " . $add_result);
+                        } else {
+                            error_log("Successfully added cover image $fn to database for event $eid");
+                        }
+                    } else {
+                        error_log("Failed to move uploaded cover image from $tmp to $full_path");
+                    }
                 } else {
-                    error_log("Successfully added image $fn to database for event $eid");
-                    $upload_count++;
+                    error_log("Cover image too large: $file_size bytes for file $name");
                 }
             } else {
-                error_log("Failed to move uploaded file from $tmp to $full_path");
+                error_log("Invalid cover image extension: $ext for file $name");
             }
         }
-        error_log("Total files uploaded: $upload_count out of " . count($_FILES['images']['name']));
-    } else {
-        error_log("No files in _FILES or not array. FILES keys: " . implode(',', array_keys($_FILES)));
+    }
+
+    // Handle additional images upload (multiple images)
+    if (!empty($_FILES['additional_images']) && isset($_FILES['additional_images']['name'])) {
+        $file_count = count($_FILES['additional_images']['name']);
+        
+        for ($i = 0; $i < $file_count; $i++) {
+            if ($_FILES['additional_images']['error'][$i] === UPLOAD_ERR_OK) {
+                $tmp = $_FILES['additional_images']['tmp_name'][$i];
+                $name = $_FILES['additional_images']['name'][$i];
+                
+                if (file_exists($tmp) && is_uploaded_file($tmp)) {
+                    $ext = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                    
+                    // Validate file extension
+                    $allowed_ext = ['jpg', 'jpeg', 'png', 'gif'];
+                    if (in_array($ext, $allowed_ext)) {
+                        // Check file size (5MB max)
+                        $file_size = $_FILES['additional_images']['size'][$i];
+                        if ($file_size <= 5 * 1024 * 1024) {
+                            $fn = uniqid('event_', true) . '.' . $ext;
+                            $dir = __DIR__ . '/../public/img/';
+
+                            if (!is_dir($dir)) {
+                                @mkdir($dir, 0755, true);
+                            }
+                            
+                            $full_path = $dir . $fn;
+                            if (move_uploaded_file($tmp, $full_path)) {
+                                error_log("Successfully moved additional image to: $full_path");
+                                $add_result = addImg($eid, $fn);
+                                if ($add_result !== true) {
+                                    error_log("ERROR: addImg failed with message: " . $add_result);
+                                } else {
+                                    error_log("Successfully added additional image $fn to database for event $eid");
+                                }
+                            } else {
+                                error_log("Failed to move uploaded additional image from $tmp to $full_path");
+                            }
+                        } else {
+                            error_log("Additional image too large: $file_size bytes for file $name");
+                        }
+                    } else {
+                        error_log("Invalid additional image extension: $ext for file $name");
+                    }
+                }
+            }
+        }
     }
 
     header('Location: edit_event?eid=' . $eid . '&success=1');

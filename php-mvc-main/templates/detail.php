@@ -124,7 +124,7 @@ if (!isset($event) || !is_array($event)) {
             </a>
         </div>
 
-        <div class="p-8 bg-purple-100 grid md:grid-cols-2 gap-8">
+        <div class="p-4 bg-purple-100 grid md:grid-cols-2 gap-6">
 
             <div class="gallery-container bg-purple-100 border-2 border-black rounded-xl shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] overflow-hidden relative">
                 <?php 
@@ -269,133 +269,78 @@ if (!isset($event) || !is_array($event)) {
                 $is_owner = $is_logged_in && $user_id && $user_id === (int)($event['uid'] ?? 0);
                 ?>
                     
-                    <?php if ($is_logged_in && $is_registered && !$is_owner): ?>
-                        <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="flex items-center gap-2">
-                                <?php if ($registration_status === 'Approved'): ?>
-                                    <div class="flex-1">
-                                        <div class="bg-green-100 border-2 border-green-500 rounded-lg p-3">
-                                            <p class="font-bold text-green-800 mb-2">✅ ได้รับการอนุมัติแล้ว!</p>
-                                            <p class="text-sm text-green-700">สร้าง OTP เพื่อเข้าร่วมกิจกรรม</p>
-                                            
-                                            <!-- OTP Generation for Participants -->
-                                            <div class="mt-3">
-                                                <button onclick="generateParticipantOTP(<?= (int)$event['eid'] ?>)" 
-                                                        class="w-full px-4 py-2 bg-green-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                                                    <i class="fa-solid fa-key"></i> สร้าง OTP สำหรับเข้างาน
-                                                </button>
-                                                <div id="participantOtpDisplay" class="hidden mt-3 p-3 bg-white border-2 border-green-400 rounded-lg text-center">
-                                                    <p class="text-sm text-gray-600 mb-1">รหัส OTP ของคุณ:</p>
-                                                    <div id="participantOtpCode" class="text-3xl font-black text-green-600 tracking-widest"></div>
-                                                    <p class="text-xs text-gray-500 mt-1">แสดงรหัสนี้ให้ผู้จัดงาน</p>
-                                                    <p class="text-xs text-orange-600 font-bold mt-2">⏱️ เหลือเวลา: <span id="participantOtpTimer">10:00</span></p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php elseif ($registration_status === 'Pending'): ?>
-                                    <i class="fa-solid fa-clock text-yellow-600"></i>
-                                    <span class="text-yellow-700 font-bold">รอการอนุมัติจากผู้จัดงาน</span>
-                                <?php elseif ($registration_status === 'Rejected'): ?>
-                                    <i class="fa-solid fa-times-circle text-red-600"></i>
-                                    <span class="text-red-700 font-bold">ไม่ได้รับการอนุมัติ</span>
-                                <?php endif; ?>
-                            </div>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if ($is_owner): ?>
-                        <!-- Owner Controls -->
-                        <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-                            <div class="flex items-center gap-2">
+                <?php if ($is_logged_in && $is_registered && !$is_owner): ?>
+                    <div class="bg-white border-2 border-black rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <div class="flex items-center gap-2">
+                            <?php if ($registration_status === 'Approved'): ?>
                                 <div class="flex-1">
-                                    <div class="bg-yellow-100 border-2 border-yellow-500 rounded-lg p-3">
-                                        <p class="font-bold text-yellow-800 mb-2">🔑 Enter OTP for Check-in</p>
-                                        <form action="verify_event_otp" method="POST" class="mt-3">
-                                            <input type="hidden" name="eid" value="<?= (int)$event['eid'] ?>">
-                                            <div class="flex gap-2">
-                                                <input type="text" 
-                                                       name="otp" 
-                                                       maxlength="6" 
-                                                       pattern="[0-9]{6}"
-                                                       placeholder="Enter OTP"
-                                                       required
-                                                       class="flex-1 px-3 py-2 border-2 border-black rounded-lg font-bold text-center tracking-widest focus:ring-2 focus:ring-yellow-300">
-                                                <button type="submit"
-                                                        class="px-4 py-2 bg-yellow-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
-                                                    <i class="fa-solid fa-sign-in-alt"></i> Check-in
-                                                </button>
-                                            </div>
-                                        </form>
+                                    <div class="bg-green-100 border-2 border-green-500 rounded-lg p-3">
+                                        <p class="font-bold text-green-800 mb-2">ได้รับการอนุมัติแล้ว!</p>
+                                        <p class="text-sm text-green-700">คุณได้รับการอนุมัติแล้ว</p>
                                     </div>
                                 </div>
-                            </div>
+                            <?php elseif ($registration_status === 'Pending'): ?>
+                                <i class="fa-solid fa-clock text-yellow-600"></i>
+                                <span class="text-yellow-700 font-bold">รอการอนุมัติจากผู้จัดงาน</span>
+                            <?php elseif ($registration_status === 'Rejected'): ?>
+                                <i class="fa-solid fa-times-circle text-red-600"></i>
+                                <span class="text-red-700 font-bold">ไม่ได้รับการอนุมัติ</span>
+                            <?php endif; ?>
                         </div>
-                    <?php endif; ?>
+                    </div>
+                <?php endif; ?>
 
-                    <?php if (!$is_logged_in): ?>
-                        <a href="login" class="col-span-4">
-                            <button class="w-full px-6 py-3 bg-orange-500 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
-                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                                <i class="fa-solid fa-sign-in-alt"></i>
-                                เข้าสู่ระบบเพื่อลงทะเบียน
-                            </button>
-                        </a>
-                    <?php elseif ($is_completed): ?>
-                        <div class="col-span-4">
-                            <button class="w-full px-6 py-3 bg-gray-500 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed"
-                                       disabled>
-                                <i class="fa-solid fa-calendar-times"></i>
-                                กิจกรรมจบแล้ว ไม่สามารถลงทะเบียนได้
-                            </button>
-                        </div>
-                    <?php elseif (!$is_registered): ?>
-                        <form action="register_event" method="POST" class="col-span-4">
-                            <input type="hidden" name="eid" value="<?= (int)$event['eid'] ?>">
-                            <button type="submit"
-                                class="w-full px-6 py-3 bg-purple-600 text-white border-2 border-black rounded-lg font-bold
+                <?php if (!$is_logged_in): ?>
+                    <a href="login" class="col-span-4">
+                        <button class="w-full px-6 py-3 bg-orange-500 text-white border-2 border-black rounded-lg font-bold
+                                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                   hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
+                                   text-sm flex items-center justify-center gap-2 whitespace-nowrap">
+                            <i class="fa-solid fa-sign-in-alt"></i>
+                            เข้าสู่ระบบเพื่อลงทะเบียน
+                        </button>
+                    </a>
+                <?php elseif ($is_completed): ?>
+                    <div class="col-span-4">
+                        <button class="w-full px-6 py-3 bg-gray-500 text-white border-2 border-black rounded-lg font-bold
+                                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                   text-sm flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed"
+                                   disabled>
+                            <i class="fa-solid fa-calendar-times"></i>
+                            กิจกรรมจบแล้ว ไม่สามารถลงทะเบียนได้
+                        </button>
+                    </div>
+                <?php elseif (!$is_registered): ?>
+                    <form action="register_event" method="POST" class="col-span-4">
+                        <input type="hidden" name="eid" value="<?= (int)$event['eid'] ?>">
+                        <button type="submit"
+                            class="w-full px-6 py-3 bg-purple-600 text-white border-2 border-black rounded-lg font-bold
                        shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
                        hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all
                        text-sm flex items-center justify-center gap-2 whitespace-nowrap">
-                                <i class="fa-solid fa-right-to-bracket"></i>
-                                ลงทะเบียน
-                            </button>
-                        </form>
-                    <?php else: ?>
-                        <div class="col-span-4">
-                            <button class="w-full px-6 py-3 bg-gray-400 text-white border-2 border-black rounded-lg font-bold
-                                       shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
-                                       text-sm flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed"
-                                       disabled>
-                                <i class="fa-solid fa-check"></i>
-                                ลงทะเบียนแล้ว
-                            </button>
-                        </div>
-                    <?php endif; ?>
-                </div>
+                            <i class="fa-solid fa-right-to-bracket"></i>
+                            ลงทะเบียน
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <div class="col-span-4">
+                        <button class="w-full px-6 py-3 bg-gray-400 text-white border-2 border-black rounded-lg font-bold
+                                   shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                                   text-sm flex items-center justify-center gap-2 whitespace-nowrap cursor-not-allowed"
+                                   disabled>
+                            <i class="fa-solid fa-check"></i>
+                            ลงทะเบียนแล้ว
+                        </button>
+                    </div>
+                <?php endif; ?>
             </div>
-
         </div>
     </div>
 
     <?php if (isset($_GET['checkin']) && $_GET['checkin'] === 'success' && isset($_SESSION['checkin_success'])): ?>
         <div class="fixed top-4 right-4 bg-green-100 border-2 border-green-500 rounded-lg p-4 shadow-lg z-50">
-            <div class="flex items-center gap-3">
-                <div class="text-2xl">✅</div>
-                <div>
-                    <p class="font-bold text-green-800">เช็คชื่อสำเร็จ!</p>
-                    <p class="text-sm text-green-700">เวลา: <?= htmlspecialchars($_SESSION['checkin_success']['time']) ?></p>
-                </div>
             </div>
         </div>
-        <?php unset($_SESSION['checkin_success']); ?>
-        <script>
-            setTimeout(() => {
-                window.location.href = window.location.pathname + '?eid=<?= (int)$event['eid'] ?>';
             }, 3000);
         </script>
     <?php endif; ?>

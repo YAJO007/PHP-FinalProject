@@ -26,8 +26,8 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
             flex flex-col overflow-hidden 
             max-w-7xl mx-auto w-full">
 
-        <div class="flex justify-between items-center 
-                border-b-2 border-black 
+        <div class="flex justify-between items-center
+                border-b-2 border-black
                 bg-purple-300 px-6 py-4">
 
             <div class="flex items-center gap-4 flex-wrap">
@@ -40,11 +40,28 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
                 </a>
 
                 <a href="my_event">
-                    <button class="px-6 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-purple-100 hover:scale-110 transition-all">
-                        กิจกรรมของฉัน
-                    </button>
+                <button class="px-6 py-2 bg-white border-2 border-black
+                           rounded-lg font-bold hover:scale-110 transition-all">
+                    กิจกรรมของฉัน
+                </button>
+                </a>
+                <a href="create_event">
+                <button class="px-6 py-2 bg-purple-500 text-white
+                           border-2 border-black rounded-lg font-bold
+                           hover:scale-110 transition-all">
+                    สร้างกิจกรรม
+                </button>
                 </a>
 
+                <a href="profile">
+                    <button class="px-6 py-2 bg-white
+                               border-2 border-black rounded-lg font-bold
+                               shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]
+                               hover:translate-x-1 hover:translate-y-1
+                               hover:shadow-none transition-all duration-150">
+                        โปรไฟล์
+                    </button>
+                </a>
                 <a href="my_registrations">
                     <button class="px-6 py-2 bg-blue-600 text-white border-2 border-black
                            rounded-lg font-bold hover:scale-110 transition-all">
@@ -52,25 +69,14 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
                     </button>
                 </a>
 
-                <a href="create_event">
-                    <button class="px-6 py-2 bg-purple-500 text-white
-                           border-2 border-black rounded-lg font-bold
-                           hover:scale-110 transition-all">
-                        สร้างกิจกรรม
-                    </button>
-                </a>
-
-                <a href="profile">
-                    <button class="px-6 py-2 bg-white border-2 border-black rounded-lg font-bold hover:bg-purple-100 hover:scale-110 transition-all">
-                        โปรไฟล์
-                    </button>
-                </a>
             </div>
 
-            <button class="w-10 h-10 flex items-center justify-center 
-                       bg-purple-600 text-white border-2 border-black rounded-md hover:scale-110 transition-all">
-                ☰
-            </button>
+           <a href="home">
+                    <button class="px-6 py-2 bg-red-500 text-white
+                           border-2 border-black rounded-lg font-bold hover:scale-110 transition-all">
+                        ออกจากระบบ
+                    </button>
+                </a> 
         </div>
 
         <div class="flex-1 bg-purple-100 p-10 flex justify-center">
@@ -140,48 +146,91 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
                    shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                     </div>
 
-                    <div>
-                        <label class="font-bold">รูปภาพกิจกรรม</label>
+                    <!-- Cover Image Section (Single Image) -->
+                    <div class="bg-purple-50 border-2 border-purple-300 rounded-lg p-4">
+                        <h3 class="font-bold text-purple-800 mb-3">
+                            <i class="fa-solid fa-image"></i> รูปหน้าปกกิจกรรม (รูปเดียว)
+                        </h3>
                         
-                        <!-- Display existing images -->
+                        <!-- Display current cover image -->
                         <?php 
                         $images = $event['images'] ?? [];
-                        error_log("DEBUG template: Found " . count($images) . " images for event " . $event['eid']);
-                        if (!empty($images)) {
-                            echo '<div class="mb-4 p-3 border-2 border-gray-300 rounded-lg bg-gray-50">';
-                            echo '<p class="text-sm text-gray-600 mb-3 font-bold">รูปภาพปัจจุบัน:</p>';
-                            echo '<div class="space-y-3" id="existing-images-container">';
-                            
-                            foreach ($images as $image) {
-                                echo '<div class="relative border-2 border-gray-400 rounded-lg overflow-hidden bg-white">';
-                                echo '  <div class="flex items-start gap-3 p-2">';
-                                echo '    <input type="checkbox" name="delete_images[]" value="' . htmlspecialchars($image) . '" class="mt-1 w-5 h-5 cursor-pointer">';
-                                echo '    <div class="flex-1">';
-                                echo '      <img src="/img/' . htmlspecialchars($image) . '" alt="Event Image" class="w-24 h-24 object-cover border-2 border-gray-300 rounded">';
-                                echo '      <p class="text-xs text-gray-500 mt-1 break-all">' . htmlspecialchars($image) . '</p>';
-                                echo '    </div>';
-                                echo '  </div>';
-                                echo '</div>';
-                            }
-                            
+                        $cover_image = !empty($images) ? $images[0] : null;
+                        if ($cover_image) {
+                            echo '<div class="mb-4 p-3 border-2 border-purple-200 rounded-lg bg-white">';
+                            echo '<p class="text-sm text-purple-600 mb-3 font-bold">รูปหน้าปกปัจจุบัน:</p>';
+                            echo '<div class="flex items-start gap-3">';
+                            echo '  <input type="checkbox" name="delete_cover_image" value="' . htmlspecialchars($cover_image) . '" class="mt-1 w-5 h-5 cursor-pointer">';
+                            echo '  <div class="flex-1">';
+                            echo '    <img src="/img/' . htmlspecialchars($cover_image) . '" alt="Cover Image" class="w-32 h-32 object-cover border-2 border-purple-300 rounded">';
+                            echo '    <p class="text-xs text-gray-500 mt-1 break-all">' . htmlspecialchars($cover_image) . '</p>';
+                            echo '  </div>';
                             echo '</div>';
-                            echo '<p class="text-xs text-red-600 mt-2"><i class="fa-solid fa-info-circle"></i> เลือกรูปที่ต้องการลบ แล้วคลิค "บันทึก"</p>';
+                            echo '<p class="text-xs text-purple-600 mt-2"><i class="fa-solid fa-info-circle"></i> เลือกเพื่อลบรูปหน้าปก แล้วอัพโหลดรูปใหม่</p>';
+                            echo '</div>';
+                        } else {
+                            echo '<div class="mb-4 p-3 border-2 border-gray-200 rounded-lg bg-gray-50">';
+                            echo '<p class="text-sm text-gray-600"><i class="fa-solid fa-info-circle"></i> ยังไม่มีรูปหน้าปก</p>';
                             echo '</div>';
                         }
                         ?>
                         
-                        <!-- Upload new images -->
-                        <div class="mt-3">
-                            <button type="button" class="block w-full px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center" onclick="document.getElementById('images_input').click()">
-                                <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปภาพใหม่
+                        <!-- Upload new cover image -->
+                        <div>
+                            <button type="button" class="block w-full px-4 py-3 border-2 border-dashed border-purple-400 rounded-lg bg-purple-50 cursor-pointer hover:bg-purple-100 transition-all text-center" onclick="document.getElementById('cover_image_input').click()">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> อัพโหลดรูปหน้าปกใหม่ (รูปเดียว)
                             </button>
-                            <input type="file" name="images" id="images_input" accept="image/*" multiple style="display: none;">
-                            <p class="text-xs text-gray-600 mt-2" id="filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป</p>
-                            <div id="image-preview-container" class="mt-3 grid grid-cols-3 gap-2 hidden">
+                            <input type="file" name="cover_image" id="cover_image_input" accept="image/jpeg,image/png,image/gif" style="display: none;">
+                            <p class="text-xs text-gray-600 mt-2" id="cover-filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB</p>
+                            <div id="cover-image-preview-container" class="mt-3 hidden">
+                                <!-- Preview image here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Additional Images Section (Multiple Images) -->
+                    <div class="bg-blue-50 border-2 border-blue-300 rounded-lg p-4">
+                        <h3 class="font-bold text-blue-800 mb-3">
+                            <i class="fa-solid fa-images"></i> รูปกิจกรรมเพิ่มเติม (หลายรูป)
+                        </h3>
+                        
+                        <!-- Display current additional images -->
+                        <?php 
+                        $additional_images = array_slice($images, 1); // Skip first image (cover)
+                        if (!empty($additional_images)) {
+                            echo '<div class="mb-4 p-3 border-2 border-blue-200 rounded-lg bg-white">';
+                            echo '<p class="text-sm text-blue-600 mb-3 font-bold">รูปเพิ่มเติมปัจจุบัน (' . count($additional_images) . ' รูป):</p>';
+                            echo '<div class="space-y-2">';
+                            foreach ($additional_images as $index => $image) {
+                                echo '<div class="flex items-start gap-3 p-2 border border-blue-200 rounded">';
+                                echo '  <input type="checkbox" name="delete_additional_images[]" value="' . htmlspecialchars($image) . '" class="mt-1 w-5 h-5 cursor-pointer">';
+                                echo '  <div class="flex-1">';
+                                echo '    <img src="/img/' . htmlspecialchars($image) . '" alt="Additional Image" class="w-24 h-24 object-cover border-2 border-blue-200 rounded">';
+                                echo '    <p class="text-xs text-gray-500 mt-1 break-all">' . htmlspecialchars($image) . '</p>';
+                                echo '  </div>';
+                                echo '</div>';
+                            }
+                            echo '</div>';
+                            echo '<p class="text-xs text-blue-600 mt-2"><i class="fa-solid fa-info-circle"></i> เลือกรูปที่ต้องการลบ และ/หรือ เพิ่มรูปใหม่ด้านล่าง</p>';
+                            echo '</div>';
+                        } else {
+                            echo '<div class="mb-4 p-3 border-2 border-gray-200 rounded-lg bg-gray-50">';
+                            echo '<p class="text-sm text-gray-600"><i class="fa-solid fa-info-circle"></i> ยังไม่มีรูปเพิ่มเติม</p>';
+                            echo '</div>';
+                        }
+                        ?>
+                        
+                        <!-- Upload additional images -->
+                        <div>
+                            <button type="button" class="block w-full px-4 py-3 border-2 border-dashed border-blue-400 rounded-lg bg-blue-50 cursor-pointer hover:bg-blue-100 transition-all text-center" onclick="document.getElementById('additional_images_input').click()">
+                                <i class="fa-solid fa-cloud-arrow-up"></i> เพิ่มรูปกิจกรรม (หลายรูป)
+                            </button>
+                            <input type="file" name="additional_images[]" id="additional_images_input" accept="image/jpeg,image/png,image/gif" multiple style="display: none;">
+                            <p class="text-xs text-gray-600 mt-2" id="additional-filename-display">ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป</p>
+                            <div id="additional-images-preview-container" class="mt-3 hidden">
                                 <!-- Preview images here -->
                             </div>
                         </div>
-
                     </div>
 
                     <div class="pt-4 flex gap-4">
@@ -205,18 +254,23 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
                         </a>
                     </div>
 
-                    <!-- Handle delete_images action -->
+                    <!-- Updated form submission handling -->
                     <script>
-                        const form = document.querySelector('form');
-                        form.addEventListener('submit', function(e) {
-                            const checkboxes = document.querySelectorAll('input[name="delete_images[]"]:checked');
-                            const newImages = document.getElementById('images_input').files.length;
+                        const editForm = document.querySelector('form');
+                        editForm.addEventListener('submit', function(e) {
+                            const deleteCoverCheckbox = document.querySelector('input[name="delete_cover_image"]:checked');
+                            const deleteAdditionalCheckboxes = document.querySelectorAll('input[name="delete_additional_images[]"]:checked');
+                            const newCoverImage = document.getElementById('cover_image_input').files.length;
+                            const newAdditionalImages = document.getElementById('additional_images_input').files.length;
                             
-                            // If deleting images, set action
-                            if (checkboxes.length > 0 && newImages === 0) {
-                                const actionInput = document.querySelector('input[name="action"]');
-                                if (actionInput) {
-                                    actionInput.value = 'delete_images';
+                            const actionInput = document.querySelector('input[name="action"]');
+                            if (actionInput) {
+                                if (deleteCoverCheckbox && newCoverImage === 0 && newAdditionalImages === 0 && deleteAdditionalCheckboxes.length === 0) {
+                                    actionInput.value = 'delete_cover_image';
+                                } else if (deleteAdditionalCheckboxes.length > 0 && newCoverImage === 0 && newAdditionalImages === 0 && !deleteCoverCheckbox) {
+                                    actionInput.value = 'delete_additional_images';
+                                } else {
+                                    actionInput.value = 'update';
                                 }
                             }
                         });
@@ -226,71 +280,121 @@ $show_success = isset($_GET['success']) && $_GET['success'] === '1';
         </div>
     </div>
 
-    <script>
-        // Auto-hide success notification and refresh page
-        const successNotif = document.querySelector('[class*="bg-green-500"]');
-        if (successNotif) {
-            setTimeout(() => {
-                // Reload page to show newly uploaded images
-                location.reload();
-            }, 1500);
-        }
+<script>
+    // Auto-hide success notification and refresh page
+    const successNotif = document.querySelector('[class*="bg-green-500"]');
+    if (successNotif) {
+        setTimeout(() => {
+            location.reload();
+        }, 1500);
+    }
 
-        // Handle multiple image input display
-        const imagesInput = document.getElementById('images_input');
-        const filenameDisplay = document.getElementById('filename-display');
-        const previewContainer = document.getElementById('image-preview-container');
-        
-        if (!imagesInput) {
-            console.error('File input not found!');
-        } else {
-            console.log('File input found, ready for upload');
-        }
-        
-        imagesInput.addEventListener('change', function() {
-            console.log('Files selected:', this.files.length);
-            previewContainer.innerHTML = '';
+    // Handle cover image input
+    const coverImageInput = document.getElementById('cover_image_input');
+    const coverFilenameDisplay = document.getElementById('cover-filename-display');
+    const coverPreviewContainer = document.getElementById('cover-image-preview-container');
+    
+    if (coverImageInput) {
+        coverImageInput.addEventListener('change', function() {
+            coverPreviewContainer.innerHTML = '';
             
             if (this.files && this.files.length > 0) {
-                previewContainer.classList.remove('hidden');
-                let totalSize = 0;
+                coverPreviewContainer.classList.remove('hidden');
+                const file = this.files[0];
+                const fileSize = file.size / 1024 / 1024;
+                
+                if (fileSize > 5) {
+                    coverFilenameDisplay.textContent = '❌ ไฟล์ใหญ่เกินไป (สูงสุด 5MB)';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.createElement('div');
+                    preview.className = 'relative border-2 border-purple-300 rounded overflow-hidden';
+                    preview.innerHTML = `
+                        <img src="${e.target.result}" class="w-full h-32 object-cover">
+                        <p class="text-xs text-gray-600 p-1 bg-purple-50 truncate">${file.name}</p>
+                    `;
+                    coverPreviewContainer.appendChild(preview);
+                    coverFilenameDisplay.textContent = `✓ เลือกรูปหน้าปก: ${file.name} (${fileSize.toFixed(2)} MB)`;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                coverPreviewContainer.classList.add('hidden');
+                coverFilenameDisplay.textContent = 'ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB';
+            }
+        });
+    }
+
+    // Handle additional images input
+    const additionalImagesInput = document.getElementById('additional_images_input');
+    const additionalFilenameDisplay = document.getElementById('additional-filename-display');
+    const additionalPreviewContainer = document.getElementById('additional-images-preview-container');
+    
+    if (additionalImagesInput) {
+        additionalImagesInput.addEventListener('change', function() {
+            additionalPreviewContainer.innerHTML = '';
+            
+            if (this.files && this.files.length > 0) {
+                additionalPreviewContainer.classList.remove('hidden');
                 let validFiles = 0;
+                let totalSize = 0;
                 
-                console.log('Processing', this.files.length, 'selected files');
-                
-                for (let i = 0; i < this.files.length; i++) {
-                    const file = this.files[i];
+                Array.from(this.files).forEach((file, index) => {
                     const fileSize = file.size / 1024 / 1024;
-                    console.log(`File ${i}:`, file.name, `(${fileSize.toFixed(2)} MB)`);
+                    totalSize += fileSize;
                     
-                    // Check file size
                     if (fileSize > 5) {
-                        continue; // Skip files larger than 5MB
+                        return;
                     }
                     
                     validFiles++;
-                    totalSize += fileSize;
-                    
                     const reader = new FileReader();
                     reader.onload = function(e) {
                         const preview = document.createElement('div');
-                        preview.className = 'relative border-2 border-purple-300 rounded overflow-hidden';
+                        preview.className = 'relative border-2 border-blue-300 rounded overflow-hidden mb-2';
                         preview.innerHTML = `
                             <img src="${e.target.result}" class="w-full h-24 object-cover">
-                            <p class="text-xs text-gray-600 p-1 bg-purple-50 truncate">${file.name}</p>
+                            <p class="text-xs text-gray-600 p-1 bg-blue-50 truncate">${file.name}</p>
                         `;
-                        previewContainer.appendChild(preview);
+                        additionalPreviewContainer.appendChild(preview);
                     };
                     reader.readAsDataURL(file);
-                }
+                });
                 
-                filenameDisplay.textContent = `✓ เลือก ${validFiles} รูป (รวม ${totalSize.toFixed(2)} MB)`;
+                if (validFiles > 0) {
+                    additionalFilenameDisplay.textContent = `✓ เลือกรูปเพิ่มเติม: ${validFiles} รูป (รวม ${totalSize.toFixed(2)} MB)`;
+                } else {
+                    additionalFilenameDisplay.textContent = '❌ ไม่มีรูปที่ถูกต้อง (ไฟล์ใหญ่เกิน 5MB)';
+                    additionalPreviewContainer.classList.add('hidden');
+                }
             } else {
-                previewContainer.classList.add('hidden');
-                filenameDisplay.textContent = 'ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป';
+                additionalPreviewContainer.classList.add('hidden');
+                additionalFilenameDisplay.textContent = 'ฟอร์แมตที่รองรับ: JPG, PNG, GIF | สูงสุด 5MB ต่อรูป';
             }
         });
-    </script>
+    }
 
-</body>
-</html>
+    // Update form submission logic
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const deleteCoverCheckbox = document.querySelector('input[name="delete_cover_image"]:checked');
+            const deleteAdditionalCheckboxes = document.querySelectorAll('input[name="delete_additional_images[]"]:checked');
+            const newCoverImage = document.getElementById('cover_image_input').files.length;
+            const newAdditionalImages = document.getElementById('additional_images_input').files.length;
+            
+            const actionInput = document.querySelector('input[name="action"]');
+            if (actionInput) {
+                if (deleteCoverCheckbox && newCoverImage === 0 && newAdditionalImages === 0 && deleteAdditionalCheckboxes.length === 0) {
+                    actionInput.value = 'delete_cover_image';
+                } else if (deleteAdditionalCheckboxes.length > 0 && newCoverImage === 0 && newAdditionalImages === 0 && !deleteCoverCheckbox) {
+                    actionInput.value = 'delete_additional_images';
+                } else {
+                    actionInput.value = 'update';
+                }
+            }
+        });
+    }
+</script>

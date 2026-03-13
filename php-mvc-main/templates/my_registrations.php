@@ -233,7 +233,7 @@ $registrations = $registrations ?? [];
                                 <div class="flex gap-2">
                                     <a href="detail?eid=<?= (int)$registration['eid'] ?>" class="flex-1">
                                         <button class="w-full px-4 py-2 bg-purple-600 text-white border-2 border-black rounded-lg font-bold hover:scale-110 transition-all text-sm">
-                                            <i class="fa-solid fa-eye"></i> ดูรายละเอียด
+                                            <i class="fa-solid fa-eye"></i> ดูรายละเอียดOTP
                                         </button>
                                     </a>
 
@@ -254,9 +254,6 @@ $registrations = $registrations ?? [];
                                         <i class="fa-solid fa-check-double"></i> คุณได้เช็คชื่อเข้าร่วมงานแล้ว
                                     </div>
                                 <?php else: ?>
-                                    <div class="w-full px-4 py-2 bg-gray-100 border-2 border-gray-300 rounded-lg font-bold text-center text-sm text-gray-600">
-                                        <i class="fa-solid fa-info-circle"></i> รอการเช็คชื่อ
-                                    </div>
                                 <?php endif; ?>
                             </div>
 
