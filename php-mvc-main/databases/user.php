@@ -36,7 +36,7 @@ function addUser(
 function checkLogin(string $email, string $password): bool
 {
     global $conn;
-    $sql = "SELECT 1 FROM user WHERE email = ? LIMIT 1";
+    $sql = "SELECT password FROM user WHERE email = ? LIMIT 1";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $email);
     $stmt->execute();
@@ -45,7 +45,7 @@ function checkLogin(string $email, string $password): bool
     if ($row = $res->fetch_assoc()) {
         $hashedPasswordDb = $row['password'];
         
-        if (password_verify($password, $hashedPasswordDb)) {
+        if ($hashedPasswordDb && password_verify($password, $hashedPasswordDb)) {
             $stmt->close();
             return true;
         }
