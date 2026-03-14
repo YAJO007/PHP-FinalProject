@@ -1,9 +1,9 @@
 <?php
 
-$hostname = 'localhost:3306';
-$dbName = 'k1god_comecat';
-$username = 'k1god_comecat';
-$password = 'qWo3Nqqj~$55mjyG';
+$hostname = 'localhost';
+$dbName = 'event';
+$username = 'root';
+$password = '';
 
 $conn = new mysqli($hostname, $username, $password, $dbName, 3306);
 if ($conn->connect_error) {
