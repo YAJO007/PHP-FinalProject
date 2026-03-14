@@ -29,7 +29,19 @@ if (isUserCheckedIn($userId, $eid)) {
     exit;
 }
 
-// Generate and store OTP
+$otpFile = __DIR__ . "/../storage/otp_{$eid}.json";
+if (file_exists($otpFile)) {
+    $existingOtpData = json_decode(file_get_contents($otpFile), true);
+    if ($existingOtpData && $existingOtpData['expires'] > time()) {
+        if ($existingOtpData['user_id'] != $userId) {
+            echo json_encode(['success' => false, 'error' => 'มีผู้อื่นกำลังใช้งาน OTP สำหรับกิจกรรมนี้แล้ว กรุณารอสักครู่']);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'มีรหัส OTP ที่ใช้งานอยู่ กรุณารอสักครู่']);
+        }
+        exit;
+    }
+}
+
 $otp = str_pad((string)random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
 
 $storageDir = __DIR__ . '/../storage';
@@ -39,7 +51,7 @@ if (!is_dir($storageDir)) {
 
 file_put_contents("{$storageDir}/otp_{$eid}.json", json_encode([
     'code'    => $otp,
-    'expires' => time() + 600, // 10 minutes
+    'expires' => time() + 600,
     'user_id' => $userId,
     'event_id' => $eid,
 ]));
