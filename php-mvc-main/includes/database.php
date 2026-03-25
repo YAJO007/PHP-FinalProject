@@ -1,9 +1,9 @@
 <?php
 
-$hostname = 'localhost';
+$hostname = '43.229.148.220';
 $dbName = 'event';
-$username = 'root';
-$password = '';
+$username = 'final';
+$password = 'admin';
 
 $conn = new mysqli($hostname, $username, $password, $dbName, 3306);
 if ($conn->connect_error) {
