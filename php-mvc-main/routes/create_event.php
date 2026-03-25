@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         (int)($_POST['max_participants'] ?? 0),
         $_POST['start_date'] ?? '',
         $_POST['end_date'] ?? '',
-        'active',
+        'Upcoming',
         $_POST['detail'] ?? ''
     );
 
